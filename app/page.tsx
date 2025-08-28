@@ -1,11 +1,3 @@
-import { DeployButton } from "@/components/deploy-button";
-import { EnvVarWarning } from "@/components/env-var-warning";
-import { AuthButton } from "@/components/auth-button";
-import { Hero } from "@/components/hero";
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import { ConnectSupabaseSteps } from "@/components/tutorial/connect-supabase-steps";
-import { SignUpUserSteps } from "@/components/tutorial/sign-up-user-steps";
-import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,114 +5,123 @@ import { Eye, Globe, Users, Plus } from "lucide-react";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center">
-      <div className="flex-1 w-full flex flex-col gap-20 items-center">
-        <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-          <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-            <div className="flex gap-5 items-center font-semibold">
-              <Link href={"/"}>Next.js Supabase Starter</Link>
-              <div className="flex items-center gap-2">
-                <DeployButton />
-              </div>
-            </div>
-            {!hasEnvVars ? <EnvVarWarning /> : <AuthButton />}
-          </div>
-        </nav>
-        <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
-          <Hero />
-          <main className="flex-1 flex flex-col gap-6 px-4">
-            {/* Sistema de Oftalmología */}
-            <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold text-blue-800 flex items-center gap-3">
-                  <Eye className="h-8 w-8" />
-                  Sistema de Páginas Oftalmológicas
-                </CardTitle>
-                <CardDescription className="text-lg text-blue-700">
-                  Generador completo de páginas web para clínicas oftalmológicas con formulario de administración, personalización de estilos y gestión de contenido.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex flex-col md:flex-row gap-4 mb-6">
-                  <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700">
-                    <Link href="/oftalmologia" className="flex items-center gap-2">
-                      <Plus className="h-4 w-4" />
-                      Crear Nueva Clínica
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline" size="lg" className="border-blue-600 text-blue-600 hover:bg-blue-50">
-                    <Link href="/admin/clinicas" className="flex items-center gap-2">
-                      <Users className="h-4 w-4" />
-                      Administrar Clínicas
-                    </Link>
-                  </Button>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-3">
-                    <h4 className="font-semibold text-blue-800 flex items-center gap-2">
-                      <Globe className="h-4 w-4" />
-                      Características:
-                    </h4>
-                    <ul className="text-sm text-blue-700 space-y-1">
-                      <li>• Formulario de administrador intuitivo</li>
-                      <li>• Personalización completa de colores y estilos</li>
-                      <li>• Páginas web responsivas generadas automáticamente</li>
-                      <li>• Gestión de información institucional</li>
-                      <li>• Base de datos con Supabase</li>
-                      <li>• Panel de administración de clínicas</li>
-                    </ul>
-                  </div>
-                  <div className="space-y-3">
-                    <h4 className="font-semibold text-blue-800 flex items-center gap-2">
-                      <Users className="h-4 w-4" />
-                      Contenido incluye:
-                    </h4>
-                    <ul className="text-sm text-blue-700 space-y-1">
-                      <li>• Información de contacto</li>
-                      <li>• Sección "Quiénes Somos"</li>
-                      <li>• Misión y Visión</li>
-                      <li>• Diseño profesional personalizable</li>
-                      <li>• Múltiples temas y fuentes</li>
-                      <li>• Vista previa en tiempo real</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-3 pt-4 border-t border-blue-200">
-                  <Link href="/oftalmologia">
-                    <Button className="bg-blue-600 hover:bg-blue-700">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Crear Nueva Clínica
-                    </Button>
-                  </Link>
-                  <Link href="/admin/clinicas">
-                    <Button variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-50">
-                      <Users className="h-4 w-4 mr-2" />
-                      Administrar Clínicas
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-
-            <h2 className="font-medium text-xl mb-4">Next steps</h2>
-            {hasEnvVars ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
-          </main>
+    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-blue-900 mb-4">
+            Sistema de Páginas Oftalmológicas
+          </h1>
+          <p className="text-lg text-blue-700 max-w-2xl mx-auto">
+            Generador completo de páginas web para clínicas oftalmológicas con formulario de administración, 
+            personalización de estilos y gestión de contenido.
+          </p>
         </div>
 
-        <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
-          <p>
-            Powered by{" "}
-            <a
-              href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-              target="_blank"
-              className="font-bold hover:underline"
-              rel="noreferrer"
-            >
-              Supabase
-            </a>
+        {/* Botones principales */}
+        <div className="flex flex-col md:flex-row gap-4 justify-center mb-12">
+          <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4">
+            <Link href="/oftalmologia" className="flex items-center gap-2">
+              <Plus className="h-5 w-5" />
+              Crear Nueva Clínica
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="border-blue-600 text-blue-600 hover:bg-blue-50 text-lg px-8 py-4">
+            <Link href="/admin/clinicas" className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              Administrar Clínicas
+            </Link>
+          </Button>
+        </div>
+
+        {/* Información del sistema */}
+        <div className="max-w-4xl mx-auto">
+          <Card className="border-blue-200 bg-white/80 backdrop-blur-sm shadow-lg">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl font-bold text-blue-800 flex items-center justify-center gap-3">
+                <Eye className="h-8 w-8" />
+                Características del Sistema
+              </CardTitle>
+              <CardDescription className="text-blue-700">
+                Todo lo que necesitas para crear páginas profesionales para clínicas oftalmológicas
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-blue-800 flex items-center gap-2">
+                    <Globe className="h-5 w-5" />
+                    Características Principales:
+                  </h4>
+                  <ul className="text-blue-700 space-y-2">
+                    <li className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Formulario de administrador intuitivo
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Personalización completa de colores y estilos
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Páginas web responsivas generadas automáticamente
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Gestión de información institucional
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Base de datos con Supabase
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Panel de administración de clínicas
+                    </li>
+                  </ul>
+                </div>
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-blue-800 flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    Contenido Incluido:
+                  </h4>
+                  <ul className="text-blue-700 space-y-2">
+                    <li className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Información de contacto completa
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Sección "Quiénes Somos"
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Misión y Visión de la clínica
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Diseño profesional personalizable
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Múltiples temas y fuentes
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      Vista previa en tiempo real
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Footer simple */}
+        <footer className="text-center py-8 mt-12">
+          <p className="text-blue-600">
+            Sistema de Páginas Oftalmológicas - Desarrollado con Next.js y Supabase
           </p>
-          <ThemeSwitcher />
         </footer>
       </div>
     </main>
