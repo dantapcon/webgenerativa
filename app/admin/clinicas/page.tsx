@@ -94,7 +94,7 @@ export default function AdminClinicasPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-indigo-100 py-8">
       <div className="container mx-auto max-w-6xl px-4">
-        <Card className="bg-white/95 backdrop-blur-sm shadow-2xl">
+        <Card className="bg-white/95 backdrop-blur-sm shadow-2xl border border-gray-200">
           <CardHeader>
             <div className="flex justify-between items-center">
               <div>
@@ -127,22 +127,22 @@ export default function AdminClinicasPage() {
 
             {/* Estadísticas */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card>
-                <CardContent className="p-4 text-center">
+              <Card className="bg-white border border-gray-200">
+                <CardContent className="p-4 text-center bg-white">
                   <div className="text-2xl font-bold text-blue-600">{clinicas.length}</div>
                   <div className="text-sm text-gray-600">Total de Clínicas</div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
+              <Card className="bg-white border border-gray-200">
+                <CardContent className="p-4 text-center bg-white">
                   <div className="text-2xl font-bold text-green-600">
                     {clinicas.filter(c => c.activo).length}
                   </div>
                   <div className="text-sm text-gray-600">Clínicas Activas</div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardContent className="p-4 text-center">
+              <Card className="bg-white border border-gray-200">
+                <CardContent className="p-4 text-center bg-white">
                   <div className="text-2xl font-bold text-gray-600">
                     {clinicas.filter(c => !c.activo).length}
                   </div>
@@ -171,8 +171,8 @@ export default function AdminClinicasPage() {
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {clinicas.map((clinica) => (
-                  <Card key={clinica.id} className="hover:shadow-lg transition-shadow">
-                    <CardHeader className="pb-3">
+                  <Card key={clinica.id} className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
+                    <CardHeader className="pb-3 bg-white">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <CardTitle className="text-xl text-gray-800 flex items-center space-x-2">
@@ -200,7 +200,7 @@ export default function AdminClinicasPage() {
                       </div>
                     </CardHeader>
 
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-4 bg-white text-gray-700">
                       {/* Información de contacto */}
                       <div className="grid grid-cols-1 gap-2 text-sm">
                         {clinica.telefono && (
