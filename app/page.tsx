@@ -10,26 +10,26 @@ export default function Home() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-blue-900 mb-4">
-            Sistema de Páginas Oftalmológicas
+            WebGenerator Pro
           </h1>
           <p className="text-lg text-blue-700 max-w-2xl mx-auto">
-            Generador completo de páginas web para clínicas oftalmológicas con formulario de administración, 
-            personalización de estilos y gestión de contenido.
+            Generador completo de páginas web para cualquier tipo de negocio con formulario intuitivo, 
+            personalización visual avanzada y gestión de contenido dinámico.
           </p>
         </div>
 
         {/* Botones principales */}
         <div className="flex flex-col md:flex-row gap-4 justify-center mb-12">
           <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4">
-            <Link href="/oftalmologia" className="flex items-center gap-2">
+            <Link href="/generador" className="flex items-center gap-2">
               <Plus className="h-5 w-5" />
-              Crear Nueva Clínica
+              Crear Sitio Web
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="border-blue-600 text-blue-600 hover:bg-blue-50 text-lg px-8 py-4">
-            <Link href="/admin/clinicas" className="flex items-center gap-2">
+            <Link href="/admin/empresas" className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              Administrar Clínicas
+              Administrar Sitios
             </Link>
           </Button>
         </div>
@@ -39,11 +39,11 @@ export default function Home() {
           <Card className="border-blue-200 bg-white/80 backdrop-blur-sm shadow-lg">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-bold text-blue-800 flex items-center justify-center gap-3">
-                <Eye className="h-8 w-8" />
+                <Globe className="h-8 w-8" />
                 Características del Sistema
               </CardTitle>
               <CardDescription className="text-blue-700">
-                Todo lo que necesitas para crear páginas profesionales para clínicas oftalmológicas
+                Todo lo que necesitas para crear sitios web profesionales para cualquier tipo de negocio
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -56,27 +56,27 @@ export default function Home() {
                   <ul className="text-blue-700 space-y-2">
                     <li className="flex items-start gap-2">
                       <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                      Formulario de administrador intuitivo
+                      Formulario intuitivo paso a paso
                     </li>
                     <li className="flex items-start gap-2">
                       <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                      Personalización completa de colores y estilos
+                      Personalización visual completa
                     </li>
                     <li className="flex items-start gap-2">
                       <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                      Páginas web responsivas generadas automáticamente
+                      Páginas web responsivas automáticas
                     </li>
                     <li className="flex items-start gap-2">
                       <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                      Gestión de información institucional
+                      Gestión de categorías y subcategorías
                     </li>
                     <li className="flex items-start gap-2">
                       <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                      Base de datos con Supabase
+                      Multi-tenant con base de datos Supabase
                     </li>
                     <li className="flex items-start gap-2">
                       <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                      Panel de administración de clínicas
+                      Panel de administración completo
                     </li>
                   </ul>
                 </div>

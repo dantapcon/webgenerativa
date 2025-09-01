@@ -1,0 +1,3266 @@
+		<div>
+			<h1 style="margin-top:24pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:16pt">
+				<a name="especificación-de-requisitos-de-software"><span style="font-family:Calibri; color:#4f81bd">Especificación de requisitos de software</span></a>
+			</h1>
+			<h2 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:14pt">
+				<a name="proyecto-webgenerator-pro"><span style="font-family:Calibri; color:#4f81bd">Proyecto: WebGenerator Pro</span></a>
+			</h2>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="enero-del-2025"><span style="font-family:Calibri; color:#4f81bd">Enero del 2025</span></a>
+			</h3>
+			<div align="center">
+				<hr size="2" align="center" style="width:100%" >
+			</div>
+			<h2 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:14pt">
+				<a name="ficha-del-documento"><span style="font-family:Calibri; color:#4f81bd">Ficha del documento</span></a>
+			</h2>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<thead>
+					<tr>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Fecha
+							</p>
+						</td>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Revisión
+							</p>
+						</td>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Autor
+							</p>
+						</td>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Verificado dep. Calidad
+							</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								25/01/2025
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								1.0
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Analista de Requisitos
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Equipo SQA
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p style="margin-top:9pt; margin-bottom:9pt">
+				<strong>Documento validado por las partes en fecha:</strong>
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Por el proveedor: Equipo de Desarrollo
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Por el cliente: Equipo de Producto
+			</p>
+			<div align="center">
+				<hr size="2" align="center" style="width:100%" >
+			</div>
+			<h2 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:14pt">
+				<a name="contenido"><span style="font-family:Calibri; color:#4f81bd">Contenido</span></a>
+			</h2>
+			<ol type="1" style="margin:0pt; padding-left:0pt">
+				<li style="margin-top:1.8pt; margin-left:26.11pt; margin-bottom:1.8pt; padding-left:9.89pt">
+					<a href="#X0e2973c2e3c317285bf344b2034a52754788c6d" style="text-decoration:none"><span style="color:#4f81bd">INTRODUCCIÓN</span></a>
+				</li>
+				<li style="margin-top:1.8pt; margin-left:26.11pt; margin-bottom:1.8pt; padding-left:9.89pt">
+					<a href="#X272b38cfc2ff6ab53ecdbfe24b7ba0e5f181bd6" style="text-decoration:none"><span style="color:#4f81bd">DESCRIPCIÓN GENERAL</span></a>
+				</li>
+				<li style="margin-top:1.8pt; margin-left:26.11pt; margin-bottom:1.8pt; padding-left:9.89pt">
+					<a href="#Xe16cbc17efb9516401e41690962f9175e4cde1d" style="text-decoration:none"><span style="color:#4f81bd">REQUISITOS ESPECÍFICOS</span></a>
+				</li>
+			</ol>
+			<div align="center">
+				<hr size="2" align="center" style="width:100%" >
+			</div>
+			<h2 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:14pt">
+				<a name="X0e2973c2e3c317285bf344b2034a52754788c6d"><span style="font-family:Calibri; color:#4f81bd">1. Introducción</span></a>
+			</h2>
+			<p style="margin-top:9pt; margin-bottom:9pt">
+				Este documento es una Especificación de Requisitos Software (ERS) para el Sistema Generador Automático de Páginas Web <strong>WebGenerator Pro</strong>. Esta especificación se ha estructurado basándose en las directrices dadas por el estándar IEEE Práctica Recomendada para Especificaciones de Requisitos Software ANSI/IEEE 830, 1998.
+			</p>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X53ca1eb396407438b910fbafb578b446b614ca3"><span style="font-family:Calibri; color:#4f81bd">1.1 Propósito</span></a>
+			</h3>
+			<p style="margin-top:9pt; margin-bottom:9pt">
+				El presente documento tiene como propósito definir las especificaciones funcionales y no funcionales para el desarrollo de un sistema web que permitirá la generación automática de páginas web personalizadas para empresas. El sistema será utilizado por un superadministrador para crear, configurar y publicar sitios web de manera automatizada.
+			</p>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X807e0e4b2e93a972a9fa0860b3c406e1abe614d"><span style="font-family:Calibri; color:#4f81bd">1.2 Alcance</span></a>
+			</h3>
+			<p style="margin-top:9pt; margin-bottom:9pt">
+				Esta especificación de requisitos está dirigida al desarrollo de una plataforma SaaS que genere automáticamente páginas web corporativas basadas en plantillas predefinidas, con capacidad de personalización visual y de contenido, publicación automática en subdominios y gestión centralizada.
+			</p>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X3c32702167a50f9f1e47f548e3fd9a17f4efae6"><span style="font-family:Calibri; color:#4f81bd">1.3 Personal involucrado</span></a>
+			</h3>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<thead>
+					<tr>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Nombre
+							</p>
+						</td>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Rol
+							</p>
+						</td>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Categoría Profesional
+							</p>
+						</td>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Responsabilidad
+							</p>
+						</td>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Información de contacto
+							</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Analista Principal
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Analista, diseñador y arquitecto
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Ing. Software
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Análisis de información, diseño y arquitectura del sistema
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								analista@empresa.com
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Desarrollador Frontend
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Desarrollador frontend
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Ing. Software
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Desarrollo de interfaces y plantillas dinámicas
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								frontend@empresa.com
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Desarrollador Backend
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Desarrollador backend
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Ing. Software
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Desarrollo de APIs y motor de generación
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								backend@empresa.com
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X202ce33122313366988e60811cd45f2e3fac5ed"><span style="font-family:Calibri; color:#4f81bd">1.4 Definiciones, acrónimos y abreviaturas</span></a>
+			</h3>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<thead>
+					<tr>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Nombre
+							</p>
+						</td>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Descripción
+							</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Superadmin
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Usuario administrador principal del sistema con acceso completo
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								CMS
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Content Management System (Sistema de Gestión de Contenidos)
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								ERS
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Especificación de Requisitos Software
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								RF
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Requerimiento Funcional
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								RNF
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Requerimiento No Funcional
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								SSL
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Secure Sockets Layer
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								SEO
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Search Engine Optimization
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								API
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Application Programming Interface
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X00ae3337cd234d2dcdfae582582fa00fca936d8"><span style="font-family:Calibri; color:#4f81bd">1.5 Referencias</span></a>
+			</h3>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<thead>
+					<tr>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Título del Documento
+							</p>
+						</td>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Referencia
+							</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Standard IEEE 830 - 1998
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								IEEE
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								NextJS Documentation
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Next.js Official Docs
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Supabase Documentation
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Supabase Official Docs
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X70674525a5257a2758557afeb02f4d7b39768cf"><span style="font-family:Calibri; color:#4f81bd">1.6 Resumen</span></a>
+			</h3>
+			<p style="margin-top:9pt; margin-bottom:9pt">
+				Este documento consta de tres secciones principales que definen los requisitos para un sistema generador automático de páginas web que permite a un superadministrador crear sitios web personalizados para empresas, con generación automática basada en plantillas, personalización visual y publicación en subdominios.
+			</p>
+			<div align="center">
+				<hr size="2" align="center" style="width:100%" >
+			</div>
+			<h2 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:14pt">
+				<a name="X272b38cfc2ff6ab53ecdbfe24b7ba0e5f181bd6"><span style="font-family:Calibri; color:#4f81bd">2. Descripción general</span></a>
+			</h2>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X530c4174996bbc2c9398cdddea6478430b49400"><span style="font-family:Calibri; color:#4f81bd">2.1 Perspectiva del producto</span></a>
+			</h3>
+			<p style="margin-top:9pt; margin-bottom:9pt">
+				El sistema <strong>WebGenerator Pro</strong> es una plataforma SaaS diseñada para generar automáticamente páginas web personalizadas para empresas. El superadministrador ingresa todos los datos de la empresa (información corporativa, identidad visual, categorías, subcategorías, productos y servicios) en un formulario integral, y el sistema genera y publica automáticamente una página web profesional en un subdominio.
+			</p>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X7ce5fdf717f2a4f1ebe063d0e3837802bc71e68"><span style="font-family:Calibri; color:#4f81bd">2.2 Funcionalidad del producto</span></a>
+			</h3>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Formulario integral para creación de empresas con todos sus datos
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Motor de plantillas dinámicas que genera páginas automáticamente
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Personalización automática de identidad visual (logo, colores, tipografía)
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Publicación automática en subdominios con SSL
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Panel de administración central para gestionar todas las empresas
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Sistema multi-tenant que mantiene separados los datos de cada empresa
+			</p>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X0f650175f96f2f005fdb483fd810bfd0c242d4c"><span style="font-family:Calibri; color:#4f81bd">2.3 Características de los usuarios</span></a>
+			</h3>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<thead>
+					<tr>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Tipo de usuario
+							</p>
+						</td>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Superadministrador
+							</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Formación
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Técnico especializado en gestión web
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Actividades
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Creación de empresas, configuración de sitios web, gestión centralizada de todas las páginas
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p style="margin-top:0pt; margin-bottom:10pt">
+				&#xa0;
+			</p>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<thead>
+					<tr>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Tipo de usuario
+							</p>
+						</td>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Administrador de Empresa
+							</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Formación
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Propietario o gerente de empresa
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Actividades
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Administración de su página web específica, gestión de servicios contratados, administración de clientes (funcionalidades futuras)
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p style="margin-top:0pt; margin-bottom:10pt">
+				&#xa0;
+			</p>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<thead>
+					<tr>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Tipo de usuario
+							</p>
+						</td>
+						<td style="border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.4pt; padding-left:5.4pt; vertical-align:bottom">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Usuario Final (Visitantes)
+							</p>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Formación
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Público general
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Actividades
+							</p>
+						</td>
+						<td style="padding-right:5.4pt; padding-left:5.4pt; vertical-align:top">
+							<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+								Navegación en los sitios web generados, consulta de productos/servicios
+							</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X11fda6f447d6f2a37cc502977dae18f9e3ad8b3"><span style="font-family:Calibri; color:#4f81bd">2.4 Restricciones</span></a>
+			</h3>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Interfaz web responsive optimizada para navegadores modernos
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Tecnologías específicas: NextJS para frontend, Supabase para backend
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>El sistema debe soportar múltiples empresas de manera concurrente
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Generación automática de SSL para todos los subdominios
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Arquitectura multi-tenant con separación de datos por empresa
+			</p>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X26d80a1bad7ec0339e80ed2e634398510a6938c"><span style="font-family:Calibri; color:#4f81bd">2.5 Suposiciones y dependencias</span></a>
+			</h3>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Se asume que los requisitos descritos son estables para la fase inicial
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Dependencia de servicios de Supabase para base de datos y autenticación
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Disponibilidad de servicio de certificados SSL automáticos
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Conectividad a internet constante para la generación y publicación de sitios
+			</p>
+			<div align="center">
+				<hr size="2" align="center" style="width:100%" >
+			</div>
+			<h2 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:14pt">
+				<a name="Xe16cbc17efb9516401e41690962f9175e4cde1d"><span style="font-family:Calibri; color:#4f81bd">3. Requisitos específicos</span></a>
+			</h2>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X7fda52c1312a76e67860b3a8d3504170142f133"><span style="font-family:Calibri; color:#4f81bd">3.1 Requisitos Funcionales - Historias de Usuario</span></a>
+			</h3>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X0409ca5cd9b731945d2da83f21a6af2680dabfe"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">Historia de Usuario 1: Creación Integral de Empresa</span></em></a>
+			</h4>
+			<table cellspacing="0" cellpadding="0" style="border:0.75pt solid #000000; border-collapse:collapse">
+				<tr>
+					<td style="border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>No. Historia</strong>
+						</p>
+					</td>
+					<td style="border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							HU001
+						</p>
+					</td>
+					<td style="border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Prioridad</strong>
+						</p>
+					</td>
+					<td style="border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Alta
+						</p>
+					</td>
+					<td style="border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Tiempo de desarrollo</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Nombre de la historia</strong>
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Creación integral de empresa con formulario completo
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>NextJS: 16 horas</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Usuario</strong>
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Superadministrador
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Producto</strong>
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Panel de administración central
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Estimación/Tiempo Costo</strong>
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>16 horas / $800</strong>
+						</p>
+					</td>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Descripción</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Como superadministrador, quiero crear una empresa nueva ingresando en un solo formulario todos los datos necesarios (información corporativa, identidad visual, categorías, subcategorías, productos y servicios), para que el sistema pueda generar automáticamente su página web personalizada.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Datos necesarios</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String nombre_empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- File logo_empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- File video_promocional
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String color_primario
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String color_secundario
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String tipografia
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String tipo_negocio
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String dominio_deseado
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String descripcion_empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String correo_empresa
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Control</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Validar que todos los campos obligatorios estén completos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Verificar que el slug/subdominio no esté en uso
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Validar formato de colores hexadecimales
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Confirmar que el logo sea un archivo de imagen válido
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Verificar formato y tamaño del video promocional
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Validar formato de correo electrónico
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Subfunciones</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							1. - Formulario multisección con validación en tiempo real
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							2. - Previsualización de colores y tipografía
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							3. - Generación automática de slug basado en nombre de empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							4. - Carga y preview de logo con validación de formato
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							5. - Carga y verificación de video promocional
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							6. - Reproductor integrado para previsualizar video
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Validación</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Todos los datos se guardan correctamente en la base de datos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Se genera un slug único para la empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los colores se validan en formato hexadecimal
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El logo se almacena y procesa correctamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- La jerarquía de categorías se mantiene consistente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los productos/servicios se asocian correctamente a sus categorías
+						</p>
+					</td>
+				</tr>
+			</table>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="Xc179e1c0ba4abcd6b529a465dad0d9b6885bbfd"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">Historia de Usuario 2: Gestión de Categorías</span></em></a>
+			</h4>
+			<table cellspacing="0" cellpadding="0" style="border:0.75pt solid #000000; border-collapse:collapse">
+				<tr>
+					<td style="border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>No. Historia</strong>
+						</p>
+					</td>
+					<td style="border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							HU002
+						</p>
+					</td>
+					<td style="border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Prioridad</strong>
+						</p>
+					</td>
+					<td style="border-right-style:solid; border-right-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Alta
+						</p>
+					</td>
+					<td style="border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Tiempo de desarrollo</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Nombre de la historia</strong>
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Gestión de categorías para organizar estructura web
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>NextJS: 4 horas</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Usuario</strong>
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Superadministrador
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Producto</strong>
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Panel de administración
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Estimación/Tiempo Costo</strong>
+						</p>
+					</td>
+					<td style="border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>4 horas / $150</strong>
+						</p>
+					</td>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Descripción</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Como superadministrador quiero crear categorías para la web de la empresa, para organizar la estructura de navegación (ejemplo: Home, Productos, Servicios, Contacto).
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Datos necesarios</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int idCategoria
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String nombre
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Text descripción
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int orden
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Bool visible
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int empresa_id
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Control</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Validar que cada categoría pertenezca a una empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Evitar nombres duplicados dentro de la misma empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Verificar permisos de acceso
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Subfunciones</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							1. - CRUD categorías (crear, editar, eliminar, listar)
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							2. - Ordenar categorías con drag &amp; drop
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							3. - Alternar visibilidad (visible/invisible)
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							4. - Filtrado por empresa
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Validación</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Las categorías se reflejan correctamente en la BD
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El menú de navegación se actualiza dinámicamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- No se permiten nombres duplicados por empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El drag &amp; drop actualiza el orden correctamente
+						</p>
+					</td>
+				</tr>
+			</table>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X52be299140bbd66fb5d45b6ad8cbaf585c09f91"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">Historia de Usuario 3: Gestión de Subcategorías</span></em></a>
+			</h4>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>No. Historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>HU003</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Prioridad</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Alta</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Tiempo de desarrollo</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Nombre de la historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Gestión de subcategorías para estructura detallada
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>NextJS: 5 horas</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Usuario</strong>
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Superadministrador
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Producto</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Panel de administración
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Estimación/Tiempo Costo</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>5 horas / $180</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Descripción</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Como superadministrador quiero agregar subcategorías a las categorías de una empresa, para estructurar secciones dentro de las páginas (ejemplo: Home → Misión, Visión).
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Datos necesarios</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int idSubcategoria
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int idCategoria
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String nombre
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Text descripción
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- File imagen
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String enlace
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int orden
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Bool visible
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Control</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Validar que pertenezcan a una categoría existente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Verificar formato de imagen
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Validar URLs de enlaces
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Subfunciones</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							1. - CRUD subcategorías
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							2. - Drag &amp; drop para reordenar
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							3. - Carga de imágenes asociadas
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							4. - Enlaces externos/internos opcionales
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							5. - Vista jerárquica por categoría padre
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Validación</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El sitio muestra las subcategorías en el orden correcto
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Las imágenes se despliegan correctamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los enlaces funcionan apropiadamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- La jerarquía se mantiene consistente
+						</p>
+					</td>
+				</tr>
+			</table>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X894911d9e683b133d16450495343b9967f73be1"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">Historia de Usuario 4: Gestión de Productos</span></em></a>
+			</h4>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>No. Historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>HU004</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Prioridad</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Alta</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Tiempo de desarrollo</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Nombre de la historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Gestión de productos para catálogo empresarial
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>NextJS: 6 horas</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Usuario</strong>
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Superadministrador
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Producto</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Panel de administración
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Estimación/Tiempo Costo</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>6 horas / $200</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Descripción</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Como superadministrador quiero gestionar los productos de cada empresa, para crear y mantener actualizado el catálogo de productos que se mostrará en el sitio web.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Datos necesarios</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int producto_id- Int empresa_id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String nombre
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Text descripción
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Decimal precio- File imagen
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int categoria_id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int subcategoria_id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int orden
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Control</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Validar que el producto pertenezca a la empresa correcta
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Verificar asociación con categoría y subcategoría
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Validar formato de precio
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Subfunciones</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							1. - CRUD completo de productos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							2. - Drag &amp; drop para reordenar productos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							3. - Gestión de imágenes de productos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							4. - Asignación a categorías/subcategorías
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							5. - Formateo automático de precios
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Validación</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los productos se muestran en el sitio web correctamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los precios se formatean adecuadamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Las imágenes cargan sin errores
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El orden se mantiene según drag &amp; drop
+						</p>
+					</td>
+				</tr>
+			</table>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X1f9d96fcc11ce8a113f9ba2c17fb1d2bdd1e253"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">Historia de Usuario 5: Gestión de Servicios</span></em></a>
+			</h4>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>No. Historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>HU005</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Prioridad</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Alta</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Tiempo de desarrollo</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Nombre de la historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Gestión de servicios para oferta empresarial
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>NextJS: 5 horas</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Usuario</strong>
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Superadministrador
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Producto</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Panel de administración
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Estimación/Tiempo Costo</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>5 horas / $175</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Descripción</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Como superadministrador quiero gestionar los servicios de cada empresa, para crear y mantener actualizada la oferta de servicios que se presentará en el sitio web.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Datos necesarios</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int servicio_id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int empresa_id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String nombre
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Text descripción
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- File imagen
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int categoria_id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int subcategoria_id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int orden
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Bool activo
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Control</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Validar que el servicio pertenezca a la empresa correcta
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Verificar asociación con categoría y subcategoría
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Verificar formato de imagen
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Subfunciones</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							1. - CRUD completo de servicios
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							2. - Drag &amp; drop para reordenar servicios
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							3. - Gestión de imágenes descriptivas
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							4. - Asignación a categorías/subcategorías
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							5. - Toggle de estado activo/inactivo
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Validación</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los servicios se muestran correctamente en el sitio
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Las imágenes se cargan apropiadamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El estado activo/inactivo se refleja en la web
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El orden se respeta según configuración
+						</p>
+					</td>
+				</tr>
+			</table>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="Xe0f1b866d5e9248b0ed4735ea05bff1365b5a6f"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">Historia de Usuario 6: Generación Automática de Página Web</span></em></a>
+			</h4>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>No. Historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>HU006</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Prioridad</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Alta</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Tiempo de desarrollo</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Nombre de la historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Motor de plantillas genera página web automáticamente
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>NextJS: 20 horas</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Usuario</strong>
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Sistema (proceso automático)
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Producto</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Motor de generación de plantillas
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Estimación/Tiempo Costo</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>20 horas / $1000</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Descripción</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Como sistema automático, quiero generar una página web completa basada en los datos ingresados de la empresa, aplicando una plantilla predefinida y personalizándola con la identidad visual específica, para crear un sitio web profesional y funcional sin intervención manual.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Datos necesarios</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Object empresa_data
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String plantilla_seleccionada
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Array estructura_categorias
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Object configuracion_visual
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Array contenido_productos_servicios
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Control</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Seleccionar plantilla apropiada según tipo de negocio
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Aplicar colores y tipografía a toda la plantilla
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Generar estructura de navegación basada en categorías
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Renderizar secciones dinámicas con productos/servicios
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Optimizar imágenes y recursos
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Subfunciones</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							1. - Algoritmo de selección de plantilla por tipo de negocio
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							2. - Motor de personalización de CSS dinámico
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							3. - Generador automático de menú de navegación
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							4. - Renderizador de secciones basado en categorías
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							5. - Optimizador de imágenes automático
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							6. - Generador de metadatos SEO básicos
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Validación</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- La plantilla se selecciona correctamente según el tipo de negocio
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los colores corporativos se aplican consistentemente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El menú de navegación refleja las categorías definidas
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Todas las secciones se renderizan con el contenido correcto
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Las imágenes se optimizan y cargan correctamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- La página generada es completamente funcional
+						</p>
+					</td>
+				</tr>
+			</table>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X983c3e995cee96632ee10623704c74636c9fa07"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">Historia de Usuario 7: Publicación Automática en Subdominio</span></em></a>
+			</h4>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>No. Historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>HU007</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Prioridad</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Alta</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Tiempo de desarrollo</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Nombre de la historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Publicación automática con SSL en subdominio
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>NextJS: 12 horas</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Usuario</strong>
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Sistema (proceso automático)
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Producto</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Sistema de despliegue automático
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Estimación/Tiempo Costo</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>12 horas / $600</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Descripción</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Como sistema automático, quiero publicar la página web generada en un subdominio único (empresa.tuapp.com) con certificado SSL automático, para que esté disponible públicamente de forma segura inmediatamente después de la creación.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Datos necesarios</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String slug_empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Object sitio_generado
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String dominio_base
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Bool ssl_enabled
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Control</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Verificar disponibilidad del subdominio
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Configurar DNS automáticamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Generar y configurar certificado SSL
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Desplegar archivos estáticos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Verificar accesibilidad del sitio
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Subfunciones</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							1. - Generador automático de subdominio basado en slug
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							2. - Configuración automática de DNS
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							3. - Provisión automática de certificados SSL
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							4. - Despliegue de archivos estáticos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							5. - Sistema de verificación de disponibilidad
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							6. - Monitoreo básico de salud del sitio
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Validación</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El subdominio se crea y configura correctamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El certificado SSL se instala y funciona
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El sitio es accesible desde internet
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Todas las páginas cargan correctamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los recursos (imágenes, CSS, JS) se sirven sin errores
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El sitio es completamente funcional en el nuevo subdominio
+						</p>
+					</td>
+				</tr>
+			</table>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X0568c0680a1cd86b43b240a47d382a4aba1dec7"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">Historia de Usuario 8: Panel de Gestión Central de Empresas</span></em></a>
+			</h4>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>No. Historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>HU008</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Prioridad</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Alta</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Tiempo de desarrollo</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Nombre de la historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Panel centralizado para gestionar todas las empresas creadas
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>NextJS: 14 horas</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Usuario</strong>
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Superadministrador
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Producto</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Dashboard de administración central
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Estimación/Tiempo Costo</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>14 horas / $700</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Descripción</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Como superadministrador, quiero acceder a un panel centralizado donde pueda ver, buscar, editar y gestionar todas las empresas y sus sitios web creados, para mantener control administrativo completo sobre la plataforma.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Datos necesarios</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Array lista_empresas
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Object filtros_busqueda
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String termino_busqueda
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Object estadisticas_generales
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Control</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Listar todas las empresas con paginación
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Implementar filtros y búsqueda
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Mostrar estado de cada sitio web
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Permitir edición de datos de empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Mostrar estadísticas básicas
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Subfunciones</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							1. - Lista paginada de empresas con búsqueda
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							2. - Filtros por tipo de negocio, fecha de creación, estado
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							3. - Vista de detalles de empresa individual
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							4. - Editor de datos de empresa existente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							5. - Monitor de estado de sitios web
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							6. - Dashboard con estadísticas básicas
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Validación</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- La lista de empresas se carga correctamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los filtros y búsqueda funcionan adecuadamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Es posible editar datos de empresas existentes
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El estado de los sitios se muestra correctamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Las estadísticas reflejan datos reales
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- La navegación entre secciones es fluida
+						</p>
+					</td>
+				</tr>
+			</table>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X385fdfa13288bc2c2ac01c5e8ba926c026c70a4"></a><a name="Xf0b5a09fbcbdd3675018838a1d8c51aeff767cb"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">Historia de Usuario 9: Gestión de Configuraciones Avanzadas del Sitio</span></em></a>
+			</h4>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>No. Historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>HU009</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Prioridad</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Alta</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Tiempo de desarrollo</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Nombre de la historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Gestión de configuraciones dinámicas y personalizadas por empresa
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>NextJS: 8 horas</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Usuario</strong>
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Superadministrador
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Producto</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Panel de administración central
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Estimación/Tiempo Costo</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>8 horas / $400</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Descripción</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Como superadministrador, quiero gestionar configuraciones adicionales y dinámicas para cada empresa (redes sociales, configuraciones de visualización, parámetros personalizados), para personalizar aspectos específicos del sitio web que van más allá de los campos básicos de la empresa.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Datos necesarios</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int empresa_id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String clave
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Text valor
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Enum tipo_valor (string/boolean/number/json)
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Timestamptz fecha_actualizacion
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Control</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Validar que cada configuración pertenezca a una empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Evitar claves duplicadas dentro de la misma empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Validar formato del valor según tipo_valor
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Verificar formato de URLs para redes sociales
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Subfunciones</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							1. - CRUD configuraciones por empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							2. - Editor de configuraciones con validación por tipo
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							3. - Sección específica para redes sociales (Facebook, Instagram, LinkedIn, WhatsApp)
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							4. - Toggle para mostrar/ocultar elementos del sitio
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							5. - Validador de URLs de redes sociales
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							6. - Vista previa de cambios en el sitio
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Validación</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Las configuraciones se guardan correctamente en la base de datos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los valores se validan según su tipo definido
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Las URLs de redes sociales son válidas
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los cambios se reflejan automáticamente en el sitio publicado
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- No se permiten claves duplicadas por empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- La fecha de actualización se registra correctamente
+						</p>
+					</td>
+				</tr>
+			</table>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X7d34499b4288d60eb55f84845728b55d33ad86f"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">Historia de Usuario 10: Sistema de Monitoreo y Logs de Operaciones</span></em></a>
+			</h4>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>No. Historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>HU010</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Prioridad</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Alta</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Tiempo de desarrollo</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Nombre de la historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Sistema de logs para auditoría y monitoreo de operaciones
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>NextJS: 10 horas</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Usuario</strong>
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Superadministrador
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Producto</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Dashboard de monitoreo y logs
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Estimación/Tiempo Costo</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>10 horas / $500</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Descripción</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Como superadministrador, quiero acceder a un sistema de logs detallado que registre y me permita consultar todas las operaciones del sistema (generación, publicación, errores), para monitorear el rendimiento, identificar problemas y mantener la confiabilidad del sistema.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Datos necesarios</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int empresa_id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Enum tipo_operacion (generacion/publicacion/configuracion)
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Enum estado (pendiente/procesando/completado/error)
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Text mensaje
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Text detalles_error
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int tiempo_ejecucion_ms
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Timestamptz fecha_operacion
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Control</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Registrar automáticamente todas las operaciones críticas
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Filtrar logs por empresa, fecha, tipo y estado
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Identificar operaciones que excedan tiempos límite
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Mostrar métricas de rendimiento y confiabilidad
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Subfunciones</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							1. - Dashboard con métricas de rendimiento en tiempo real
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							2. - Filtros avanzados (empresa, fecha, tipo, estado)
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							3. - Alertas para operaciones que excedan 30 segundos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							4. - Vista de operaciones recientes por empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							5. - Métricas de tasa de éxito por tipo de operación
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							6. - Identificador de empresas con errores para reintento
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							7. - Exportación de logs para análisis
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Validación</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Todos los logs se registran automáticamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los filtros funcionan correctamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Las métricas reflejan datos reales del sistema
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Se identifican correctamente operaciones lentas (&gt;30s)
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El dashboard muestra información actualizada
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Es posible rastrear el historial completo de una empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los detalles de errores son comprensibles y útiles
+						</p>
+					</td>
+				</tr>
+			</table>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X47da66322e03d6e8bc6660cb233faca5580fdec"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">Historia de Usuario 11: Gestión Centralizada de Archivos Multimedia</span></em></a>
+			</h4>
+			<table cellspacing="0" cellpadding="0" style="border-collapse:collapse">
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>No. Historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>HU011</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Prioridad</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Alta</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Tiempo de desarrollo</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Nombre de la historia</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Sistema centralizado para gestionar archivos multimedia
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>NextJS: 12 horas</strong>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Usuario</strong>
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Superadministrador
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Producto</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Gestor de archivos multimedia
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Estimación/Tiempo Costo</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>12 horas / $600</strong>
+						</p>
+					</td>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							&#xa0;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Descripción</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Como superadministrador, quiero gestionar de forma centralizada todos los archivos multimedia (imágenes, videos, documentos) de cada empresa, para optimizar el almacenamiento, controlar el uso de recursos y mantener organizados todos los assets digitales del sistema.
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Datos necesarios</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int id- Int empresa_id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String nombre_archivo
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String url_archivo
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Enum tipo_archivo (imagen/video/documento)
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Bigint tamaño_bytes
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- String formato
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Enum referencia_tipo (logo/producto/servicio/promocional)
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Int referencia_id
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Timestamptz fecha_subida
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Control</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Validar formatos de archivo permitidos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Controlar tamaño máximo de archivos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Asociar archivos correctamente a productos/servicios
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Optimizar imágenes automáticamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							Detectar archivos huérfanos sin referencias
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Subfunciones</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							1. - Explorador de archivos con vista de galería
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							2. - Subida masiva de archivos con drag &amp; drop
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							3. - Optimizador automático de imágenes grandes (&gt;1MB)
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							4. - Asociador de archivos a productos/servicios
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							5. - Monitor de uso de almacenamiento por empresa
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							6. - Detector y limpiador de archivos huérfanos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							7. - Generador de URLs de CDN8. - Filtros por tipo, tamaño y fecha
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							<strong>Validación</strong>
+						</p>
+					</td>
+					<td colspan="4" style="border-right:0.75pt solid #7f7f7f; border-left:0.75pt solid #7f7f7f; border-bottom:0.75pt solid #7f7f7f; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los archivos se suben y almacenan correctamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- La optimización de imágenes funciona automáticamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Las asociaciones a productos/servicios son correctas
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- El monitor de almacenamiento muestra datos precisos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Se detectan y pueden eliminar archivos huérfanos
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Las URLs de CDN se generan correctamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- Los filtros y búsqueda funcionan adecuadamente
+						</p>
+						<p style="margin-top:1.8pt; margin-bottom:1.8pt; font-size:12pt">
+							- La galería carga eficientemente con paginación
+						</p>
+					</td>
+				</tr>
+			</table>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<span style="font-family:Calibri; color:#4f81bd">&#xa0;</span>
+			</h3>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<span style="font-family:Calibri; color:#4f81bd">3.2 Requisitos No Funcionales</span>
+			</h3>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="Xaf97b0240dd023525ead85f6b6c41e7252bf926"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">3.2.1 Requisitos de rendimiento</span></em></a>
+			</h4>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>El sistema debe generar una página web completa en menos de 30 segundos
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>La publicación en subdominio debe completarse en menos de 2 minutos
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>El panel de administración debe cargar la lista de empresas en menos de 3 segundos
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Las páginas generadas deben cargar en menos de 2 segundos
+			</p>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X994719ded6a55d34ac23bc201a7163146009c41"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">3.2.2 Seguridad</span></em></a>
+			</h4>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Autenticación segura del superadministrador con JWT
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Separación completa de datos entre empresas (multi-tenant)
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Certificados SSL automáticos para todos los subdominios
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Validación y sanitización de todos los datos ingresados
+			</p>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X307c2391591dee8bd0db7e19be01c7ee4786621"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">3.2.3 Fiabilidad</span></em></a>
+			</h4>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Disponibilidad del sistema del 99.5%
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Backup automático de base de datos cada 24 horas
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Recuperación automática ante fallos de generación
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Logs detallados de todas las operaciones críticas
+			</p>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="Xc0ef049e4533542b18a481d44374ad2649e9945"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">3.2.4 Disponibilidad</span></em></a>
+			</h4>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Sistema disponible 24/7 con mantenimientos programados
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Sitios web generados disponibles permanentemente
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Tiempo de inactividad máximo de 4 horas mensuales para mantenimiento
+			</p>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="X99c74ff8dc1aeba734f247605d1a0787827d334"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">3.2.5 Mantenibilidad</span></em></a>
+			</h4>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Código documentado siguiendo estándares de NextJS
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Arquitectura modular para facilitar actualizaciones
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Sistema de versionado para plantillas
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Documentación técnica completa
+			</p>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="Xdfd4d327992c3fdd60ff0db4e5a37adaf2d2f76"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">3.2.6 Portabilidad</span></em></a>
+			</h4>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Compatible con navegadores modernos (Chrome, Firefox, Safari, Edge)
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Páginas web generadas completamente responsivas
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span>Diseño adaptativo para dispositivos móviles y desktop
+			</p>
+			<h3 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="Xe7bf930f75ba611a12b9b12709cbd030e52d7bf"><span style="font-family:Calibri; color:#4f81bd">3.3 Requisitos de Interfaces</span></a>
+			</h3>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="Xf465a7280fdda2e65fba9391e58ae99b034072a"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">3.3.1 Interfaces de usuario</span></em></a>
+			</h4>
+			<p style="margin-top:9pt; margin-bottom:9pt">
+				El sistema contará con:
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span><strong>Panel de superadministrador</strong>: Interfaz web moderna y responsive para gestión centralizada
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span><strong>Formulario de creación de empresa</strong>: Interfaz multisección con validación en tiempo real
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span><strong>Páginas web generadas</strong>: Interfaces públicas optimizadas para usuarios finales
+			</p>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="Xb81f40f53f0d06e99a7b99d908aeb4fd019ee9f"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">3.3.2 Interfaces de software</span></em></a>
+			</h4>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span><strong>Frontend</strong>: NextJS 14+ con TypeScript
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span><strong>Backend</strong>: Supabase (PostgreSQL + API REST)
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span><strong>Almacenamiento</strong>: Supabase Storage para imágenes y archivos
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span><strong>Despliegue</strong>: Vercel o similar para hosting automático
+			</p>
+			<h4 style="margin-top:10pt; margin-bottom:0pt; page-break-inside:avoid; page-break-after:avoid; font-size:12pt">
+				<a name="Xd5a3376b62edfa799e545b31ced3df2ad0c71e4"><em><span style="font-family:Calibri; font-weight:normal; color:#4f81bd">3.3.3 Interfaces de comunicación</span></em></a>
+			</h4>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span><strong>API REST</strong>: Comunicación entre frontend y backend
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span><strong>Webhooks</strong>: Para notificaciones de estado de despliegue
+			</p>
+			<p style="margin-top:1.8pt; margin-left:36pt; margin-bottom:1.8pt; text-indent:-24pt">
+				•<span style="width:18.68pt; font:7pt 'Times New Roman'; display:inline-block">&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0; </span><strong>SSL/HTTPS</strong>: Protocolo seguro para todas las comunicaciones
+			</p>
+		</div>
+	<p style="bottom: 10px; right: 10px; position: absolute;"><a href="https://wordtohtml.net" target="_blank" style="font-size:11px; color: #d0d0d0">Convertido a HTML con WordToHTML.net</a></p>

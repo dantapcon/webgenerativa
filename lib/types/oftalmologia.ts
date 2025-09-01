@@ -1,64 +1,89 @@
-// Tipos TypeScript para el sistema de oftalmología
+// Tipos TypeScript para WebGenerator Pro
 
-export interface ClinicaOftalmologica {
-  id: string;
-  titulo: string;
-  lema?: string | null;
+export interface Empresa {
+  id: number;
+  nombre_empresa: string;
+  slug_empresa: string;
+  descripcion_empresa?: string | null;
+  correo_empresa?: string | null;
+  telefono_empresa?: string | null;
+  direccion_empresa?: string | null;
+  tipo_negocio?: string | null;
+  dominio_deseado?: string | null;
+  subdominio_generado?: string | null;
   logo_url?: string | null;
-  quienes_somos: string;
-  mision: string;
-  vision: string;
-  telefono?: string | null;
-  email?: string | null;
-  direccion?: string | null;
-  activo: boolean;
-  created_at: string;
-  updated_at: string;
+  video_promocional_url?: string | null;
+  color_primario?: string | null;
+  color_secundario?: string | null;
+  tipografia?: string | null;
+  plantilla_id?: number | null;
+  estado_sitio: 'creando' | 'publicado' | 'error' | 'mantenimiento';
+  ssl_activo: boolean;
+  fecha_creacion: string;
+  fecha_actualizacion: string;
+  creado_por?: number | null;
 }
 
-export interface EstilosClinica {
-  id: string;
-  clinica_id: string;
-  color_primario: string;
-  color_secundario: string;
-  color_acento: string;
-  color_texto: string;
-  color_fondo: string;
-  fuente_principal: string;
-  fuente_titulo: string;
-  tamano_fuente: string;
-  estilo_botones: 'rounded' | 'square' | 'pill';
-  tema_general: 'moderno' | 'clasico' | 'minimalista' | 'corporativo';
-  created_at: string;
-  updated_at: string;
+export interface Categoria {
+  id: number;
+  empresa_id: number;
+  nombre: string;
+  descripcion?: string | null;
+  orden: number;
+  visible: boolean;
+  fecha_creacion: string;
+  subcategorias?: Subcategoria[];
 }
 
-export interface ClinicaCompleta extends ClinicaOftalmologica {
-  estilos?: EstilosClinica;
+export interface Subcategoria {
+  id: number;
+  categoria_id: number;
+  nombre: string;
+  descripcion?: string | null;
+  imagen_url?: string | null;
+  enlace_externo?: string | null;
+  orden: number;
+  visible: boolean;
+  fecha_creacion: string;
+}
+
+export interface EmpresaCompleta extends Empresa {
+  categorias?: Categoria[];
+  subcategorias?: Subcategoria[];
 }
 
 // Tipos para formularios
-export interface ClinicaFormData {
-  titulo: string;
-  lema?: string;
+export interface EmpresaFormData {
+  // Datos básicos de empresa
+  nombre_empresa: string;
+  slug_empresa?: string;
+  descripcion_empresa?: string;
+  correo_empresa?: string;
+  telefono_empresa?: string;
+  direccion_empresa?: string;
+  tipo_negocio?: string;
+  dominio_deseado?: string;
   logo_url?: string;
-  quienes_somos: string;
-  mision: string;
-  vision: string;
-  telefono?: string;
-  email?: string;
-  direccion?: string;
-  // Estilos
+  video_promocional_url?: string;
+  
+  // Estilos y personalización
   color_primario?: string;
   color_secundario?: string;
-  color_acento?: string;
-  color_texto?: string;
-  color_fondo?: string;
-  fuente_principal?: string;
-  fuente_titulo?: string;
-  tamano_fuente?: string;
-  estilo_botones?: 'rounded' | 'square' | 'pill';
-  tema_general?: 'moderno' | 'clasico' | 'minimalista' | 'corporativo';
+  tipografia?: string;
+  
+  // Categorías y subcategorías
+  categorias?: Array<{
+    nombre: string;
+    descripcion?: string;
+    orden: number;
+    subcategorias?: Array<{
+      nombre: string;
+      descripcion?: string;
+      imagen_url?: string;
+      enlace_externo?: string;
+      orden: number;
+    }>;
+  }>;
 }
 
 // Respuestas de la API
@@ -69,9 +94,9 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
-export interface CreateClinicaResponse {
+export interface CreateEmpresaResponse {
   success: boolean;
   message: string;
-  clinica_id: string;
+  empresa_id: number;
   website_url: string;
 }
