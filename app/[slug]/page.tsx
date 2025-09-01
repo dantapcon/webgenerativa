@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Mail, Phone, MapPin, Globe, ExternalLink, Play } from 'lucide-react';
 import Link from 'next/link';
+import { NavigationBar } from '@/components/navigation-bar';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -104,86 +105,114 @@ export default async function EmpresaPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* Categorías y Subcategorías */}
-      {empresa.categorias && empresa.categorias.length > 0 && (
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                {empresa.tipo_negocio === 'servicios' ? 'Nuestros Servicios' : 'Lo Que Ofrecemos'}
-              </h2>
-              <p className="text-xl text-gray-600">
-                Explora todo lo que tenemos para ti
-              </p>
-            </div>
-
-            <div className="space-y-12">
-              {empresa.categorias.map((categoria, index) => (
-                <div key={categoria.id} className="space-y-8">
-                  <div className="text-center">
-                    <Badge 
-                      variant="outline" 
-                      className="text-lg px-4 py-2 mb-4"
-                      style={{ 
-                        borderColor: empresa.color_primario || '#2563eb', 
-                        color: empresa.color_primario || '#2563eb' 
-                      }}
-                    >
-                      {categoria.nombre}
-                    </Badge>
-                    {categoria.descripcion && (
-                      <p className="text-gray-600 max-w-2xl mx-auto">
-                        {categoria.descripcion}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Subcategorías */}
-                  {categoria.subcategorias && categoria.subcategorias.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {categoria.subcategorias.map((subcategoria: any) => (
-                        <Card key={subcategoria.id} className="group hover:shadow-lg transition-shadow">
-                          <CardContent className="p-6">
-                            {subcategoria.imagen_url && (
-                              <div className="mb-4 overflow-hidden rounded-lg">
-                                <img 
-                                  src={subcategoria.imagen_url} 
-                                  alt={subcategoria.nombre_subcategoria}
-                                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                              </div>
-                            )}
-                            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                              {subcategoria.nombre_subcategoria}
-                            </h3>
-                            {subcategoria.descripcion_subcategoria && (
-                              <p className="text-gray-600 mb-4">
-                                {subcategoria.descripcion_subcategoria}
-                              </p>
-                            )}
-                            {subcategoria.enlace_externo && (
-                              <Button 
-                                asChild
-                                className="w-full"
-                                style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
-                              >
-                                <a href={subcategoria.enlace_externo} target="_blank" rel="noopener noreferrer">
-                                  Ver Más
-                                  <ExternalLink className="h-4 w-4 ml-2" />
-                                </a>
-                              </Button>
-                            )}
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+      {/* Header principal con hero */}
+      <section className="relative bg-gradient-to-r from-blue-600 to-purple-700 text-white py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6" style={{ 
+            fontFamily: `'${empresa.tipografia}', sans-serif`
+          }}>
+            {empresa.nombre_empresa}
+          </h1>
+          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
+            {empresa.descripcion_empresa || `Bienvenido a ${empresa.nombre_empresa}`}
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            {empresa.telefono_empresa && (
+              <a
+                href={`tel:${empresa.telefono_empresa}`}
+                className="flex items-center gap-2 bg-white text-gray-800 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
+              >
+                <Phone className="h-5 w-5" />
+                {empresa.telefono_empresa}
+              </a>
+            )}
+            <a
+              href={`https://wa.me/${(empresa.telefono_empresa || '').replace(/\D/g, '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition-all duration-300 transform hover:scale-105"
+            >
+              📱 WhatsApp
+            </a>
           </div>
-        </section>
+          {empresa.direccion_empresa && (
+            <div className="flex items-center justify-center gap-2 mt-6 text-lg opacity-80">
+              <MapPin className="h-5 w-5" />
+              <span>{empresa.direccion_empresa}</span>
+            </div>
+          )}
+        </div>
+        
+        {/* Elementos decorativos */}
+        <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+        <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/10 rounded-full blur-xl"></div>
+      </section>
+
+      {/* Barra de navegación de categorías - estilo elegante */}
+      {empresa.categorias && empresa.categorias.length > 0 && (
+        <NavigationBar
+          categorias={empresa.categorias}
+          empresaSlug={empresa.slug_empresa}
+          colorPrimario={empresa.color_primario}
+          tipografia={empresa.tipografia}
+        />
       )}
+
+      {/* Sección de presentación de la empresa */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+              {empresa.tipo_negocio === 'servicios' ? 'Nuestros Servicios Profesionales' : 'Lo Que Hacemos'}
+            </h2>
+            <p className="text-xl text-gray-600 leading-relaxed">
+              {empresa.descripcion_empresa || `En ${empresa.nombre_empresa} nos dedicamos a brindar el mejor servicio a nuestros clientes con profesionalismo y calidad.`}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Llamada a la acción */}
+      <section className="py-16 bg-gradient-to-r from-gray-50 to-gray-100">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+            ¿Listo para comenzar?
+          </h2>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Contáctanos hoy mismo y descubre cómo podemos ayudarte
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            {empresa.telefono_empresa && (
+              <Button
+                asChild
+                size="lg"
+                className="text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
+              >
+                <a href={`tel:${empresa.telefono_empresa}`} className="flex items-center gap-2">
+                  <Phone className="h-5 w-5" />
+                  Llamar Ahora
+                </a>
+              </Button>
+            )}
+            <Button
+              asChild
+              size="lg"
+              className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            >
+              <a
+                href={`https://wa.me/${(empresa.telefono_empresa || '').replace(/\D/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2"
+              >
+                📱 WhatsApp
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
 
       {/* Información de contacto */}
       <section 
@@ -278,6 +307,43 @@ export default async function EmpresaPage({ params }: PageProps) {
               <p>© 2024 {empresa.nombre_empresa}. Todos los derechos reservados.</p>
               <p className="text-sm">
                 Sitio web creado con <Link href="/generador" className="text-blue-400 hover:underline">WebGenerator Pro</Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold mb-4" style={{ 
+              fontFamily: `'${empresa.tipografia}', sans-serif`
+            }}>
+              {empresa.nombre_empresa}
+            </h3>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+              {empresa.direccion_empresa && (
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  <span>{empresa.direccion_empresa}</span>
+                </div>
+              )}
+              {empresa.telefono_empresa && (
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4" />
+                  <span>{empresa.telefono_empresa}</span>
+                </div>
+              )}
+              {empresa.correo_empresa && (
+                <div className="flex items-center gap-2">
+                  <Mail className="h-4 w-4" />
+                  <span>{empresa.correo_empresa}</span>
+                </div>
+              )}
+            </div>
+            <div className="mt-6 pt-6 border-t border-gray-800">
+              <p className="text-gray-400 text-sm">
+                © {new Date().getFullYear()} {empresa.nombre_empresa}. Todos los derechos reservados.
               </p>
             </div>
           </div>

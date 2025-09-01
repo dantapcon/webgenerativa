@@ -97,9 +97,11 @@ export class WebGeneratorService {
               visible: true
             }));
 
-              const { data: subcategoriasError } = await supabase
-                .from('subcategorias')
-                .insert(subcategoriasData);            if (subcategoriasError) {
+            const { error: subcategoriasError } = await supabase
+              .from('subcategorias')
+              .insert(subcategoriasData);
+
+            if (subcategoriasError) {
               console.error(`Error creando subcategorías para ${categoria.nombre}:`, subcategoriasError);
             }
           }
