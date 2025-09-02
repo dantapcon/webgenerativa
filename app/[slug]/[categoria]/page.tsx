@@ -4,7 +4,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
-import { CategoryNavigation } from '@/components/category-navigation';
+import { EmpresaLayout } from '@/components/empresa-layout';
+import { generateSlug } from '@/lib/utils';
 
 interface PageProps {
   params: Promise<{ slug: string; categoria: string }>;
@@ -19,9 +20,9 @@ export default async function CategoriaPage({ params }: PageProps) {
     notFound();
   }
 
-  // Buscar la categoría específica
+  // Buscar la categoría específica usando la función generateSlug consistente
   const categoriaEncontrada = empresa.categorias?.find(
-    cat => cat.nombre.toLowerCase().replace(/\s+/g, '-') === categoria
+    cat => generateSlug(cat.nombre) === categoria
   );
 
   if (!categoriaEncontrada) {
@@ -29,71 +30,22 @@ export default async function CategoriaPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Header con logo y navegación */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link 
-                href={`/${slug}`}
-                className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
-              >
-                <ArrowLeft className="h-5 w-5" />
-                <span>Volver</span>
-              </Link>
-              <div className="h-8 w-px bg-gray-300"></div>
-              <div>
-                <h1 className="text-2xl font-bold" style={{ 
-                  color: empresa.color_primario || '#2563eb',
-                  fontFamily: `'${empresa.tipografia}', sans-serif`
-                }}>
-                  {empresa.nombre_empresa}
-                </h1>
-                <p className="text-sm text-gray-600">{empresa.direccion_empresa}</p>
-              </div>
-            </div>
-
-            {/* Información de contacto */}
-            <div className="hidden md:flex items-center gap-6">
-              {empresa.telefono_empresa && (
-                <div className="text-right">
-                  <p className="text-sm text-gray-500">Teléfono</p>
-                  <p className="font-semibold" style={{ color: empresa.color_primario || '#2563eb' }}>
-                    {empresa.telefono_empresa}
-                  </p>
-                </div>
-              )}
-              <Button
-                asChild
-                className="bg-green-500 hover:bg-green-600 text-white"
-              >
-                <a 
-                  href={`https://wa.me/${(empresa.telefono_empresa || '').replace(/\D/g, '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  WhatsApp
-                </a>
-              </Button>
-            </div>
-          </div>
+    <EmpresaLayout empresa={empresa} categoriaActiva={categoria}>
+      {/* Breadcrumb */}
+      <div className="bg-white border-b">
+        <div className="container mx-auto px-4 py-3">
+          <Link 
+            href={`/${slug}`}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Volver al inicio</span>
+          </Link>
         </div>
-      </header>
-
-      {/* Navegación de categorías */}
-      {empresa.categorias && empresa.categorias.length > 0 && (
-        <CategoryNavigation
-          categorias={empresa.categorias}
-          empresaSlug={slug}
-          categoriaActual={categoriaEncontrada.id}
-          colorPrimario={empresa.color_primario}
-          tipografia={empresa.tipografia}
-        />
-      )}
+      </div>
 
       {/* Contenido de la categoría */}
-      <main className="py-12">
+      <div className="py-12">
         <div className="container mx-auto px-4">
           {/* Header de la categoría */}
           <div className="text-center mb-12">
@@ -181,32 +133,8 @@ export default async function CategoriaPage({ params }: PageProps) {
             </div>
           )}
         </div>
-      </main>
-
-      {/* Footer de contacto */}
-      <footer className="bg-gray-900 text-white py-12 mt-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold mb-4" style={{ 
-              fontFamily: `'${empresa.tipografia}', sans-serif`
-            }}>
-              {empresa.nombre_empresa}
-            </h3>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-              {empresa.direccion_empresa && (
-                <p className="text-gray-300">📍 {empresa.direccion_empresa}</p>
-              )}
-              {empresa.telefono_empresa && (
-                <p className="text-gray-300">📞 {empresa.telefono_empresa}</p>
-              )}
-              {empresa.correo_empresa && (
-                <p className="text-gray-300">✉️ {empresa.correo_empresa}</p>
-              )}
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+      </div>
+    </EmpresaLayout>
   );
 }
 
@@ -219,6 +147,6 @@ export async function generateStaticParams({ params }: { params: Promise<{ slug:
   }
 
   return empresa.categorias.map((categoria) => ({
-    categoria: categoria.nombre.toLowerCase().replace(/\s+/g, '-'),
+    categoria: generateSlug(categoria.nombre),
   }));
 }

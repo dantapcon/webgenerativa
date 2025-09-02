@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { generateSlug } from '@/lib/utils';
 
 interface NavigationBarProps {
   categorias: Array<{
@@ -11,13 +12,15 @@ interface NavigationBarProps {
   empresaSlug: string;
   colorPrimario?: string | null;
   tipografia?: string | null;
+  categoriaActiva?: string; // Slug de la categoría activa
 }
 
 export function NavigationBar({ 
   categorias, 
   empresaSlug, 
   colorPrimario, 
-  tipografia 
+  tipografia,
+  categoriaActiva 
 }: NavigationBarProps) {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
 
@@ -27,8 +30,9 @@ export function NavigationBar({
         <div className="flex items-center justify-center py-4">
           <div className="flex flex-wrap items-center justify-center gap-2 lg:gap-4">
             {categorias.map((categoria) => {
-              const categorySlug = categoria.nombre.toLowerCase().replace(/\s+/g, '-');
+              const categorySlug = generateSlug(categoria.nombre);
               const isHovered = hoveredItem === categoria.id;
+              const isActive = categoriaActiva === categorySlug;
               
               return (
                 <Link
@@ -37,20 +41,18 @@ export function NavigationBar({
                   className="group relative px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:text-white hover:shadow-xl hover:-translate-y-1 transform"
                   style={{ 
                     fontFamily: `'${tipografia}', sans-serif`,
-                    backgroundColor: isHovered ? colorPrimario || '#2563eb' : '#f8fafc',
-                    color: isHovered ? 'white' : '#374151',
-                    transform: isHovered ? 'translateY(-4px)' : 'translateY(0)'
+                    backgroundColor: (isActive || isHovered) ? colorPrimario || '#2563eb' : '#f8fafc',
+                    color: (isActive || isHovered) ? 'white' : '#374151',
+                    transform: (isActive || isHovered) ? 'translateY(-4px)' : 'translateY(0)',
+                    boxShadow: isActive ? `0 10px 25px ${colorPrimario || '#2563eb'}30` : undefined
                   }}
-                  onMouseEnter={() => setHoveredItem(categoria.id)}
+                  onMouseEnter={() => !isActive && setHoveredItem(categoria.id)}
                   onMouseLeave={() => setHoveredItem(null)}
                 >
                   <span className="relative z-10">{categoria.nombre}</span>
-                  <div 
-                    className={`absolute inset-0 rounded-xl transition-opacity duration-300 ${
-                      isHovered ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    style={{ backgroundColor: colorPrimario || '#2563eb' }}
-                  ></div>
+                  {isActive && (
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 rounded-full" style={{ backgroundColor: colorPrimario || '#2563eb' }}></div>
+                  )}
                 </Link>
               );
             })}
