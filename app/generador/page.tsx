@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Globe, Palette, Building, Users, Phone, Mail, MapPin, Image, Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 import Link from 'next/link';
+import { Header } from '@/components/header';
 
 interface CategoriaForm {
   nombre: string;
@@ -214,8 +215,10 @@ export default function WebGeneratorPage() {
   }, [formData.color_primario, formData.color_secundario, formData.tipografia]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-indigo-100 py-8">
-      <div className="container mx-auto max-w-6xl px-4">
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-indigo-100 py-8">
+        <div className="container mx-auto max-w-6xl px-4">
         <Card className="bg-white/95 backdrop-blur-sm shadow-2xl">
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
@@ -934,5 +937,6 @@ export default function WebGeneratorPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

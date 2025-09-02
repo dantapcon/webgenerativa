@@ -1,9 +1,10 @@
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface HeaderProps {
-  empresa: {
+  empresa?: {
     nombre_empresa: string;
     logo_url?: string | null;
     direccion_empresa?: string | null;
@@ -15,17 +16,29 @@ interface HeaderProps {
 }
 
 export function Header({ empresa }: HeaderProps) {
+  // Valores por defecto si no se proporciona empresa
+  const defaultEmpresa = {
+    nombre_empresa: 'WebGenerator Pro',
+    logo_url: null,
+    direccion_empresa: null,
+    telefono_empresa: null,
+    correo_empresa: null,
+    color_primario: '#2563eb',
+    tipografia: 'Inter'
+  };
+
+  const empresaData = empresa || defaultEmpresa;
   return (
     <header className="bg-white shadow-sm border-b">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo y nombre */}
           <div className="flex items-center gap-4">
-            {empresa.logo_url && (
+            {empresaData.logo_url && (
               <div className="relative w-16 h-16">
                 <Image
-                  src={empresa.logo_url}
-                  alt={`Logo ${empresa.nombre_empresa}`}
+                  src={empresaData.logo_url}
+                  alt={`Logo ${empresaData.nombre_empresa}`}
                   fill
                   className="object-contain"
                 />
@@ -33,15 +46,15 @@ export function Header({ empresa }: HeaderProps) {
             )}
             <div>
               <h1 className="text-2xl font-bold" style={{ 
-                color: empresa.color_primario || '#2563eb',
-                fontFamily: `'${empresa.tipografia}', sans-serif`
+                color: empresaData.color_primario || '#2563eb',
+                fontFamily: `'${empresaData.tipografia}', sans-serif`
               }}>
-                {empresa.nombre_empresa}
+                {empresaData.nombre_empresa}
               </h1>
-              {empresa.direccion_empresa && (
+              {empresaData.direccion_empresa && (
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <MapPin className="h-4 w-4" style={{ color: empresa.color_primario || '#2563eb' }} />
-                  <span>{empresa.direccion_empresa}</span>
+                  <MapPin className="h-4 w-4" style={{ color: empresaData.color_primario || '#2563eb' }} />
+                  <span>{empresaData.direccion_empresa}</span>
                 </div>
               )}
             </div>
@@ -49,55 +62,51 @@ export function Header({ empresa }: HeaderProps) {
 
           {/* Información de contacto */}
           <div className="hidden md:flex items-center gap-6">
-            {empresa.telefono_empresa && (
+            {empresaData.telefono_empresa && (
               <div className="text-right">
                 <div className="flex items-center gap-2 justify-end">
-                  <Phone className="h-4 w-4" style={{ color: empresa.color_primario || '#2563eb' }} />
+                  <Phone className="h-4 w-4" style={{ color: empresaData.color_primario || '#2563eb' }} />
                   <span className="text-sm text-gray-500">Citas</span>
                 </div>
-                <p className="font-semibold" style={{ color: empresa.color_primario || '#2563eb' }}>
-                  {empresa.telefono_empresa}
+                <p className="font-semibold" style={{ color: empresaData.color_primario || '#2563eb' }}>
+                  {empresaData.telefono_empresa}
                 </p>
               </div>
             )}
             <Button
               asChild
-              className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2"
             >
-              <a 
-                href={`https://wa.me/${(empresa.telefono_empresa || '').replace(/\D/g, '')}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link 
+                href="/dashboard"
                 className="flex items-center gap-2"
               >
-                📱 Asistencia WhatsApp
-              </a>
+                Volver al Inicio
+              </Link>
             </Button>
           </div>
         </div>
 
         {/* Versión móvil del contacto */}
         <div className="md:hidden mt-4 flex flex-col gap-3">
-          {empresa.telefono_empresa && (
+          {empresaData.telefono_empresa && (
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4" style={{ color: empresa.color_primario || '#2563eb' }} />
-                <span className="font-semibold" style={{ color: empresa.color_primario || '#2563eb' }}>
-                  {empresa.telefono_empresa}
+                <Phone className="h-4 w-4" style={{ color: empresaData.color_primario || '#2563eb' }} />
+                <span className="font-semibold" style={{ color: empresaData.color_primario || '#2563eb' }}>
+                  {empresaData.telefono_empresa}
                 </span>
               </div>
               <Button
                 asChild
                 size="sm"
-                className="bg-green-500 hover:bg-green-600 text-white"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
               >
-                <a 
-                  href={`https://wa.me/${(empresa.telefono_empresa || '').replace(/\D/g, '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link 
+                  href="/dashboard"
                 >
-                  📱 WhatsApp
-                </a>
+                  Volver al Inicio
+                </Link>
               </Button>
             </div>
           )}

@@ -138,3 +138,47 @@ input[class*="h-9"] {
   color: #1f2937 !important;
   border-color: #e5e7eb !important;
 }
+
+/* Forzar componentes específicos del admin y formularios */
+.admin-filter, .admin-panel, .form-container,
+[class*="admin"], [class*="form"], 
+[data-testid*="admin"], [data-testid*="form"] {
+  background-color: white !important;
+  color: #1f2937 !important;
+}
+
+/* Forzar todos los inputs dentro de formularios */
+form input, form textarea, form select,
+form [role="textbox"], form [role="combobox"] {
+  background-color: white !important;
+  color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+/* Forzar elementos con clases específicas de shadcn/ui que pueden tener fondo oscuro */
+.bg-slate-900, .bg-gray-900, .bg-zinc-900, .bg-neutral-900,
+.bg-stone-900, .bg-red-900, .bg-orange-900, .bg-amber-900,
+.bg-yellow-900, .bg-lime-900, .bg-green-900, .bg-emerald-900,
+.bg-teal-900, .bg-cyan-900, .bg-sky-900, .bg-blue-900,
+.bg-indigo-900, .bg-violet-900, .bg-purple-900, .bg-fuchsia-900,
+.bg-pink-900, .bg-rose-900, .dark\:bg-slate-900, .dark\:bg-gray-900,
+[class*="dark:bg-"] {
+  background-color: white !important;
+  color: #1f2937 !important;
+}
+
+/* Forzar texto oscuro en elementos claros */
+.text-white, .text-gray-100, .text-slate-100,
+.dark\:text-white, .dark\:text-gray-100,
+[class*="dark:text-white"], [class*="dark:text-gray-100"] {
+  color: #1f2937 !important;
+}
+
+/* Asegurar que los filtros y elementos de admin tengan bordes visibles */
+.admin-filters input, .admin-filters select, .admin-filters textarea,
+[data-admin] input, [data-admin] select, [data-admin] textarea {
+  background-color: white !important;
+  color: #1f2937 !important;
+  border: 2px solid #e5e7eb !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
