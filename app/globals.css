@@ -32,31 +32,31 @@
   }
   
   .dark {
-    /* Forzar tema claro siempre */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 221 83% 53%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 221 83% 53%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* Forzar tema claro siempre - sobreescribir variables dark */
+    --background: 0 0% 100% !important;
+    --foreground: 0 0% 3.9% !important;
+    --card: 0 0% 100% !important;
+    --card-foreground: 0 0% 3.9% !important;
+    --popover: 0 0% 100% !important;
+    --popover-foreground: 0 0% 3.9% !important;
+    --primary: 221 83% 53% !important;
+    --primary-foreground: 0 0% 98% !important;
+    --secondary: 210 40% 96% !important;
+    --secondary-foreground: 0 0% 9% !important;
+    --muted: 210 40% 96% !important;
+    --muted-foreground: 0 0% 45.1% !important;
+    --accent: 210 40% 96% !important;
+    --accent-foreground: 0 0% 9% !important;
+    --destructive: 0 84.2% 60.2% !important;
+    --destructive-foreground: 0 0% 98% !important;
+    --border: 214 32% 91% !important;
+    --input: 214 32% 91% !important;
+    --ring: 221 83% 53% !important;
+    --chart-1: 220 70% 50% !important;
+    --chart-2: 160 60% 45% !important;
+    --chart-3: 30 80% 55% !important;
+    --chart-4: 280 65% 60% !important;
+    --chart-5: 340 75% 55% !important;
   }
 }
 
@@ -70,7 +70,7 @@
 }
 
 /* Asegurar que no haya temas oscuros */
-html, body, .dark {
+html, body, .dark, [data-theme="dark"] {
   background-color: white !important;
   color: #1f2937 !important;
 }
@@ -80,4 +80,61 @@ html, body, .dark {
   background-color: white !important;
   color: #1f2937 !important;
   border: 1px solid #e5e7eb !important;
+}
+
+/* Forzar campos de input claros */
+input, textarea, select, 
+[role="textbox"], [role="searchbox"], 
+.input, [class*="input"] {
+  background-color: white !important;
+  color: #1f2937 !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Forzar botones y elementos interactivos claros */
+button:not([class*="bg-"]), 
+.button:not([class*="bg-"]) {
+  background-color: #f9fafb !important;
+  color: #1f2937 !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Forzar dropdowns y selects */
+[role="combobox"], [role="listbox"], 
+.select, [class*="select"] {
+  background-color: white !important;
+  color: #1f2937 !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Forzar modales y popovers */
+[role="dialog"], [data-state="open"],
+.popover, .modal, [class*="popover"], [class*="modal"] {
+  background-color: white !important;
+  color: #1f2937 !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Específicos para shadcn/ui */
+[data-radix-popper-content-wrapper],
+[data-radix-select-content],
+[data-radix-dropdown-menu-content],
+[data-radix-popover-content] {
+  background-color: white !important;
+  color: #1f2937 !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+/* Forzar elementos con bg-transparent a tener fondo blanco en lugar de transparente oscuro */
+.bg-transparent {
+  background-color: white !important;
+}
+
+/* Asegurar que todos los elementos input de shadcn tengan fondo claro */
+[class*="ui-input"], 
+[data-ui="input"],
+input[class*="h-9"] {
+  background-color: white !important;
+  color: #1f2937 !important;
+  border-color: #e5e7eb !important;
 }
