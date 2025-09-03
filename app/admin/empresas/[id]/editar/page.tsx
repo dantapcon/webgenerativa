@@ -37,6 +37,22 @@ export default function EditarEmpresaPage({ params }: PageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  
+  // Estado para categorías y subcategorías
+  const [categorias, setCategorias] = useState<Array<{
+    id?: number;
+    nombre: string;
+    descripcion: string;
+    orden: number;
+    subcategorias: Array<{
+      id?: number;
+      nombre: string;
+      descripcion: string;
+      imagen_url: string;
+      enlace_externo: string;
+      orden: number;
+    }>;
+  }>>([]);
 
   const showAlert = (type: 'success' | 'error', message: string) => {
     setAlert({ type, message });
@@ -84,6 +100,26 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           color_secundario: data.color_secundario || '#1e40af',
           tipografia: data.tipografia || 'Inter'
         });
+        
+        // Cargar categorías y subcategorías
+        if (data.categorias && data.categorias.length > 0) {
+          setCategorias(data.categorias.map(cat => ({
+            id: cat.id,
+            nombre: cat.nombre,
+            descripcion: cat.descripcion || '',
+            orden: cat.orden,
+            subcategorias: cat.subcategorias ? cat.subcategorias.map(sub => ({
+              id: sub.id,
+              nombre: sub.nombre,
+              descripcion: sub.descripcion || '',
+              imagen_url: sub.imagen_url || '',
+              enlace_externo: sub.enlace_externo || '',
+              orden: sub.orden
+            })) : []
+          })));
+        } else {
+          setCategorias([]);
+        }
       } catch (error) {
         console.error('Error cargando empresa:', error);
         showAlert('error', 'Error al cargar los datos de la empresa');
@@ -103,6 +139,73 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     }));
   };
 
+  // Función auxiliar para validar categorías antes de enviar
+  const procesarCategorias = () => {
+    // Definir el tipo correcto para las categorías (según los requisitos de WebGeneratorService.updateEmpresa)
+    type SubcategoriaType = {
+      id?: number;
+      nombre: string;
+      descripcion: string;
+      imagen_url: string;
+      enlace_externo: string;
+      orden: number;
+    };
+    
+    type CategoriaType = {
+      id?: number;
+      nombre: string;
+      descripcion: string;
+      orden: number;
+      subcategorias: SubcategoriaType[];
+    };
+    
+    // Clonar profundamente las categorías para evitar efectos secundarios
+    const categoriasClone: any[] = JSON.parse(JSON.stringify(categorias));
+    
+    // Transformación a formato esperado por el servicio
+    const resultado = categoriasClone
+      .filter((cat: any) => cat && cat.nombre && cat.nombre.trim() !== '')
+      .map((cat: any) => {
+        // Crear un objeto limpio con solo los campos necesarios
+        const catProcesada = {
+          id: cat.id,
+          nombre: cat.nombre.trim(),
+          descripcion: cat.descripcion?.trim() || '',
+          orden: cat.orden || 0,
+          subcategorias: [] as any[]
+        };
+        
+        // Procesar subcategorías si existen
+        if (cat.subcategorias && Array.isArray(cat.subcategorias) && cat.subcategorias.length > 0) {
+          catProcesada.subcategorias = cat.subcategorias
+            .filter((sub: any) => sub && sub.nombre && sub.nombre.trim() !== '')
+            .map((sub: any) => {
+              // Preparar campos con formateo especial para URLs
+              let imagenUrl = sub.imagen_url?.trim() || '';
+              let enlaceExterno = sub.enlace_externo?.trim() || '';
+              
+              // Formateo de enlaces para cumplir con restricciones de BD
+              // Estos cambios son solo para previsualización, el backend también hace la verificación
+              
+              // Objeto limpio con todos los campos necesarios y sin propiedades opcionales
+              return {
+                id: sub.id,
+                nombre: sub.nombre.trim(),
+                descripcion: sub.descripcion?.trim() || '',
+                imagen_url: imagenUrl,
+                enlace_externo: enlaceExterno,
+                orden: sub.orden || 0
+              };
+            });
+        }
+        
+        console.log('Categoría procesada:', catProcesada);
+        return catProcesada;
+      });
+    
+    return resultado;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!empresaId) return;
@@ -116,7 +219,14 @@ export default function EditarEmpresaPage({ params }: PageProps) {
         return;
       }
 
-      await WebGeneratorService.updateEmpresa(empresaId, formData);
+      // Validar y procesar categorías
+      const categoriasValidadas = procesarCategorias();
+      
+      // Log para debug
+      console.log('Categorías a enviar:', JSON.stringify(categoriasValidadas, null, 2));
+      
+      // Actualizar empresa con las categorías
+      await WebGeneratorService.updateEmpresa(empresaId, formData, categoriasValidadas);
       showAlert('success', 'Empresa actualizada exitosamente');
       
       // Recargar datos
@@ -435,6 +545,268 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                   Actualmente disponible en: <code>/{empresa.slug_empresa}</code>
                 </p>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Categorías y Subcategorías */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Categorías</CardTitle>
+              <CardDescription>
+                Gestionar las categorías y subcategorías del sitio web
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {categorias.map((categoria, catIndex) => (
+                <div key={categoria.id || catIndex} className="mb-6 p-4 border rounded-md">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-medium">Categoría {catIndex + 1}</h4>
+                    <Button 
+                      variant="destructive" 
+                      size="sm"
+                      onClick={() => {
+                        const newCategorias = [...categorias];
+                        newCategorias.splice(catIndex, 1);
+                        setCategorias(newCategorias);
+                      }}
+                    >
+                      Eliminar
+                    </Button>
+                  </div>
+                  
+                  <div className="grid gap-3 mb-4">
+                    <div>
+                      <Label htmlFor={`cat-nombre-${catIndex}`}>Nombre</Label>
+                      <Input
+                        id={`cat-nombre-${catIndex}`}
+                        value={categoria.nombre}
+                        onChange={(e) => {
+                          const newCategorias = [...categorias];
+                          newCategorias[catIndex].nombre = e.target.value;
+                          setCategorias(newCategorias);
+                        }}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor={`cat-descripcion-${catIndex}`}>Descripción</Label>
+                      <textarea
+                        id={`cat-descripcion-${catIndex}`}
+                        value={categoria.descripcion}
+                        onChange={(e) => {
+                          const newCategorias = [...categorias];
+                          newCategorias[catIndex].descripcion = e.target.value;
+                          setCategorias(newCategorias);
+                        }}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={2}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor={`cat-orden-${catIndex}`}>Orden</Label>
+                      <Input
+                        id={`cat-orden-${catIndex}`}
+                        type="number"
+                        value={categoria.orden || catIndex + 1}
+                        onChange={(e) => {
+                          const newCategorias = [...categorias];
+                          newCategorias[catIndex].orden = parseInt(e.target.value);
+                          setCategorias(newCategorias);
+                        }}
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Subcategorías */}
+                  <div className="mt-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h5 className="text-sm font-medium">Subcategorías</h5>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          const newCategorias = [...categorias];
+                          if (!newCategorias[catIndex].subcategorias) {
+                            newCategorias[catIndex].subcategorias = [];
+                          }
+                          
+                          // Agregar nueva subcategoría (sin ID para que se detecte como nueva)
+                          newCategorias[catIndex].subcategorias.push({
+                            nombre: '',
+                            descripcion: '',
+                            imagen_url: '',
+                            enlace_externo: '',
+                            orden: (newCategorias[catIndex].subcategorias?.length || 0) + 1
+                          });
+                          
+                          setCategorias(newCategorias);
+                        }}
+                      >
+                        Añadir Subcategoría
+                      </Button>
+                    </div>
+                    
+                    {categoria.subcategorias && categoria.subcategorias.map((subcategoria, subIndex) => (
+                      <div key={subcategoria.id || `${catIndex}-${subIndex}`} className="p-3 mb-3 border rounded-md bg-gray-50">
+                        <div className="flex items-center justify-between mb-2">
+                          <h6 className="text-sm">Subcategoría {subIndex + 1}</h6>
+                          <Button 
+                            variant="destructive" 
+                            size="sm"
+                            onClick={() => {
+                              const newCategorias = [...categorias];
+                              if (newCategorias[catIndex].subcategorias) {
+                                newCategorias[catIndex].subcategorias.splice(subIndex, 1);
+                                setCategorias(newCategorias);
+                              }
+                            }}
+                          >
+                            Eliminar
+                          </Button>
+                        </div>
+                        
+                        <div className="grid gap-2">
+                          <div>
+                            <Label htmlFor={`sub-nombre-${catIndex}-${subIndex}`} className="text-xs">Nombre</Label>
+                            <Input
+                              id={`sub-nombre-${catIndex}-${subIndex}`}
+                              value={subcategoria.nombre || ''}
+                              onChange={(e) => {
+                                const newCategorias = JSON.parse(JSON.stringify(categorias));
+                                if (!newCategorias[catIndex].subcategorias[subIndex]) {
+                                  newCategorias[catIndex].subcategorias[subIndex] = {};
+                                }
+                                newCategorias[catIndex].subcategorias[subIndex].nombre = e.target.value;
+                                setCategorias(newCategorias);
+                              }}
+                            />
+                          </div>
+                          
+                          <div>
+                            <Label htmlFor={`sub-desc-${catIndex}-${subIndex}`} className="text-xs">Descripción</Label>
+                            <textarea
+                              id={`sub-desc-${catIndex}-${subIndex}`}
+                              value={subcategoria.descripcion || ''}
+                              onChange={(e) => {
+                                const newCategorias = JSON.parse(JSON.stringify(categorias));
+                                if (!newCategorias[catIndex].subcategorias[subIndex]) {
+                                  newCategorias[catIndex].subcategorias[subIndex] = {};
+                                }
+                                newCategorias[catIndex].subcategorias[subIndex].descripcion = e.target.value;
+                                setCategorias(newCategorias);
+                              }}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              rows={2}
+                            />
+                          </div>
+                          
+                          <div>
+                            <Label htmlFor={`sub-img-${catIndex}-${subIndex}`} className="text-xs">URL de Imagen</Label>
+                            <div className="flex">
+                              <Input
+                                id={`sub-img-${catIndex}-${subIndex}`}
+                                value={subcategoria.imagen_url || ''}
+                                onChange={(e) => {
+                                  const newCategorias = JSON.parse(JSON.stringify(categorias));
+                                  if (!newCategorias[catIndex].subcategorias[subIndex]) {
+                                    newCategorias[catIndex].subcategorias[subIndex] = {};
+                                  }
+                                  
+                                  // Limpiar y formatear la URL si es necesario
+                                  let url = e.target.value.trim();
+                                  newCategorias[catIndex].subcategorias[subIndex].imagen_url = url;
+                                  setCategorias(newCategorias);
+                                }}
+                                placeholder="https://ejemplo.com/imagen.jpg"
+                                className="flex-1"
+                              />
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                              Introduce la URL completa de la imagen
+                            </p>
+                            {subcategoria.imagen_url && (
+                              <div className="mt-2">
+                                <img 
+                                  src={subcategoria.imagen_url} 
+                                  alt="Vista previa" 
+                                  className="h-20 object-contain rounded border"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).src = "https://placehold.co/400x300?text=Imagen+no+disponible";
+                                  }}
+                                />
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div>
+                            <Label htmlFor={`sub-link-${catIndex}-${subIndex}`} className="text-xs">Enlace Externo</Label>
+                            <div className="flex">
+                              <Input
+                                id={`sub-link-${catIndex}-${subIndex}`}
+                                value={subcategoria.enlace_externo || ''}
+                                onChange={(e) => {
+                                  const newCategorias = JSON.parse(JSON.stringify(categorias));
+                                  if (!newCategorias[catIndex].subcategorias[subIndex]) {
+                                    newCategorias[catIndex].subcategorias[subIndex] = {};
+                                  }
+                                  
+                                  // Almacenar sin formatear para mantener lo que el usuario escribió
+                                  newCategorias[catIndex].subcategorias[subIndex].enlace_externo = e.target.value.trim();
+                                  setCategorias(newCategorias);
+                                }}
+                                placeholder="ejemplo.com/pagina.html"
+                                className="flex-1"
+                              />
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {subcategoria.enlace_externo ? 
+                                `Se guardará como: ${subcategoria.enlace_externo.match(/^https?:\/\//) ? 
+                                  subcategoria.enlace_externo : 
+                                  `https://${subcategoria.enlace_externo}`}` : 
+                                "El 'https://' se añadirá automáticamente si no lo incluyes"}
+                            </p>
+                          </div>
+                          
+                          <div>
+                            <Label htmlFor={`sub-orden-${catIndex}-${subIndex}`} className="text-xs">Orden</Label>
+                            <Input
+                              id={`sub-orden-${catIndex}-${subIndex}`}
+                              type="number"
+                              value={subcategoria.orden || subIndex + 1}
+                              onChange={(e) => {
+                                const newCategorias = JSON.parse(JSON.stringify(categorias));
+                                if (!newCategorias[catIndex].subcategorias[subIndex]) {
+                                  newCategorias[catIndex].subcategorias[subIndex] = {};
+                                }
+                                newCategorias[catIndex].subcategorias[subIndex].orden = parseInt(e.target.value);
+                                setCategorias(newCategorias);
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setCategorias([
+                    ...categorias,
+                    {
+                      nombre: '',
+                      descripcion: '',
+                      orden: categorias.length + 1,
+                      subcategorias: []
+                    }
+                  ]);
+                }}
+              >
+                Añadir Nueva Categoría
+              </Button>
             </CardContent>
           </Card>
 

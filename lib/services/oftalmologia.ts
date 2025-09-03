@@ -252,7 +252,24 @@ export class WebGeneratorService {
   }
 
   // Actualizar una empresa
-  static async updateEmpresa(id: number, data: Partial<EmpresaFormData>): Promise<Empresa> {
+  static async updateEmpresa(
+    id: number, 
+    data: Partial<EmpresaFormData>, 
+    categoriasData?: Array<{
+      id?: number;
+      nombre: string;
+      descripcion: string;
+      orden: number;
+      subcategorias: Array<{
+        id?: number;
+        nombre: string;
+        descripcion: string;
+        imagen_url: string;
+        enlace_externo: string;
+        orden: number;
+      }>;
+    }>
+  ): Promise<Empresa> {
     try {
       // Extraer datos que no van en la tabla empresas
       const { categorias, ...empresaData } = data;
@@ -267,6 +284,280 @@ export class WebGeneratorService {
 
       if (empresaError) {
         throw new Error(`Error actualizando empresa: ${empresaError.message}`);
+      }
+
+      // Si se proporcionaron categorías, actualizarlas
+      if (categoriasData && categoriasData.length > 0) {
+        // 1. Obtener categorías actuales
+        const { data: categoriasActuales, error: categoriasError } = await supabase
+          .from('categorias')
+          .select('id')
+          .eq('empresa_id', id);
+
+        if (categoriasError) {
+          console.error('Error obteniendo categorías actuales:', categoriasError);
+        }
+        
+        const idsCategoriasActuales = categoriasActuales?.map(c => c.id) || [];
+        
+        // 2. Procesar cada categoría
+        for (const categoria of categoriasData) {
+          if (categoria.id) {
+            // Actualizar categoría existente
+            const { error: updateCatError } = await supabase
+              .from('categorias')
+              .update({
+                nombre: categoria.nombre,
+                descripcion: categoria.descripcion,
+                orden: categoria.orden
+              })
+              .eq('id', categoria.id);
+
+            if (updateCatError) {
+              console.error(`Error actualizando categoría ${categoria.id}:`, updateCatError);
+            }
+            
+            // Remover de la lista de IDs para no eliminarla después
+            const index = idsCategoriasActuales.indexOf(categoria.id);
+            if (index > -1) {
+              idsCategoriasActuales.splice(index, 1);
+            }
+          } else if (categoria.nombre.trim()) {
+            // Crear nueva categoría
+            const { data: nuevaCategoria, error: createCatError } = await supabase
+              .from('categorias')
+              .insert({
+                empresa_id: id,
+                nombre: categoria.nombre,
+                descripcion: categoria.descripcion || '',
+                orden: categoria.orden,
+                visible: true
+              })
+              .select()
+              .single();
+
+            if (createCatError) {
+              console.error('Error creando nueva categoría:', createCatError);
+              continue;
+            }
+            
+            categoria.id = nuevaCategoria.id;
+          }
+
+          // Procesar subcategorías si la categoría tiene ID
+          if (categoria.id && categoria.subcategorias && categoria.subcategorias.length > 0) {
+            // Obtener subcategorías actuales
+            const { data: subcategoriasActuales, error: subError } = await supabase
+              .from('subcategorias')
+              .select('id')
+              .eq('categoria_id', categoria.id);
+
+            if (subError) {
+              console.error(`Error obteniendo subcategorías para categoría ${categoria.id}:`, subError);
+            }
+
+            const idsSubcategoriasActuales = subcategoriasActuales?.map(s => s.id) || [];
+
+            // Procesar cada subcategoría
+            for (const subcategoria of categoria.subcategorias) {
+              console.log(`Procesando subcategoría:`, subcategoria);
+              
+              if (subcategoria.id) {
+                // Verificar si la subcategoría realmente existe en la base de datos
+                const { data: existeSub, error: checkSubError } = await supabase
+                  .from('subcategorias')
+                  .select('id')
+                  .eq('id', subcategoria.id)
+                  .maybeSingle();
+                
+                if (checkSubError) {
+                  console.error(`Error verificando subcategoría ${subcategoria.id}:`, checkSubError);
+                  continue;
+                }
+                
+                if (!existeSub) {
+                  console.warn(`La subcategoría con ID ${subcategoria.id} no existe. Creando nueva...`);
+                  // Crear como nueva subcategoría si no existe
+                  const { error: createNewSubError } = await supabase
+                    .from('subcategorias')
+                    .insert({
+                      categoria_id: categoria.id,
+                      nombre: subcategoria.nombre,
+                      descripcion: subcategoria.descripcion || '',
+                      imagen_url: subcategoria.imagen_url || '',
+                      enlace_externo: subcategoria.enlace_externo || '',
+                      orden: subcategoria.orden,
+                      visible: true
+                    });
+                  
+                  if (createNewSubError) {
+                    console.error('Error creando subcategoría que debería existir:', createNewSubError);
+                  }
+                  continue;
+                }
+                
+                // Preparar datos para actualizar
+                const datosActualizados = {
+                  nombre: subcategoria.nombre,
+                  descripcion: subcategoria.descripcion || '',
+                  imagen_url: subcategoria.imagen_url || '',
+                  enlace_externo: subcategoria.enlace_externo || '',
+                  orden: subcategoria.orden
+                };
+                
+                console.log(`Actualizando subcategoría ${subcategoria.id} con:`, datosActualizados);
+                
+                // Actualizar subcategoría existente
+                try {
+                  // Limpieza adicional para evitar problemas con valores nulos
+                  const cleanData: Record<string, any> = {};
+                  
+                  // Solo incluir campos que no sean nulos o undefined
+                  if (datosActualizados.nombre) cleanData.nombre = datosActualizados.nombre;
+                  if (datosActualizados.descripcion !== undefined) cleanData.descripcion = datosActualizados.descripcion || '';
+                  if (datosActualizados.imagen_url !== undefined) cleanData.imagen_url = datosActualizados.imagen_url || '';
+                  
+                  // Corrección especial para el enlace_externo para cumplir con la restricción CHECK
+                  if (datosActualizados.enlace_externo !== undefined) {
+                    let enlace = datosActualizados.enlace_externo || '';
+                    // Si el enlace está vacío, establecerlo como NULL para evitar restricciones CHECK
+                    if (!enlace.trim()) {
+                      cleanData.enlace_externo = null;
+                    } else {
+                      // Si hay un enlace y no empieza con http:// o https://, añadir https://
+                      if (!enlace.match(/^https?:\/\//)) {
+                        enlace = `https://${enlace}`;
+                      }
+                      cleanData.enlace_externo = enlace;
+                    }
+                  }
+                  
+                  if (datosActualizados.orden !== undefined) cleanData.orden = datosActualizados.orden || 0;
+                  
+                  console.log(`Datos a actualizar para subcategoría ${subcategoria.id}:`, JSON.stringify(cleanData));
+                  
+                  // Si no hay datos para actualizar, omitir esta actualización
+                  if (Object.keys(cleanData).length === 0) {
+                    console.log(`No hay datos para actualizar en subcategoría ${subcategoria.id}, omitiendo`);
+                    continue;
+                  }
+                  
+                  // Verificar si la subcategoría existe realmente
+                  const { data: checkData, error: checkError } = await supabase
+                    .from('subcategorias')
+                    .select('id')
+                    .eq('id', subcategoria.id)
+                    .single();
+                    
+                  if (checkError || !checkData) {
+                    console.warn(`La subcategoría ${subcategoria.id} no existe, omitiendo actualización`);
+                    continue;
+                  }
+                  
+                  // Realizar la actualización
+                  const { data, error: updateSubError } = await supabase
+                    .from('subcategorias')
+                    .update(cleanData)
+                    .eq('id', subcategoria.id)
+                    .select();
+
+                  if (updateSubError) {
+                    console.error(`Error actualizando subcategoría ${subcategoria.id}:`, updateSubError);
+                    console.error(`Datos que causaron el error: ${JSON.stringify(cleanData)}`);
+                    
+                    // Intento de depuración adicional
+                    if (updateSubError.details) {
+                      console.error(`Detalles del error: ${updateSubError.details}`);
+                    }
+                    if (updateSubError.hint) {
+                      console.error(`Sugerencia: ${updateSubError.hint}`);
+                    }
+                    
+                    // No lanzar el error para que el proceso continúe
+                    console.log('Continuando proceso a pesar del error...');
+                  } else {
+                    console.log(`Subcategoría ${subcategoria.id} actualizada exitosamente:`, data);
+                  }
+                } catch (err) {
+                  console.error(`Excepción al actualizar subcategoría ${subcategoria.id}:`, err);
+                  console.error(`Datos que causaron la excepción: ${JSON.stringify(datosActualizados)}`);
+                  
+                  // No lanzar el error para que el proceso continúe
+                  console.log('Continuando proceso a pesar de la excepción...');
+                }
+
+                // Remover de la lista de IDs para no eliminarla después
+                const index = idsSubcategoriasActuales.indexOf(subcategoria.id);
+                if (index > -1) {
+                  idsSubcategoriasActuales.splice(index, 1);
+                }
+              } else if (subcategoria.nombre.trim()) {
+                // Crear nueva subcategoría
+                console.log(`Creando nueva subcategoría "${subcategoria.nombre}" para categoría ${categoria.id}`);
+                
+                // Prepara datos para nueva subcategoría
+                const datosNuevaSub: Record<string, any> = {
+                  categoria_id: categoria.id,
+                  nombre: subcategoria.nombre,
+                  descripcion: subcategoria.descripcion || '',
+                  imagen_url: subcategoria.imagen_url || '',
+                  orden: subcategoria.orden || 0,
+                  visible: true
+                };
+                
+                // Manejo especial para enlace_externo
+                if (subcategoria.enlace_externo) {
+                  let enlace = subcategoria.enlace_externo;
+                  // Si hay un enlace y no empieza con http:// o https://, añadir https://
+                  if (!enlace.match(/^https?:\/\//)) {
+                    enlace = `https://${enlace}`;
+                  }
+                  datosNuevaSub.enlace_externo = enlace;
+                } else {
+                  datosNuevaSub.enlace_externo = '';
+                }
+                
+                const { data: nuevaSubcategoria, error: createSubError } = await supabase
+                  .from('subcategorias')
+                  .insert(datosNuevaSub)
+                  .select()
+                  .single();
+
+                if (createSubError) {
+                  console.error('Error creando nueva subcategoría:', createSubError);
+                } else {
+                  console.log(`Subcategoría creada con éxito, ID: ${nuevaSubcategoria?.id}`);
+                  // Actualizar el ID para evitar duplicación en futuras actualizaciones
+                  subcategoria.id = nuevaSubcategoria?.id;
+                }
+              }
+            }
+
+            // Eliminar subcategorías que ya no existen
+            if (idsSubcategoriasActuales.length > 0) {
+              const { error: deleteSubError } = await supabase
+                .from('subcategorias')
+                .delete()
+                .in('id', idsSubcategoriasActuales);
+
+              if (deleteSubError) {
+                console.error('Error eliminando subcategorías:', deleteSubError);
+              }
+            }
+          }
+        }
+
+        // 3. Eliminar categorías que ya no existen
+        if (idsCategoriasActuales.length > 0) {
+          const { error: deleteCatError } = await supabase
+            .from('categorias')
+            .delete()
+            .in('id', idsCategoriasActuales);
+
+          if (deleteCatError) {
+            console.error('Error eliminando categorías:', deleteCatError);
+          }
+        }
       }
 
       return empresa;
