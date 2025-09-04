@@ -88,9 +88,14 @@ export default async function EmpresaPage({ params }: PageProps) {
   return (
     <EmpresaLayout empresa={empresa}>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r text-white py-20 overflow-hidden" style={{
-        background: `linear-gradient(135deg, ${empresa.color_primario || '#2563eb'}, ${empresa.color_secundario || '#7c3aed'})`
-      }}>
+      <section 
+        className="relative text-white py-20 overflow-hidden" 
+        style={{
+          background: empresa.hero_fondo_tipo === 'imagen' && empresa.hero_imagen_fondo
+            ? `url(${empresa.hero_imagen_fondo}) center/cover no-repeat`
+            : `linear-gradient(135deg, ${empresa.color_primario || '#2563eb'}, ${empresa.color_secundario || '#7c3aed'})`
+        }}
+      >
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h1 className="text-4xl md:text-6xl font-bold mb-6" style={{ 
@@ -139,17 +144,32 @@ export default async function EmpresaPage({ params }: PageProps) {
       {/* Sección de presentación de la empresa */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
+          <div 
+            className="max-w-4xl mx-auto text-center p-8 rounded-lg"
+            style={{
+              background: empresa.descripcion_fondo_tipo === 'imagen' && empresa.descripcion_imagen_fondo
+                ? `url(${empresa.descripcion_imagen_fondo}) center/cover no-repeat` 
+                : `linear-gradient(135deg, ${empresa.color_primario || '#2563eb'}33, ${empresa.color_secundario || '#7c3aed'}33)`,
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+            }}
+          >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
               {empresa.tipo_negocio === 'servicios' ? 'Nuestros Servicios Profesionales' : 'Lo Que Hacemos'}
             </h2>
-            <p className="text-xl text-gray-600 leading-relaxed mb-8">
-              {empresa.descripcion_empresa || `En ${empresa.nombre_empresa} nos dedicamos a brindar el mejor servicio a nuestros clientes con profesionalismo y calidad.`}
-            </p>
             
             {/* Video Promocional */}
             {empresa.video_promocional_url && (
               <div className="mt-10 max-w-3xl mx-auto">
+                {empresa.video_descripcion && (
+                  <p className="text-lg leading-relaxed mb-6" style={{
+                    color: '#333',
+                    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                    padding: '12px',
+                    borderRadius: '8px'
+                  }}>
+                    {empresa.video_descripcion}
+                  </p>
+                )}
                 <div className="aspect-video w-full shadow-lg rounded-xl overflow-hidden">
                   {empresa.video_promocional_url.includes('youtube.com') || empresa.video_promocional_url.includes('youtu.be') ? (
                     <iframe

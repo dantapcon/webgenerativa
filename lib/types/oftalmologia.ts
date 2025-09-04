@@ -5,6 +5,11 @@ export interface Empresa {
   nombre_empresa: string;
   slug_empresa: string;
   descripcion_empresa?: string | null;
+  hero_fondo_tipo?: 'color' | 'imagen' | null;
+  hero_imagen_fondo?: string | null;
+  descripcion_fondo_tipo?: 'color' | 'imagen' | null;
+  descripcion_imagen_fondo?: string | null;
+  video_descripcion?: string | null;
   correo_empresa?: string | null;
   telefono_empresa?: string | null;
   direccion_empresa?: string | null;
@@ -61,6 +66,11 @@ export interface EmpresaFormData {
   nombre_empresa: string;
   slug_empresa?: string;
   descripcion_empresa?: string;
+  hero_fondo_tipo?: 'color' | 'imagen';
+  hero_imagen_fondo?: string;
+  descripcion_fondo_tipo?: 'color' | 'imagen';
+  descripcion_imagen_fondo?: string;
+  video_descripcion?: string;
   correo_empresa?: string;
   telefono_empresa?: string;
   direccion_empresa?: string;

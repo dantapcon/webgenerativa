@@ -64,6 +64,11 @@ export default function WebGeneratorPage() {
   const [formData, setFormData] = useState<EmpresaFormData>({
     nombre_empresa: '',
     descripcion_empresa: '',
+    hero_fondo_tipo: 'color',
+    hero_imagen_fondo: '',
+    descripcion_fondo_tipo: 'color',
+    descripcion_imagen_fondo: '',
+    video_descripcion: '',
     correo_empresa: '',
     telefono_empresa: '',
     direccion_empresa: '',
@@ -376,6 +381,71 @@ export default function WebGeneratorPage() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="hero_fondo_tipo" className="text-sm font-medium text-gray-700">
+                        Tipo de fondo para sección principal
+                      </Label>
+                      <select
+                        id="hero_fondo_tipo"
+                        name="hero_fondo_tipo"
+                        value={formData.hero_fondo_tipo || 'color'}
+                        onChange={handleInputChange}
+                        className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="color">Gradiente de color (por defecto)</option>
+                        <option value="imagen">Imagen de fondo</option>
+                      </select>
+                    </div>
+
+                    {formData.hero_fondo_tipo === 'imagen' && (
+                      <div className="space-y-2">
+                        <Label htmlFor="hero_imagen_fondo" className="text-sm font-medium text-gray-700">
+                          URL de imagen para sección principal
+                        </Label>
+                        <Input
+                          id="hero_imagen_fondo"
+                          name="hero_imagen_fondo"
+                          value={formData.hero_imagen_fondo || ''}
+                          onChange={handleInputChange}
+                          placeholder="https://ejemplo.com/mi-imagen.jpg"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <p className="text-xs text-gray-500">Para mejores resultados, usa imágenes de alta resolución</p>
+                      </div>
+                    )}
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="descripcion_fondo_tipo" className="text-sm font-medium text-gray-700">
+                        Tipo de fondo para descripción
+                      </Label>
+                      <select
+                        id="descripcion_fondo_tipo"
+                        name="descripcion_fondo_tipo"
+                        value={formData.descripcion_fondo_tipo || 'color'}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="color">Color sólido</option>
+                        <option value="imagen">Imagen de fondo</option>
+                      </select>
+                    </div>
+                    
+                    {formData.descripcion_fondo_tipo === 'imagen' && (
+                      <div className="space-y-2">
+                        <Label htmlFor="descripcion_imagen_fondo" className="text-sm font-medium text-gray-700">
+                          URL de la imagen de fondo
+                        </Label>
+                        <Input
+                          id="descripcion_imagen_fondo"
+                          name="descripcion_imagen_fondo"
+                          value={formData.descripcion_imagen_fondo || ''}
+                          onChange={handleInputChange}
+                          placeholder="https://ejemplo.com/mi-imagen.jpg"
+                        />
+                        <p className="text-xs text-gray-500">Para mejores resultados, usa imágenes de tonalidad clara o con transparencia</p>
+                      </div>
+                    )}
 
                     <div className="space-y-2">
                       <Label htmlFor="correo_empresa" className="text-sm font-medium text-gray-700 flex items-center gap-2">
@@ -595,6 +665,26 @@ export default function WebGeneratorPage() {
                               placeholder="https://youtube.com/watch?v=..."
                               className="h-11"
                             />
+                            
+                            {formData.video_promocional_url && (
+                              <div className="mt-3">
+                                <Label htmlFor="video_descripcion" className="text-sm font-medium text-gray-700">
+                                  Descripción del Video
+                                </Label>
+                                <textarea
+                                  id="video_descripcion"
+                                  name="video_descripcion"
+                                  value={formData.video_descripcion || ''}
+                                  onChange={handleInputChange}
+                                  placeholder="Describe brevemente el contenido del video"
+                                  rows={2}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                                <p className="text-xs text-gray-500">
+                                  Este texto se mostrará junto al video en lugar de la descripción general
+                                </p>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -1030,8 +1120,16 @@ export default function WebGeneratorPage() {
                             Bienvenido a {formData.nombre_empresa}
                           </div>
                           <div 
-                            className="text-gray-700"
-                            style={{ fontFamily: `'${formData.tipografia}', sans-serif` }}
+                            className="text-gray-700 p-3 rounded-md"
+                            style={{ 
+                              fontFamily: `'${formData.tipografia}', sans-serif`,
+                              background: formData.descripcion_fondo_tipo === 'imagen' && formData.descripcion_imagen_fondo 
+                                ? `url(${formData.descripcion_imagen_fondo}) center/cover no-repeat` 
+                                : `linear-gradient(135deg, ${formData.color_primario}33, ${formData.color_secundario}33)`,
+                              textShadow: formData.descripcion_fondo_tipo === 'imagen' ? '0 0 5px rgba(255, 255, 255, 0.8)' : 'none',
+                              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                              border: '1px solid #e5e7eb'
+                            }}
                           >
                             {formData.descripcion_empresa || 'Descripción de la empresa...'}
                           </div>

@@ -124,6 +124,11 @@ export default function EditarEmpresaPage({ params }: PageProps) {
   const [formData, setFormData] = useState<EmpresaFormData>({
     nombre_empresa: '',
     descripcion_empresa: '',
+    hero_fondo_tipo: 'color',
+    hero_imagen_fondo: '',
+    descripcion_fondo_tipo: 'color',
+    descripcion_imagen_fondo: '',
+    video_descripcion: '',
     correo_empresa: '',
     telefono_empresa: '',
     direccion_empresa: '',
@@ -192,6 +197,11 @@ export default function EditarEmpresaPage({ params }: PageProps) {
         setFormData({
           nombre_empresa: data.nombre_empresa,
           descripcion_empresa: data.descripcion_empresa || '',
+          hero_fondo_tipo: data.hero_fondo_tipo || 'color',
+          hero_imagen_fondo: data.hero_imagen_fondo || '',
+          descripcion_fondo_tipo: data.descripcion_fondo_tipo || 'color',
+          descripcion_imagen_fondo: data.descripcion_imagen_fondo || '',
+          video_descripcion: data.video_descripcion || '',
           correo_empresa: data.correo_empresa || '',
           telefono_empresa: data.telefono_empresa || '',
           direccion_empresa: data.direccion_empresa || '',
@@ -460,16 +470,80 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="descripcion_empresa">Descripción</Label>
-                <textarea
-                  id="descripcion_empresa"
-                  name="descripcion_empresa"
-                  value={formData.descripcion_empresa}
-                  onChange={handleInputChange}
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="descripcion_empresa">Descripción</Label>
+                  <textarea
+                    id="descripcion_empresa"
+                    name="descripcion_empresa"
+                    value={formData.descripcion_empresa}
+                    onChange={handleInputChange}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                {/* Configuración del fondo de hero */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="hero_fondo_tipo">Tipo de fondo para sección principal</Label>
+                    <select
+                      id="hero_fondo_tipo"
+                      name="hero_fondo_tipo"
+                      value={formData.hero_fondo_tipo || 'color'}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="color">Gradiente de color (por defecto)</option>
+                      <option value="imagen">Imagen de fondo</option>
+                    </select>
+                  </div>
+                  
+                  {formData.hero_fondo_tipo === 'imagen' && (
+                    <div className="space-y-2">
+                      <Label htmlFor="hero_imagen_fondo">URL de la imagen de fondo</Label>
+                      <Input
+                        id="hero_imagen_fondo"
+                        name="hero_imagen_fondo"
+                        value={formData.hero_imagen_fondo || ''}
+                        onChange={handleInputChange}
+                        placeholder="https://ejemplo.com/mi-imagen.jpg"
+                      />
+                      <p className="text-xs text-gray-500">Para mejores resultados, usa imágenes de alta resolución</p>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Configuración del fondo de descripción */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="descripcion_fondo_tipo">Tipo de fondo para descripción</Label>
+                    <select
+                      id="descripcion_fondo_tipo"
+                      name="descripcion_fondo_tipo"
+                      value={formData.descripcion_fondo_tipo || 'color'}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="color">Color sólido</option>
+                      <option value="imagen">Imagen de fondo</option>
+                    </select>
+                  </div>
+                  
+                  {formData.descripcion_fondo_tipo === 'imagen' && (
+                    <div className="space-y-2">
+                      <Label htmlFor="descripcion_imagen_fondo">URL de la imagen de fondo</Label>
+                      <Input
+                        id="descripcion_imagen_fondo"
+                        name="descripcion_imagen_fondo"
+                        value={formData.descripcion_imagen_fondo || ''}
+                        onChange={handleInputChange}
+                        placeholder="https://ejemplo.com/mi-imagen.jpg"
+                      />
+                      <p className="text-xs text-gray-500">Para mejores resultados, usa imágenes de tonalidad clara o con transparencia</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -688,6 +762,23 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                     <p className="text-sm text-gray-500 mt-1">
                       Ingresa la URL de YouTube, Vimeo o un video público (e.g. https://youtube.com/watch?v=ID)
                     </p>
+                    
+                    <div className="mt-3">
+                      <Label htmlFor="video_descripcion">Descripción del Video</Label>
+                      <textarea
+                        id="video_descripcion"
+                        name="video_descripcion"
+                        value={formData.video_descripcion || ''}
+                        onChange={handleInputChange}
+                        rows={2}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Describe brevemente el contenido del video"
+                      />
+                      <p className="text-xs text-gray-500">
+                        Este texto se mostrará junto al video en la sección de video promocional
+                      </p>
+                    </div>
+                    
                     {formData.video_promocional_url && (
                       <div className="mt-3">
                         <Label className="mb-2 block">Vista previa del video:</Label>
@@ -747,8 +838,16 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                     </div>
                     <div className="p-4 space-y-3">
                       <div 
-                        className="text-gray-700"
-                        style={{ fontFamily: `'${formData.tipografia}', sans-serif` }}
+                        className="text-gray-700 p-3 rounded-md"
+                        style={{ 
+                          fontFamily: `'${formData.tipografia}', sans-serif`,
+                          background: formData.descripcion_fondo_tipo === 'imagen' && formData.descripcion_imagen_fondo 
+                            ? `url(${formData.descripcion_imagen_fondo}) center/cover no-repeat` 
+                            : `linear-gradient(135deg, ${formData.color_primario}33, ${formData.color_secundario}33)`,
+                          textShadow: formData.descripcion_fondo_tipo === 'imagen' ? '0 0 5px rgba(255, 255, 255, 0.8)' : 'none',
+                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                          border: '1px solid #e5e7eb'
+                        }}
                       >
                         {formData.descripcion_empresa || 'Descripción de la empresa...'}
                       </div>
