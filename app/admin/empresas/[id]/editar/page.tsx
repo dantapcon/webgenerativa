@@ -629,12 +629,6 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                       <br />
                       <span className="text-red-500 font-medium">⚠️ No pegues imágenes directamente - solo URLs válidas</span>
                     </p>
-                    <div className="text-xs text-blue-600 mt-1 cursor-pointer" onClick={() => window.open('https://imgur.com/upload', '_blank')}>
-                      ↗️ Puedes subir tus imágenes en Imgur y luego usar la URL
-                    </div>
-                    <div className="text-xs text-green-600 mt-1">
-                      📝 Para Google Drive: Asegúrate de que el archivo esté compartido como "Cualquier persona con el enlace puede ver"
-                    </div>
                   </div>                  <div className="space-y-2">
                     <Label htmlFor="video_promocional_url">Video Promocional</Label>
                     <Input
@@ -1047,9 +1041,6 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                             <p className="text-xs text-gray-500 mt-1">
                               Introduce la URL completa de la imagen. Compatible con enlaces de Google Drive.
                             </p>
-                            <div className="text-xs text-green-600 mt-1">
-                              📝 Para Google Drive: Asegúrate de que el archivo esté compartido como "Cualquier persona con el enlace puede ver"
-                            </div>
                             {subcategoria.imagen_url && (
                               <div className="mt-2">
                                 <img 
