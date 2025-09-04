@@ -558,20 +558,68 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               {categorias.map((categoria, catIndex) => (
-                <div key={categoria.id || catIndex} className="mb-6 p-4 border rounded-md">
+                <div key={categoria.id || catIndex} className="mb-6 p-4 border rounded-md border-blue-200 bg-blue-50/50 shadow-sm">
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-medium">Categoría {catIndex + 1}</h4>
-                    <Button 
-                      variant="destructive" 
-                      size="sm"
-                      onClick={() => {
-                        const newCategorias = [...categorias];
-                        newCategorias.splice(catIndex, 1);
-                        setCategorias(newCategorias);
-                      }}
-                    >
-                      Eliminar
-                    </Button>
+                    <h4 className="font-medium text-blue-800">
+                      <span className="inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 mr-2">
+                        {catIndex + 1}
+                      </span>
+                      Categoría: {categoria.nombre || 'Sin nombre'}
+                    </h4>
+                    <div className="flex items-center gap-2">
+                      {/* Botones de reordenamiento para categorías */}
+                      <div className="flex flex-col">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-6 w-6"
+                          onClick={() => {
+                            if (catIndex === 0) return;
+                            
+                            const newCategorias = [...categorias];
+                            const temp = newCategorias[catIndex];
+                            newCategorias[catIndex] = newCategorias[catIndex - 1];
+                            newCategorias[catIndex - 1] = temp;
+                            setCategorias(newCategorias);
+                          }}
+                          disabled={catIndex === 0}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={catIndex === 0 ? "text-gray-300" : "text-blue-700"}>
+                            <path d="m18 15-6-6-6 6"/>
+                          </svg>
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-6 w-6"
+                          onClick={() => {
+                            if (catIndex === categorias.length - 1) return;
+                            
+                            const newCategorias = [...categorias];
+                            const temp = newCategorias[catIndex];
+                            newCategorias[catIndex] = newCategorias[catIndex + 1];
+                            newCategorias[catIndex + 1] = temp;
+                            setCategorias(newCategorias);
+                          }}
+                          disabled={catIndex === categorias.length - 1}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={catIndex === categorias.length - 1 ? "text-gray-300" : "text-blue-700"}>
+                            <path d="m6 9 6 6 6-6"/>
+                          </svg>
+                        </Button>
+                      </div>
+                      <Button 
+                        variant="destructive" 
+                        size="sm"
+                        onClick={() => {
+                          const newCategorias = [...categorias];
+                          newCategorias.splice(catIndex, 1);
+                          setCategorias(newCategorias);
+                        }}
+                      >
+                        Eliminar
+                      </Button>
+                    </div>
                   </div>
                   
                   <div className="grid gap-3 mb-4">
@@ -619,12 +667,20 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                   </div>
                   
                   {/* Subcategorías */}
-                  <div className="mt-4">
+                  <div className="mt-5 pt-4 border-t border-blue-100">
                     <div className="flex items-center justify-between mb-3">
-                      <h5 className="text-sm font-medium">Subcategorías</h5>
+                      <div className="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-600 mr-2">
+                          <path d="M9 18h6"></path>
+                          <path d="M12 22V9"></path>
+                          <circle cx="12" cy="6" r="3"></circle>
+                        </svg>
+                        <h5 className="text-sm font-medium text-gray-700">Subcategorías de {categoria.nombre || 'esta categoría'}</h5>
+                      </div>
                       <Button 
                         variant="outline" 
                         size="sm"
+                        className="bg-green-50 border-green-200 hover:bg-green-100 text-green-700 flex items-center gap-1"
                         onClick={() => {
                           const newCategorias = [...categorias];
                           if (!newCategorias[catIndex].subcategorias) {
@@ -643,27 +699,88 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                           setCategorias(newCategorias);
                         }}
                       >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14"></path>
+                          <path d="M12 5v14"></path>
+                        </svg>
                         Añadir Subcategoría
                       </Button>
                     </div>
+                    <p className="text-xs text-gray-500 mb-3 ml-4">Las subcategorías se mostrarán dentro de esta categoría en el sitio web.</p>
                     
                     {categoria.subcategorias && categoria.subcategorias.map((subcategoria, subIndex) => (
-                      <div key={subcategoria.id || `${catIndex}-${subIndex}`} className="p-3 mb-3 border rounded-md bg-gray-50">
+                      <div key={subcategoria.id || `${catIndex}-${subIndex}`} className="p-3 mb-3 border rounded-md border-gray-300 bg-white shadow-sm ml-4 relative">
+                        {/* Línea conectora visual entre categoría y subcategoría */}
+                        <div className="absolute -left-4 top-1/2 w-4 h-0.5 bg-gray-300"></div>
+                        
                         <div className="flex items-center justify-between mb-2">
-                          <h6 className="text-sm">Subcategoría {subIndex + 1}</h6>
-                          <Button 
-                            variant="destructive" 
-                            size="sm"
-                            onClick={() => {
-                              const newCategorias = [...categorias];
-                              if (newCategorias[catIndex].subcategorias) {
-                                newCategorias[catIndex].subcategorias.splice(subIndex, 1);
-                                setCategorias(newCategorias);
-                              }
-                            }}
-                          >
-                            Eliminar
-                          </Button>
+                          <h6 className="text-sm font-medium flex items-center">
+                            <span className="inline-block bg-gray-200 text-gray-700 rounded-full px-2 py-0.5 text-xs mr-2">
+                              {subIndex + 1}
+                            </span>
+                            Subcategoría: {subcategoria.nombre || 'Sin nombre'}
+                          </h6>
+                          <div className="flex items-center gap-2">
+                            {/* Botones de reordenamiento */}
+                            <div className="flex flex-col">
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="h-6 w-6"
+                                onClick={() => {
+                                  if (subIndex === 0) return;
+                                  
+                                  const newCategorias = JSON.parse(JSON.stringify(categorias));
+                                  if (newCategorias[catIndex].subcategorias) {
+                                    const temp = newCategorias[catIndex].subcategorias[subIndex];
+                                    newCategorias[catIndex].subcategorias[subIndex] = newCategorias[catIndex].subcategorias[subIndex - 1];
+                                    newCategorias[catIndex].subcategorias[subIndex - 1] = temp;
+                                    setCategorias(newCategorias);
+                                  }
+                                }}
+                                disabled={subIndex === 0}
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={subIndex === 0 ? "text-gray-300" : "text-gray-700"}>
+                                  <path d="m18 15-6-6-6 6"/>
+                                </svg>
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="h-6 w-6"
+                                onClick={() => {
+                                  const lastIndex = categoria.subcategorias ? categoria.subcategorias.length - 1 : 0;
+                                  if (subIndex === lastIndex) return;
+                                  
+                                  const newCategorias = JSON.parse(JSON.stringify(categorias));
+                                  if (newCategorias[catIndex].subcategorias) {
+                                    const temp = newCategorias[catIndex].subcategorias[subIndex];
+                                    newCategorias[catIndex].subcategorias[subIndex] = newCategorias[catIndex].subcategorias[subIndex + 1];
+                                    newCategorias[catIndex].subcategorias[subIndex + 1] = temp;
+                                    setCategorias(newCategorias);
+                                  }
+                                }}
+                                disabled={subIndex === (categoria.subcategorias ? categoria.subcategorias.length - 1 : 0)}
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={subIndex === (categoria.subcategorias ? categoria.subcategorias.length - 1 : 0) ? "text-gray-300" : "text-gray-700"}>
+                                  <path d="m6 9 6 6 6-6"/>
+                                </svg>
+                              </Button>
+                            </div>
+                            <Button 
+                              variant="destructive" 
+                              size="sm"
+                              onClick={() => {
+                                const newCategorias = [...categorias];
+                                if (newCategorias[catIndex].subcategorias) {
+                                  newCategorias[catIndex].subcategorias.splice(subIndex, 1);
+                                  setCategorias(newCategorias);
+                                }
+                              }}
+                            >
+                              Eliminar
+                            </Button>
+                          </div>
                         </div>
                         
                         <div className="grid gap-2">
