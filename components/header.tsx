@@ -40,6 +40,8 @@ interface HeaderProps {
   empresa?: {
     nombre_empresa: string;
     logo_url?: string | null;
+    logo_tamano?: string | null;
+    logo_posicion?: 'izquierda' | 'centro' | 'derecha' | null;
     direccion_empresa?: string | null;
     telefono_empresa?: string | null;
     correo_empresa?: string | null;
@@ -53,6 +55,8 @@ export function Header({ empresa }: HeaderProps) {
   const defaultEmpresa = {
     nombre_empresa: 'WebGenerator Pro',
     logo_url: null,
+    logo_tamano: 'mediano',
+    logo_posicion: 'izquierda',
     direccion_empresa: null,
     telefono_empresa: null,
     correo_empresa: null,
@@ -66,9 +70,16 @@ export function Header({ empresa }: HeaderProps) {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo y nombre */}
-          <div className="flex items-center gap-4">
+          <div className={`flex items-center gap-4 ${
+            empresaData.logo_posicion === 'centro' ? 'mx-auto' : 
+            empresaData.logo_posicion === 'derecha' ? 'ml-auto' : ''
+          }`}>
             {empresaData.logo_url && (
-              <div className="relative w-16 h-16">
+              <div className={`relative ${
+                empresaData.logo_tamano === 'pequeno' ? 'w-12 h-12' : 
+                empresaData.logo_tamano === 'grande' ? 'w-24 h-24' : 
+                'w-16 h-16'
+              }`}>
                 <Image
                   src={empresaData.logo_url.includes('drive.google.com') ? 
                     formatGoogleDriveUrl(empresaData.logo_url) : 

@@ -197,6 +197,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           tipo_negocio: data.tipo_negocio || '',
           dominio_deseado: data.dominio_deseado || '',
           logo_url: data.logo_url || '',
+          logo_tamano: data.logo_tamano || 'mediano',
+          logo_posicion: data.logo_posicion || 'izquierda',
           video_promocional_url: data.video_promocional_url || '',
           color_primario: data.color_primario || '#2563eb',
           color_secundario: data.color_secundario || '#1e40af',
@@ -591,14 +593,55 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                         className="flex-1"
                       />
                     </div>
+                    
+                    {/* Opciones de personalización del logo */}
+                    <div className="grid grid-cols-2 gap-4 mt-2">
+                      <div>
+                        <Label htmlFor="logo_tamano" className="text-sm">Tamaño del Logo</Label>
+                        <select
+                          id="logo_tamano"
+                          name="logo_tamano"
+                          value={formData.logo_tamano || 'mediano'}
+                          onChange={handleInputChange}
+                          className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1"
+                        >
+                          <option value="pequeno">Pequeño</option>
+                          <option value="mediano">Mediano</option>
+                          <option value="grande">Grande</option>
+                        </select>
+                      </div>
+                      <div>
+                        <Label htmlFor="logo_posicion" className="text-sm">Posición del Logo</Label>
+                        <select
+                          id="logo_posicion"
+                          name="logo_posicion"
+                          value={formData.logo_posicion || 'izquierda'}
+                          onChange={handleInputChange}
+                          className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1"
+                        >
+                          <option value="izquierda">Izquierda</option>
+                          <option value="centro">Centro</option>
+                          <option value="derecha">Derecha</option>
+                        </select>
+                      </div>
+                    </div>
+                    
                     {formData.logo_url && (
-                      <div className="mt-2">
+                      <div className={`mt-2 flex ${
+                        formData.logo_posicion === 'centro' ? 'justify-center' : 
+                        formData.logo_posicion === 'derecha' ? 'justify-end' : 
+                        'justify-start'
+                      }`}>
                         <img 
                           src={formData.logo_url.includes('drive.google.com') ? 
                             formatGoogleDriveUrl(formData.logo_url) : 
                             formData.logo_url} 
                           alt="Vista previa del logo" 
-                          className="h-16 object-contain rounded border"
+                          className={`object-contain rounded border ${
+                            formData.logo_tamano === 'pequeno' ? 'h-10' : 
+                            formData.logo_tamano === 'grande' ? 'h-24' : 
+                            'h-16'
+                          }`}
                           onError={(e) => {
                             const imgElement = e.target as HTMLImageElement;
                             const currentSrc = imgElement.src;

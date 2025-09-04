@@ -15,6 +15,8 @@ interface EmpresaLayoutProps {
     telefono_empresa?: string | null;
     direccion_empresa?: string | null;
     logo_url?: string | null;
+    logo_tamano?: string | null;
+    logo_posicion?: 'izquierda' | 'centro' | 'derecha' | null;
     color_primario?: string | null;
     color_secundario?: string | null;
     tipografia?: string | null;
@@ -27,6 +29,7 @@ interface EmpresaLayoutProps {
 }
 
 export function EmpresaLayout({ children, empresa, categoriaActiva }: EmpresaLayoutProps) {
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header fijo en todas las páginas */}
