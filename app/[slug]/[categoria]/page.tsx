@@ -69,27 +69,21 @@ export default async function CategoriaPage({ params }: PageProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {categoriaEncontrada.subcategorias.map((subcategoria: any) => (
                 <Card key={subcategoria.id} className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden">
-                  {subcategoria.imagen_url && (
-                    <div className="relative overflow-hidden h-56">
-                      <img 
-                        src={subcategoria.imagen_url} 
-                        alt={subcategoria.nombre}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-xl font-bold text-white drop-shadow-lg">
-                          {subcategoria.nombre}
-                        </h3>
-                      </div>
-                    </div>
-                  )}
-                  
                   <CardContent className="p-6">
-                    {!subcategoria.imagen_url && (
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">
-                        {subcategoria.nombre}
-                      </h3>
+                    {/* Título siempre visible en la parte superior */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">
+                      {subcategoria.nombre}
+                    </h3>
+                    
+                    {/* Imagen debajo del título si existe */}
+                    {subcategoria.imagen_url && (
+                      <div className="relative overflow-hidden h-56 mb-4 rounded-lg">
+                        <img 
+                          src={subcategoria.imagen_url} 
+                          alt={subcategoria.nombre}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                      </div>
                     )}
                     
                     {subcategoria.descripcion && (
