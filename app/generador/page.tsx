@@ -47,6 +47,7 @@ function formatGoogleDriveUrl(url: string): string {
 interface CategoriaForm {
   nombre: string;
   descripcion: string;
+  tipo_display?: 'horizontal' | 'vertical';
   orden: number;
   subcategorias: SubcategoriaForm[];
 }
@@ -112,6 +113,7 @@ export default function WebGeneratorPage() {
     const nuevaCategoria: CategoriaForm = {
       nombre: '',
       descripcion: '',
+      tipo_display: 'horizontal', // Valor predeterminado
       orden: categorias.length,
       subcategorias: []
     };
@@ -197,6 +199,7 @@ export default function WebGeneratorPage() {
         categorias: categorias.map(cat => ({
           nombre: cat.nombre,
           descripcion: cat.descripcion,
+          tipo_display: cat.tipo_display || 'horizontal',
           orden: cat.orden,
           subcategorias: cat.subcategorias.map(sub => ({
             nombre: sub.nombre,
@@ -699,7 +702,7 @@ export default function WebGeneratorPage() {
                           </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="space-y-2">
                               <Label className="text-sm font-medium text-gray-700">Nombre de la Categoría</Label>
                               <Input
@@ -717,6 +720,18 @@ export default function WebGeneratorPage() {
                                 placeholder="Descripción breve de la categoría"
                                 className="h-10"
                               />
+                            </div>
+                            <div className="space-y-2">
+                              <Label className="text-sm font-medium text-gray-700">Tipo de Visualización</Label>
+                              <select
+                                value={categoria.tipo_display || 'horizontal'}
+                                onChange={(e) => actualizarCategoria(categoriaIndex, 'tipo_display', e.target.value)}
+                                className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="horizontal">Horizontal (Por defecto)</option>
+                                <option value="vertical">Vertical</option>
+                              </select>
+                              <p className="text-xs text-gray-500 mt-1">Define cómo se mostrarán las subcategorías</p>
                             </div>
                           </div>
 

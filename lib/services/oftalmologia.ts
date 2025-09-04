@@ -8,6 +8,23 @@ import {
   EmpresaFormData 
 } from '../types/oftalmologia';
 
+// Interfaces específicas para el servicio
+interface CategoriaServicio {
+  id?: number;
+  nombre: string;
+  descripcion: string;
+  tipo_display?: 'horizontal' | 'vertical';
+  orden: number;
+  subcategorias: {
+    id?: number;
+    nombre: string;
+    descripcion: string;
+    imagen_url: string;
+    enlace_externo: string;
+    orden: number;
+  }[];
+}
+
 // Cliente de Supabase
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!;
@@ -255,20 +272,7 @@ export class WebGeneratorService {
   static async updateEmpresa(
     id: number, 
     data: Partial<EmpresaFormData>, 
-    categoriasData?: Array<{
-      id?: number;
-      nombre: string;
-      descripcion: string;
-      orden: number;
-      subcategorias: Array<{
-        id?: number;
-        nombre: string;
-        descripcion: string;
-        imagen_url: string;
-        enlace_externo: string;
-        orden: number;
-      }>;
-    }>
+    categoriasData?: Array<CategoriaServicio>
   ): Promise<Empresa> {
     try {
       // Extraer datos que no van en la tabla empresas
@@ -309,6 +313,7 @@ export class WebGeneratorService {
               .update({
                 nombre: categoria.nombre,
                 descripcion: categoria.descripcion,
+                tipo_display: categoria.tipo_display || 'horizontal',
                 orden: categoria.orden
               })
               .eq('id', categoria.id);
@@ -330,6 +335,7 @@ export class WebGeneratorService {
                 empresa_id: id,
                 nombre: categoria.nombre,
                 descripcion: categoria.descripcion || '',
+                tipo_display: categoria.tipo_display || 'horizontal',
                 orden: categoria.orden,
                 visible: true
               })

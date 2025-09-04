@@ -145,6 +145,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     id?: number;
     nombre: string;
     descripcion: string;
+    tipo_display?: 'horizontal' | 'vertical';
     orden: number;
     subcategorias: Array<{
       id?: number;
@@ -211,6 +212,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             id: cat.id,
             nombre: cat.nombre,
             descripcion: cat.descripcion || '',
+            tipo_display: cat.tipo_display || 'horizontal',
             orden: cat.orden,
             subcategorias: cat.subcategorias ? cat.subcategorias.map(sub => ({
               id: sub.id,
@@ -266,6 +268,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       id?: number;
       nombre: string;
       descripcion: string;
+      tipo_display?: 'horizontal' | 'vertical';
       orden: number;
       subcategorias: SubcategoriaType[];
     };
@@ -282,6 +285,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           id: cat.id,
           nombre: cat.nombre.trim(),
           descripcion: cat.descripcion?.trim() || '',
+          tipo_display: cat.tipo_display || 'horizontal',
           orden: cat.orden || 0,
           subcategorias: [] as any[]
         };
@@ -884,6 +888,24 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={2}
                       />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor={`cat-tipo-display-${catIndex}`}>Tipo de visualización de subcategorías</Label>
+                      <select
+                        id={`cat-tipo-display-${catIndex}`}
+                        value={categoria.tipo_display || 'horizontal'}
+                        onChange={(e) => {
+                          const newCategorias = [...categorias];
+                          newCategorias[catIndex].tipo_display = e.target.value as 'horizontal' | 'vertical';
+                          setCategorias(newCategorias);
+                        }}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="horizontal">Horizontal (Por defecto)</option>
+                        <option value="vertical">Vertical</option>
+                      </select>
+                      <p className="text-sm text-gray-500 mt-1">Define cómo se mostrarán las subcategorías en el sitio web</p>
                     </div>
                     
                     <div>

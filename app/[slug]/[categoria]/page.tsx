@@ -97,50 +97,108 @@ export default async function CategoriaPage({ params }: PageProps) {
 
           {/* Subcategorías */}
           {categoriaEncontrada.subcategorias && categoriaEncontrada.subcategorias.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className={`grid grid-cols-1 gap-8 ${
+              categoriaEncontrada.tipo_display === 'vertical' 
+                ? 'max-w-3xl mx-auto' 
+                : 'md:grid-cols-2 lg:grid-cols-3'
+            }`}>
               {categoriaEncontrada.subcategorias.map((subcategoria: any) => (
                 <Card key={subcategoria.id} className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden">
                   <CardContent className="p-6">
-                    {/* Título siempre visible en la parte superior */}
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">
-                      {subcategoria.nombre}
-                    </h3>
-                    
-                    {/* Imagen debajo del título si existe */}
-                    {subcategoria.imagen_url && (
-                      <div className="relative overflow-hidden h-56 mb-4 rounded-lg">
-                        <img 
-                          src={subcategoria.imagen_url.includes('drive.google.com') ? 
-                            formatGoogleDriveUrl(subcategoria.imagen_url) : 
-                            subcategoria.imagen_url} 
-                          alt={subcategoria.nombre}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
+                    {/* Layout vertical */}
+                    {categoriaEncontrada.tipo_display === 'vertical' ? (
+                      <div className="md:flex md:gap-6">
+                        {/* Imagen a la izquierda en modo vertical */}
+                        {subcategoria.imagen_url && (
+                          <div className="relative overflow-hidden rounded-lg md:w-48 md:h-48 md:flex-shrink-0 mb-4 md:mb-0">
+                            <img 
+                              src={subcategoria.imagen_url.includes('drive.google.com') ? 
+                                formatGoogleDriveUrl(subcategoria.imagen_url) : 
+                                subcategoria.imagen_url} 
+                              alt={subcategoria.nombre}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          </div>
+                        )}
+                        
+                        {/* Contenido a la derecha en modo vertical */}
+                        <div className="md:flex-1">
+                          <h3 className="text-xl font-bold text-gray-900 mb-4">
+                            {subcategoria.nombre}
+                          </h3>
+                          
+                          {subcategoria.descripcion && (
+                            <p className="text-gray-600 mb-6 leading-relaxed">
+                              {subcategoria.descripcion}
+                            </p>
+                          )}
+                          
+                          {subcategoria.enlace_externo && (
+                            <Button
+                              asChild
+                              className="w-full group/btn text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                              style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
+                            >
+                              <a
+                                href={subcategoria.enlace_externo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-center gap-2"
+                              >
+                                Consultar más
+                                <ExternalLink className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                              </a>
+                            </Button>
+                          )}
+                        </div>
                       </div>
-                    )}
-                    
-                    {subcategoria.descripcion && (
-                      <p className="text-gray-600 mb-6 leading-relaxed">
-                        {subcategoria.descripcion}
-                      </p>
-                    )}
-                    
-                    {subcategoria.enlace_externo && (
-                      <Button
-                        asChild
-                        className="w-full group/btn text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                        style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
-                      >
-                        <a
-                          href={subcategoria.enlace_externo}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-2"
-                        >
-                          Consultar más
-                          <ExternalLink className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                        </a>
-                      </Button>
+                    ) : (
+                      /* Layout horizontal (predeterminado) */
+                      <>
+                        {/* Título arriba en modo horizontal */}
+                        <h3 className="text-xl font-bold text-gray-900 mb-4">
+                          {subcategoria.nombre}
+                        </h3>
+                        
+                        {/* Imagen debajo del título */}
+                        {subcategoria.imagen_url && (
+                          <div className="relative overflow-hidden h-56 mb-4 rounded-lg">
+                            <img 
+                              src={subcategoria.imagen_url.includes('drive.google.com') ? 
+                                formatGoogleDriveUrl(subcategoria.imagen_url) : 
+                                subcategoria.imagen_url} 
+                              alt={subcategoria.nombre}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          </div>
+                        )}
+                        
+                        {/* Descripción */}
+                        {subcategoria.descripcion && (
+                          <p className="text-gray-600 mb-6 leading-relaxed">
+                            {subcategoria.descripcion}
+                          </p>
+                        )}
+                        
+                        {/* Botón de enlace */}
+                        {subcategoria.enlace_externo && (
+                          <Button
+                            asChild
+                            className="w-full group/btn text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                            style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
+                          >
+                            <a
+                              href={subcategoria.enlace_externo}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-2"
+                            >
+                              Consultar más
+                              <ExternalLink className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                            </a>
+                          </Button>
+                        )}
+                      </>
                     )}
                   </CardContent>
                 </Card>

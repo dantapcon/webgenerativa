@@ -31,6 +31,7 @@ export interface Categoria {
   empresa_id: number;
   nombre: string;
   descripcion?: string | null;
+  tipo_display?: 'horizontal' | 'vertical' | null;
   orden: number;
   visible: boolean;
   fecha_creacion: string;
@@ -79,6 +80,7 @@ export interface EmpresaFormData {
   categorias?: Array<{
     nombre: string;
     descripcion?: string;
+    tipo_display?: 'horizontal' | 'vertical';
     orden: number;
     subcategorias?: Array<{
       nombre: string;
