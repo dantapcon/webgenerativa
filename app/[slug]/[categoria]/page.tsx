@@ -7,6 +7,37 @@ import Link from 'next/link';
 import { EmpresaLayout } from '@/components/empresa-layout';
 import { generateSlug } from '@/lib/utils';
 
+// Función para convertir URLs de Google Drive en enlaces directos
+function formatGoogleDriveUrl(url: string): string {
+  try {
+    if (!url || !url.includes('drive.google.com')) return url;
+    
+    // Extraer el ID del archivo de Google Drive
+    let fileId = '';
+    
+    // Formato: drive.google.com/file/d/ID/view
+    if (url.includes('/file/d/')) {
+      const parts = url.split('/file/d/');
+      if (parts.length > 1) {
+        fileId = parts[1].split('/')[0];
+      }
+    }
+    // Formato: drive.google.com/open?id=ID
+    else if (url.includes('open?id=')) {
+      const urlObj = new URL(url);
+      fileId = urlObj.searchParams.get('id') || '';
+    }
+    
+    if (!fileId) return url;
+    
+    // MÉTODO PROBADO Y CONFIRMADO: Formato correcto para imágenes de Google Drive
+    return `https://drive.google.com/uc?export=view&id=${fileId}`;
+  } catch (error) {
+    console.error('Error formateando URL de Google Drive:', error);
+    return url;
+  }
+}
+
 interface PageProps {
   params: Promise<{ slug: string; categoria: string }>;
 }
@@ -79,7 +110,9 @@ export default async function CategoriaPage({ params }: PageProps) {
                     {subcategoria.imagen_url && (
                       <div className="relative overflow-hidden h-56 mb-4 rounded-lg">
                         <img 
-                          src={subcategoria.imagen_url} 
+                          src={subcategoria.imagen_url.includes('drive.google.com') ? 
+                            formatGoogleDriveUrl(subcategoria.imagen_url) : 
+                            subcategoria.imagen_url} 
                           alt={subcategoria.nombre}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />

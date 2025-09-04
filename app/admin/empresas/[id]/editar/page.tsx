@@ -49,6 +49,71 @@ function formatVimeoUrl(url: string): string {
   }
 }
 
+// Función para convertir URLs de Google Drive en enlaces directos
+function formatGoogleDriveUrl(url: string): string {
+  try {
+    if (!url || !url.includes('drive.google.com')) return url;
+    
+    // Extraer el ID del archivo de Google Drive
+    let fileId = '';
+    
+    // Formato: drive.google.com/file/d/ID/view
+    if (url.includes('/file/d/')) {
+      const parts = url.split('/file/d/');
+      if (parts.length > 1) {
+        fileId = parts[1].split('/')[0];
+      }
+    }
+    // Formato: drive.google.com/open?id=ID
+    else if (url.includes('open?id=')) {
+      const urlObj = new URL(url);
+      fileId = urlObj.searchParams.get('id') || '';
+    }
+    
+    if (!fileId) return url;
+    
+    // Método principal: formato uc con export=view
+    const convertedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+    console.log('URL de Google Drive convertida:', {
+      original: url,
+      fileId: fileId,
+      converted: convertedUrl
+    });
+    return convertedUrl;
+  } catch (error) {
+    console.error('Error formateando URL de Google Drive:', error);
+    return url;
+  }
+}
+
+// Función alternativa para Google Drive si la primera falla
+function formatGoogleDriveUrlAlternative(url: string): string {
+  try {
+    if (!url || !url.includes('drive.google.com')) return url;
+    
+    // Extraer el ID del archivo de Google Drive
+    let fileId = '';
+    
+    if (url.includes('/file/d/')) {
+      const parts = url.split('/file/d/');
+      if (parts.length > 1) {
+        fileId = parts[1].split('/')[0];
+      }
+    } else if (url.includes('open?id=')) {
+      const urlObj = new URL(url);
+      fileId = urlObj.searchParams.get('id') || '';
+    }
+    
+    if (!fileId) return url;
+    
+    // Método alternativo: usar googleapis
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+  } catch (error) {
+    console.error('Error con método alternativo de Google Drive:', error);
+    return url;
+  }
+}
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }
@@ -170,6 +235,13 @@ export default function EditarEmpresaPage({ params }: PageProps) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    
+    // Validar que no sea una imagen base64 para el campo logo_url
+    if (name === 'logo_url' && value.startsWith('data:image/')) {
+      showAlert('error', 'No se pueden usar imágenes en formato base64. Por favor, usa una URL de imagen válida o sube la imagen a un servicio como Imgur.');
+      return;
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -507,18 +579,63 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                     </select>
                   </div>
 
-                  <div className="space-y-2">
+                    <div className="space-y-2">
                     <Label htmlFor="logo_url">URL del Logo</Label>
-                    <Input
-                      id="logo_url"
-                      name="logo_url"
-                      value={formData.logo_url}
-                      onChange={handleInputChange}
-                      placeholder="https://ejemplo.com/logo.png"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
+                    <div className="flex">
+                      <Input
+                        id="logo_url"
+                        name="logo_url"
+                        value={formData.logo_url}
+                        onChange={handleInputChange}
+                        placeholder="https://ejemplo.com/logo.png o URL de Google Drive"
+                        className="flex-1"
+                      />
+                    </div>
+                    {formData.logo_url && (
+                      <div className="mt-2">
+                        <img 
+                          src={formData.logo_url.includes('drive.google.com') ? 
+                            formatGoogleDriveUrl(formData.logo_url) : 
+                            formData.logo_url} 
+                          alt="Vista previa del logo" 
+                          className="h-16 object-contain rounded border"
+                          onError={(e) => {
+                            const imgElement = e.target as HTMLImageElement;
+                            const currentSrc = imgElement.src;
+                            
+                            console.error("Error cargando logo:", {
+                              originalUrl: formData.logo_url,
+                              processedUrl: currentSrc,
+                              error: e
+                            });
+                            
+                            // Si es una URL de Google Drive y falló el primer método, probar alternativo
+                            if (formData.logo_url && formData.logo_url.includes('drive.google.com') && currentSrc.includes('uc?export=view')) {
+                              console.log("Probando método alternativo para logo de Google Drive...");
+                              imgElement.src = formatGoogleDriveUrlAlternative(formData.logo_url);
+                            } else {
+                              // Si ya falló todo, mostrar placeholder
+                              imgElement.src = "https://placehold.co/400x300?text=Logo+no+disponible";
+                            }
+                          }}
+                          onLoad={() => {
+                            console.log("Logo cargado exitosamente:", formData.logo_url);
+                          }}
+                        />
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">
+                      Introduce la URL completa del logo. Compatible con enlaces de Google Drive.
+                      <br />
+                      <span className="text-red-500 font-medium">⚠️ No pegues imágenes directamente - solo URLs válidas</span>
+                    </p>
+                    <div className="text-xs text-blue-600 mt-1 cursor-pointer" onClick={() => window.open('https://imgur.com/upload', '_blank')}>
+                      ↗️ Puedes subir tus imágenes en Imgur y luego usar la URL
+                    </div>
+                    <div className="text-xs text-green-600 mt-1">
+                      📝 Para Google Drive: Asegúrate de que el archivo esté compartido como "Cualquier persona con el enlace puede ver"
+                    </div>
+                  </div>                  <div className="space-y-2">
                     <Label htmlFor="video_promocional_url">Video Promocional</Label>
                     <Input
                       id="video_promocional_url"
@@ -913,24 +1030,55 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                                   
                                   // Limpiar y formatear la URL si es necesario
                                   let url = e.target.value.trim();
+                                  
+                                  // Validar que no sea una imagen base64
+                                  if (url.startsWith('data:image/')) {
+                                    showAlert('error', 'No se pueden usar imágenes en formato base64. Por favor, usa una URL de imagen válida o sube la imagen a un servicio como Imgur.');
+                                    return;
+                                  }
+                                  
                                   newCategorias[catIndex].subcategorias[subIndex].imagen_url = url;
                                   setCategorias(newCategorias);
                                 }}
-                                placeholder="https://ejemplo.com/imagen.jpg"
+                                placeholder="https://ejemplo.com/imagen.jpg o URL de Google Drive"
                                 className="flex-1"
                               />
                             </div>
                             <p className="text-xs text-gray-500 mt-1">
-                              Introduce la URL completa de la imagen
+                              Introduce la URL completa de la imagen. Compatible con enlaces de Google Drive.
                             </p>
+                            <div className="text-xs text-green-600 mt-1">
+                              📝 Para Google Drive: Asegúrate de que el archivo esté compartido como "Cualquier persona con el enlace puede ver"
+                            </div>
                             {subcategoria.imagen_url && (
                               <div className="mt-2">
                                 <img 
-                                  src={subcategoria.imagen_url} 
+                                  src={subcategoria.imagen_url.includes('drive.google.com') ? 
+                                    formatGoogleDriveUrl(subcategoria.imagen_url) : 
+                                    subcategoria.imagen_url} 
                                   alt="Vista previa" 
                                   className="h-20 object-contain rounded border"
                                   onError={(e) => {
-                                    (e.target as HTMLImageElement).src = "https://placehold.co/400x300?text=Imagen+no+disponible";
+                                    const imgElement = e.target as HTMLImageElement;
+                                    const currentSrc = imgElement.src;
+                                    
+                                    console.error("Error cargando imagen:", {
+                                      originalUrl: subcategoria.imagen_url,
+                                      processedUrl: currentSrc,
+                                      error: e
+                                    });
+                                    
+                                    // Si es una URL de Google Drive y falló el primer método, probar alternativo
+                                    if (subcategoria.imagen_url.includes('drive.google.com') && currentSrc.includes('uc?export=view')) {
+                                      console.log("Probando método alternativo para Google Drive...");
+                                      imgElement.src = formatGoogleDriveUrlAlternative(subcategoria.imagen_url);
+                                    } else {
+                                      // Si ya falló todo, mostrar placeholder
+                                      imgElement.src = "https://placehold.co/400x300?text=Imagen+no+disponible";
+                                    }
+                                  }}
+                                  onLoad={() => {
+                                    console.log("Imagen cargada exitosamente:", subcategoria.imagen_url);
                                   }}
                                 />
                               </div>

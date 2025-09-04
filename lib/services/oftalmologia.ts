@@ -415,7 +415,19 @@ export class WebGeneratorService {
                   // Solo incluir campos que no sean nulos o undefined
                   if (datosActualizados.nombre) cleanData.nombre = datosActualizados.nombre;
                   if (datosActualizados.descripcion !== undefined) cleanData.descripcion = datosActualizados.descripcion || '';
-                  if (datosActualizados.imagen_url !== undefined) cleanData.imagen_url = datosActualizados.imagen_url || '';
+                  
+                  // Validar y limpiar imagen_url - NO permitir base64
+                  if (datosActualizados.imagen_url !== undefined) {
+                    let imagen_url = datosActualizados.imagen_url || '';
+                    
+                    // Si es una imagen en formato base64, rechazarla y usar cadena vacía
+                    if (imagen_url.startsWith('data:image/')) {
+                      console.warn('Se detectó imagen en formato base64, rechazando. Use URLs de imágenes.');
+                      imagen_url = '';
+                    }
+                    
+                    cleanData.imagen_url = imagen_url;
+                  }
                   
                   // Corrección especial para el enlace_externo para cumplir con la restricción CHECK
                   if (datosActualizados.enlace_externo !== undefined) {

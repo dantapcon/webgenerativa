@@ -13,6 +13,37 @@ import { Globe, Palette, Building, Users, Phone, Mail, MapPin, Image, Plus, Tras
 import Link from 'next/link';
 import { Header } from '@/components/header';
 
+// Función para convertir URLs de Google Drive en enlaces directos
+function formatGoogleDriveUrl(url: string): string {
+  try {
+    if (!url || !url.includes('drive.google.com')) return url;
+    
+    // Extraer el ID del archivo de Google Drive
+    let fileId = '';
+    
+    // Formato: drive.google.com/file/d/ID/view
+    if (url.includes('/file/d/')) {
+      const parts = url.split('/file/d/');
+      if (parts.length > 1) {
+        fileId = parts[1].split('/')[0];
+      }
+    }
+    // Formato: drive.google.com/open?id=ID
+    else if (url.includes('open?id=')) {
+      const urlObj = new URL(url);
+      fileId = urlObj.searchParams.get('id') || '';
+    }
+    
+    if (!fileId) return url;
+    
+    // MÉTODO PROBADO Y CONFIRMADO: Formato correcto para imágenes de Google Drive
+    return `https://drive.google.com/uc?export=view&id=${fileId}`;
+  } catch (error) {
+    console.error('Error formateando URL de Google Drive:', error);
+    return url;
+  }
+}
+
 interface CategoriaForm {
   nombre: string;
   descripcion: string;
@@ -56,6 +87,13 @@ export default function WebGeneratorPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    
+    // Validar que no sea una imagen base64 para el campo logo_url
+    if (name === 'logo_url' && value.startsWith('data:image/')) {
+      showAlert('error', 'No se pueden usar imágenes en formato base64. Por favor, usa una URL de imagen válida o sube la imagen a un servicio como Imgur.');
+      return;
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -128,6 +166,12 @@ export default function WebGeneratorPage() {
   };
 
   const actualizarSubcategoria = (categoriaIndex: number, subcategoriaIndex: number, campo: keyof SubcategoriaForm, valor: string) => {
+    // Validar que no sea una imagen base64 para el campo imagen_url
+    if (campo === 'imagen_url' && valor.startsWith('data:image/')) {
+      showAlert('error', 'No se pueden usar imágenes en formato base64. Por favor, usa una URL de imagen válida o sube la imagen a un servicio como Imgur.');
+      return;
+    }
+    
     const nuevasCategorias = [...categorias];
     nuevasCategorias[categoriaIndex].subcategorias[subcategoriaIndex] = {
       ...nuevasCategorias[categoriaIndex].subcategorias[subcategoriaIndex],
@@ -503,9 +547,28 @@ export default function WebGeneratorPage() {
                                 name="logo_url"
                                 value={formData.logo_url}
                                 onChange={handleInputChange}
-                                placeholder="https://ejemplo.com/logo.png"
+                                placeholder="https://ejemplo.com/logo.png o URL de Google Drive"
                                 className="flex-1 h-11"
                               />
+                              {formData.logo_url && formData.logo_url.includes('drive.google.com') && (
+                                <p className="text-xs text-green-600 mt-1">
+                                  Enlace de Google Drive detectado, se convertirá automáticamente
+                                </p>
+                              )}
+                              {formData.logo_url && !formData.logo_url.includes('placeholder') && (
+                                <div className="mt-2">
+                                  <img 
+                                    src={formData.logo_url.includes('drive.google.com') ? 
+                                      formatGoogleDriveUrl(formData.logo_url) : 
+                                      formData.logo_url} 
+                                    alt="Vista previa del logo" 
+                                    className="h-16 object-contain rounded border"
+                                    onError={(e) => {
+                                      (e.target as HTMLImageElement).src = "https://placehold.co/400x300?text=Logo+no+disponible";
+                                    }}
+                                  />
+                                </div>
+                              )}
                               <Button
                                 type="button"
                                 variant="outline"
@@ -770,6 +833,27 @@ export default function WebGeneratorPage() {
                                       placeholder="https://ejemplo.com/imagen.jpg"
                                       className="h-9 text-sm"
                                     />
+                                    {subcategoria.imagen_url && subcategoria.imagen_url.includes('drive.google.com') && (
+                                      <p className="text-xs text-green-600 mt-1">
+                                        Enlace de Google Drive detectado, se convertirá automáticamente
+                                      </p>
+                                    )}
+                                    {subcategoria.imagen_url && (
+                                      <div className="mt-2">
+                                        <img 
+                                          src={subcategoria.imagen_url.includes('drive.google.com') ? 
+                                            formatGoogleDriveUrl(subcategoria.imagen_url) : 
+                                            subcategoria.imagen_url} 
+                                          alt="Vista previa" 
+                                          className="h-16 object-contain rounded border"
+                                          onError={(e) => {
+                                            console.error("Error cargando imagen en generador:", e);
+                                            (e.target as HTMLImageElement).src = "https://placehold.co/400x300?text=Imagen+no+disponible";
+                                          }}
+                                          crossOrigin="anonymous"
+                                        />
+                                      </div>
+                                    )}
                                   </div>
                                   <div className="space-y-1">
                                     <Label className="text-xs font-medium text-gray-600">Enlace Externo</Label>
