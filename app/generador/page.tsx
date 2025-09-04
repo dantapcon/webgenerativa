@@ -598,11 +598,12 @@ export default function WebGeneratorPage() {
 
                   <div className="space-y-6">
                     {categorias.map((categoria, categoriaIndex) => (
-                      <Card key={categoriaIndex} className="border-l-4 border-blue-500">
-                        <CardHeader className="pb-4">
+                      <Card key={categoriaIndex} className="border-l-4 border-blue-500 shadow-md bg-blue-50/50">
+                        <CardHeader className="pb-4 bg-gradient-to-r from-blue-600 to-blue-400 text-white">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <Badge variant="secondary">Categoría {categoriaIndex + 1}</Badge>
+                              <Badge className="bg-white text-blue-700">{categoriaIndex + 1}</Badge>
+                              <span className="font-medium">Categoría: {categoria.nombre || 'Sin nombre'}</span>
                               <div className="flex gap-1">
                                 <Button
                                   type="button"
@@ -657,32 +658,89 @@ export default function WebGeneratorPage() {
                           </div>
 
                           {/* Subcategorías */}
-                          <div className="space-y-4">
+                          <div className="space-y-4 mt-6 pt-4 border-t border-blue-100">
                             <div className="flex items-center justify-between">
-                              <h5 className="font-medium text-gray-800">Subcategorías</h5>
+                              <div className="flex items-center bg-blue-100 rounded-md px-3 py-2 text-blue-800">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 mr-2">
+                                  <path d="M9 18h6"></path>
+                                  <path d="M12 22V9"></path>
+                                  <circle cx="12" cy="6" r="3"></circle>
+                                </svg>
+                                <h5 className="font-medium">Subcategorías de <strong>"{categoria.nombre || 'esta categoría'}"</strong></h5>
+                              </div>
                               <Button
                                 type="button"
                                 variant="outline"
                                 size="sm"
+                                className="bg-cyan-50 border-cyan-200 hover:bg-cyan-100 text-cyan-700 flex items-center gap-1"
                                 onClick={() => agregarSubcategoria(categoriaIndex)}
                               >
                                 <Plus className="h-4 w-4 mr-1" />
                                 Agregar Subcategoría
                               </Button>
                             </div>
+                            <div className="ml-3 mb-3 bg-blue-50 p-2 rounded-lg border border-blue-100">
+                              <p className="text-xs text-blue-700">Las subcategorías se mostrarán dentro de <strong>"{categoria.nombre || 'esta categoría'}"</strong> en el sitio web.</p>
+                            </div>
 
                             {categoria.subcategorias.map((subcategoria, subcategoriaIndex) => (
-                              <div key={subcategoriaIndex} className="border rounded-lg p-4 bg-gray-50">
+                              <div key={subcategoriaIndex} className="border rounded-lg p-4 bg-cyan-50 border-l-4 border-cyan-500 ml-3 relative shadow-sm">
+                                {/* Línea conectora e indicador visual */}
+                                <div className="absolute -left-3 top-1/2 w-3 h-0.5 bg-cyan-500"></div>
+                                <div className="absolute -left-5 top-1/2 transform -translate-y-1/2 w-3 h-3 rounded-full bg-cyan-500 border-2 border-white"></div>
+                                
                                 <div className="flex items-center justify-between mb-3">
-                                  <Badge variant="outline">Subcategoría {subcategoriaIndex + 1}</Badge>
-                                  <Button
-                                    type="button"
-                                    variant="destructive"
-                                    size="sm"
-                                    onClick={() => eliminarSubcategoria(categoriaIndex, subcategoriaIndex)}
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
+                                  <div className="flex items-center">
+                                    <Badge className="bg-cyan-100 text-cyan-800 hover:bg-cyan-200">Subcategoría {subcategoriaIndex + 1}</Badge>
+                                    <span className="ml-2 text-xs text-cyan-700">de {categoria.nombre || 'Categoría principal'}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    {/* Botones de reordenamiento para subcategorías */}
+                                    <Button
+                                      type="button"
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => {
+                                        const newCategorias = [...categorias];
+                                        if (subcategoriaIndex > 0) {
+                                          const temp = newCategorias[categoriaIndex].subcategorias[subcategoriaIndex];
+                                          newCategorias[categoriaIndex].subcategorias[subcategoriaIndex] = newCategorias[categoriaIndex].subcategorias[subcategoriaIndex - 1];
+                                          newCategorias[categoriaIndex].subcategorias[subcategoriaIndex - 1] = temp;
+                                          setCategorias(newCategorias);
+                                        }
+                                      }}
+                                      disabled={subcategoriaIndex === 0}
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <ArrowUp className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                      type="button"
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => {
+                                        const newCategorias = [...categorias];
+                                        if (subcategoriaIndex < categoria.subcategorias.length - 1) {
+                                          const temp = newCategorias[categoriaIndex].subcategorias[subcategoriaIndex];
+                                          newCategorias[categoriaIndex].subcategorias[subcategoriaIndex] = newCategorias[categoriaIndex].subcategorias[subcategoriaIndex + 1];
+                                          newCategorias[categoriaIndex].subcategorias[subcategoriaIndex + 1] = temp;
+                                          setCategorias(newCategorias);
+                                        }
+                                      }}
+                                      disabled={subcategoriaIndex === categoria.subcategorias.length - 1}
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <ArrowDown className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                      type="button"
+                                      variant="destructive"
+                                      size="sm"
+                                      onClick={() => eliminarSubcategoria(categoriaIndex, subcategoriaIndex)}
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </div>
                                 </div>
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

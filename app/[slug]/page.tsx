@@ -4,6 +4,43 @@ import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
 import { EmpresaLayout } from '@/components/empresa-layout';
 
+// Funciones auxiliares para formatear URLs de video
+function formatYoutubeUrl(url: string): string {
+  try {
+    // Extraer el ID del video de YouTube
+    let videoId = '';
+    
+    // Formato: youtube.com/watch?v=ID
+    if (url.includes('youtube.com/watch')) {
+      const urlObj = new URL(url);
+      videoId = urlObj.searchParams.get('v') || '';
+    } 
+    // Formato: youtu.be/ID
+    else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1]?.split('?')[0] || '';
+    }
+    
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+  } catch (error) {
+    console.error('Error formateando URL de YouTube:', error);
+    return '';
+  }
+}
+
+function formatVimeoUrl(url: string): string {
+  try {
+    // Extraer el ID del video de Vimeo
+    const vimeoRegex = /vimeo\.com\/(?:video\/)?(\d+)/;
+    const matches = url.match(vimeoRegex);
+    const videoId = matches ? matches[1] : '';
+    
+    return videoId ? `https://player.vimeo.com/video/${videoId}` : '';
+  } catch (error) {
+    console.error('Error formateando URL de Vimeo:', error);
+    return '';
+  }
+}
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
@@ -75,9 +112,48 @@ export default async function EmpresaPage({ params }: PageProps) {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
               {empresa.tipo_negocio === 'servicios' ? 'Nuestros Servicios Profesionales' : 'Lo Que Hacemos'}
             </h2>
-            <p className="text-xl text-gray-600 leading-relaxed">
+            <p className="text-xl text-gray-600 leading-relaxed mb-8">
               {empresa.descripcion_empresa || `En ${empresa.nombre_empresa} nos dedicamos a brindar el mejor servicio a nuestros clientes con profesionalismo y calidad.`}
             </p>
+            
+            {/* Video Promocional */}
+            {empresa.video_promocional_url && (
+              <div className="mt-10 max-w-3xl mx-auto">
+                <div className="aspect-video w-full shadow-lg rounded-xl overflow-hidden">
+                  {empresa.video_promocional_url.includes('youtube.com') || empresa.video_promocional_url.includes('youtu.be') ? (
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src={formatYoutubeUrl(empresa.video_promocional_url)}
+                      title="Video promocional"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="aspect-video"
+                    ></iframe>
+                  ) : empresa.video_promocional_url.includes('vimeo.com') ? (
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src={formatVimeoUrl(empresa.video_promocional_url)}
+                      title="Video promocional"
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      allowFullScreen
+                      className="aspect-video"
+                    ></iframe>
+                  ) : (
+                    <video
+                      src={empresa.video_promocional_url}
+                      controls
+                      className="w-full h-full"
+                    >
+                      Tu navegador no soporta la reproducción de videos.
+                    </video>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>

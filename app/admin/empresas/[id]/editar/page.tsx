@@ -12,6 +12,43 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ArrowLeft, Save, Eye, Building } from 'lucide-react';
 import Link from 'next/link';
 
+// Funciones auxiliares para formatear URLs de video
+function formatYoutubeUrl(url: string): string {
+  try {
+    // Extraer el ID del video de YouTube
+    let videoId = '';
+    
+    // Formato: youtube.com/watch?v=ID
+    if (url.includes('youtube.com/watch')) {
+      const urlObj = new URL(url);
+      videoId = urlObj.searchParams.get('v') || '';
+    } 
+    // Formato: youtu.be/ID
+    else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1]?.split('?')[0] || '';
+    }
+    
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+  } catch (error) {
+    console.error('Error formateando URL de YouTube:', error);
+    return '';
+  }
+}
+
+function formatVimeoUrl(url: string): string {
+  try {
+    // Extraer el ID del video de Vimeo
+    const vimeoRegex = /vimeo\.com\/(?:video\/)?(\d+)/;
+    const matches = url.match(vimeoRegex);
+    const videoId = matches ? matches[1] : '';
+    
+    return videoId ? `https://player.vimeo.com/video/${videoId}` : '';
+  } catch (error) {
+    console.error('Error formateando URL de Vimeo:', error);
+    return '';
+  }
+}
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }
@@ -490,6 +527,50 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                       onChange={handleInputChange}
                       placeholder="https://youtube.com/watch?v=..."
                     />
+                    <p className="text-sm text-gray-500 mt-1">
+                      Ingresa la URL de YouTube, Vimeo o un video público (e.g. https://youtube.com/watch?v=ID)
+                    </p>
+                    {formData.video_promocional_url && (
+                      <div className="mt-3">
+                        <Label className="mb-2 block">Vista previa del video:</Label>
+                        <div className="aspect-video w-full border rounded overflow-hidden bg-gray-100">
+                          {formData.video_promocional_url.includes('youtube.com') || formData.video_promocional_url.includes('youtu.be') ? (
+                            <iframe
+                              width="100%"
+                              height="100%"
+                              src={formatYoutubeUrl(formData.video_promocional_url)}
+                              title="Video promocional"
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="aspect-video"
+                            ></iframe>
+                          ) : formData.video_promocional_url.includes('vimeo.com') ? (
+                            <iframe
+                              width="100%"
+                              height="100%"
+                              src={formatVimeoUrl(formData.video_promocional_url)}
+                              title="Video promocional"
+                              frameBorder="0"
+                              allow="autoplay; fullscreen; picture-in-picture"
+                              allowFullScreen
+                              className="aspect-video"
+                            ></iframe>
+                          ) : (
+                            <video
+                              src={formData.video_promocional_url}
+                              controls
+                              className="w-full h-full"
+                              onError={(e) => {
+                                e.currentTarget.outerHTML = '<div class="flex items-center justify-center h-full text-gray-500">El formato del video no es válido o no es accesible</div>';
+                              }}
+                            >
+                              Tu navegador no soporta la reproducción de videos.
+                            </video>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
