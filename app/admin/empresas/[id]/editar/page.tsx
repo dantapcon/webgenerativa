@@ -709,13 +709,13 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                     <p className="text-xs text-gray-500 mb-3 ml-4">Las subcategorías se mostrarán dentro de esta categoría en el sitio web.</p>
                     
                     {categoria.subcategorias && categoria.subcategorias.map((subcategoria, subIndex) => (
-                      <div key={subcategoria.id || `${catIndex}-${subIndex}`} className="p-3 mb-3 border rounded-md border-gray-300 bg-white shadow-sm ml-4 relative">
+                      <div key={subcategoria.id || `${catIndex}-${subIndex}`} className="p-3 mb-3 border rounded-md border-l-4 border-cyan-500 bg-cyan-50 shadow-sm ml-4 relative">
                         {/* Línea conectora visual entre categoría y subcategoría */}
-                        <div className="absolute -left-4 top-1/2 w-4 h-0.5 bg-gray-300"></div>
+                        <div className="absolute -left-4 top-1/2 w-4 h-0.5 bg-cyan-500"></div>
                         
                         <div className="flex items-center justify-between mb-2">
-                          <h6 className="text-sm font-medium flex items-center">
-                            <span className="inline-block bg-gray-200 text-gray-700 rounded-full px-2 py-0.5 text-xs mr-2">
+                          <h6 className="text-sm font-medium flex items-center text-cyan-800">
+                            <span className="inline-block bg-cyan-100 text-cyan-800 rounded-full px-2 py-0.5 text-xs mr-2">
                               {subIndex + 1}
                             </span>
                             Subcategoría: {subcategoria.nombre || 'Sin nombre'}
