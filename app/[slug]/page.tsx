@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
 import { EmpresaLayout } from '@/components/empresa-layout';
+import { ConsejoModal } from '@/components/consejo-modal';
 
 // Función para convertir URLs de Google Drive en enlaces directos
 function formatGoogleDriveUrl(url: string): string {
@@ -87,6 +88,17 @@ export default async function EmpresaPage({ params }: PageProps) {
 
   return (
     <EmpresaLayout empresa={empresa}>
+      {/* Modal de Consejo Diario */}
+      <ConsejoModal
+        isActive={empresa.modal_activo || false}
+        titulo={empresa.modal_titulo || undefined}
+        mensaje={empresa.modal_mensaje || undefined}
+        imagenUrl={empresa.modal_imagen_url || undefined}
+        fondoTipo={empresa.modal_fondo_tipo || undefined}
+        fondoColor={empresa.modal_fondo_color || undefined}
+        fondoImagen={empresa.modal_fondo_imagen || undefined}
+      />
+
       {/* Hero Section */}
       <section 
         className="relative text-white py-20 overflow-hidden" 

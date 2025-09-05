@@ -201,6 +201,14 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           descripcion_fondo_tipo: data.descripcion_fondo_tipo || 'color',
           descripcion_imagen_fondo: data.descripcion_imagen_fondo || '',
           video_descripcion: data.video_descripcion || '',
+          // Campos para el modal de ventana flotante
+          modal_activo: data.modal_activo || false,
+          modal_titulo: data.modal_titulo || '',
+          modal_mensaje: data.modal_mensaje || '',
+          modal_imagen_url: data.modal_imagen_url || '',
+          modal_fondo_tipo: data.modal_fondo_tipo || 'color',
+          modal_fondo_color: data.modal_fondo_color || '#ffffff',
+          modal_fondo_imagen: data.modal_fondo_imagen || '',
           correo_empresa: data.correo_empresa || '',
           telefono_empresa: data.telefono_empresa || '',
           direccion_empresa: data.direccion_empresa || '',
@@ -862,6 +870,175 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                   Actualmente disponible en: <code>/{empresa.slug_empresa}</code>
                 </p>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Ventana Flotante */}
+          <Card>
+            <CardHeader>
+              <CardTitle>💬 Ventana Flotante de Bienvenida</CardTitle>
+              <CardDescription>
+                Configurar una ventana flotante que aparecerá cada vez que alguien visite la página
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Activar/Desactivar Modal */}
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="modal_activo"
+                  name="modal_activo"
+                  checked={formData.modal_activo || false}
+                  onChange={(e) => setFormData(prev => ({ ...prev, modal_activo: e.target.checked }))}
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <Label htmlFor="modal_activo" className="text-sm font-medium text-gray-700">
+                  Activar ventana flotante de bienvenida
+                </Label>
+              </div>
+              <p className="text-xs text-gray-500">
+                Se mostrará una ventana flotante cada vez que alguien visite la página
+              </p>
+
+              {/* Campos del modal - solo visible si está activo */}
+              {formData.modal_activo && (
+                <div className="space-y-4 mt-4 p-4 bg-gray-50 rounded-lg border">
+                  {/* Título */}
+                  <div className="space-y-2">
+                    <Label htmlFor="modal_titulo">Título de la ventana</Label>
+                    <Input
+                      id="modal_titulo"
+                      name="modal_titulo"
+                      value={formData.modal_titulo || ''}
+                      onChange={handleInputChange}
+                      placeholder="Ej: ¡Bienvenido! o Información importante"
+                    />
+                  </div>
+
+                  {/* Mensaje */}
+                  <div className="space-y-2">
+                    <Label htmlFor="modal_mensaje">Mensaje de la ventana</Label>
+                    <textarea
+                      id="modal_mensaje"
+                      name="modal_mensaje"
+                      value={formData.modal_mensaje || ''}
+                      onChange={handleInputChange}
+                      placeholder="Escribe tu mensaje de bienvenida, información importante o promoción..."
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  {/* Imagen opcional */}
+                  <div className="space-y-2">
+                    <Label htmlFor="modal_imagen_url">URL de imagen (opcional)</Label>
+                    <Input
+                      id="modal_imagen_url"
+                      name="modal_imagen_url"
+                      value={formData.modal_imagen_url || ''}
+                      onChange={handleInputChange}
+                      placeholder="https://ejemplo.com/imagen.jpg"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Imagen que aparecerá en la ventana (tamaño máximo: 300px de alto)
+                    </p>
+                  </div>
+
+                  {/* Configuración de fondo */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Tipo de fondo */}
+                    <div className="space-y-2">
+                      <Label htmlFor="modal_fondo_tipo">Tipo de fondo</Label>
+                      <select
+                        id="modal_fondo_tipo"
+                        name="modal_fondo_tipo"
+                        value={formData.modal_fondo_tipo || 'color'}
+                        onChange={handleInputChange}
+                        className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="color">Color sólido</option>
+                        <option value="imagen">Imagen de fondo</option>
+                      </select>
+                    </div>
+
+                    {/* Color de fondo */}
+                    {formData.modal_fondo_tipo === 'color' && (
+                      <div className="space-y-2">
+                        <Label htmlFor="modal_fondo_color">Color de fondo</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="modal_fondo_color"
+                            name="modal_fondo_color"
+                            type="color"
+                            value={formData.modal_fondo_color || '#ffffff'}
+                            onChange={handleInputChange}
+                            className="w-16 h-10 p-1"
+                          />
+                          <Input
+                            type="text"
+                            value={formData.modal_fondo_color || '#ffffff'}
+                            onChange={(e) => setFormData(prev => ({ ...prev, modal_fondo_color: e.target.value }))}
+                            className="flex-1 h-10"
+                            placeholder="#ffffff"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Imagen de fondo */}
+                    {formData.modal_fondo_tipo === 'imagen' && (
+                      <div className="space-y-2">
+                        <Label htmlFor="modal_fondo_imagen">URL de imagen de fondo</Label>
+                        <Input
+                          id="modal_fondo_imagen"
+                          name="modal_fondo_imagen"
+                          value={formData.modal_fondo_imagen || ''}
+                          onChange={handleInputChange}
+                          placeholder="https://ejemplo.com/fondo.jpg"
+                        />
+                        <p className="text-xs text-gray-500">
+                          Se aplicará una capa semi-transparente para mejorar la legibilidad
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Vista previa del modal */}
+                  {(formData.modal_titulo || formData.modal_mensaje) && (
+                    <div className="mt-4">
+                      <Label className="text-sm font-medium text-gray-700 mb-2 block">Vista previa de la ventana:</Label>
+                      <div className="border rounded-lg p-4 bg-white shadow-sm max-w-md" style={{
+                        background: formData.modal_fondo_tipo === 'imagen' && formData.modal_fondo_imagen
+                          ? `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("${formData.modal_fondo_imagen}") center/cover no-repeat`
+                          : formData.modal_fondo_color || '#ffffff'
+                      }}>
+                        {formData.modal_titulo && (
+                          <h3 className="text-lg font-bold text-gray-800 mb-2">
+                            {formData.modal_titulo}
+                          </h3>
+                        )}
+                        {formData.modal_imagen_url && (
+                          <div className="flex justify-center mb-2">
+                            <img
+                              src={formData.modal_imagen_url}
+                              alt="Vista previa"
+                              className="max-w-full h-auto rounded max-h-24 object-cover"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        )}
+                        {formData.modal_mensaje && (
+                          <p className="text-gray-700 text-sm whitespace-pre-line">
+                            {formData.modal_mensaje}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
 

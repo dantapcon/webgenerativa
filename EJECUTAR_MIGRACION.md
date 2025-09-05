@@ -80,11 +80,11 @@ Ejecuta este comando para verificar:
 SELECT column_name, data_type, is_nullable, column_default
 FROM information_schema.columns 
 WHERE table_name = 'empresas' 
-AND column_name IN ('descripcion_fondo_tipo', 'descripcion_imagen_fondo', 'video_descripcion', 'hero_fondo_tipo', 'hero_imagen_fondo')
+AND column_name IN ('descripcion_fondo_tipo', 'descripcion_imagen_fondo', 'video_descripcion', 'hero_fondo_tipo', 'hero_imagen_fondo', 'modal_activo', 'modal_titulo', 'modal_mensaje', 'modal_imagen_url', 'modal_fondo_tipo', 'modal_fondo_color', 'modal_fondo_imagen')
 ORDER BY column_name;
 ```
 
-Deberías ver las 5 columnas listadas.
+Deberías ver las 12 columnas listadas.
 
 ## Paso 4: Reiniciar la aplicación
 

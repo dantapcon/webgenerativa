@@ -10,6 +10,14 @@ export interface Empresa {
   descripcion_fondo_tipo?: 'color' | 'imagen' | null;
   descripcion_imagen_fondo?: string | null;
   video_descripcion?: string | null;
+  // Campos para el modal de consejo diario
+  modal_activo?: boolean | null;
+  modal_titulo?: string | null;
+  modal_mensaje?: string | null;
+  modal_imagen_url?: string | null;
+  modal_fondo_tipo?: 'color' | 'imagen' | null;
+  modal_fondo_color?: string | null;
+  modal_fondo_imagen?: string | null;
   correo_empresa?: string | null;
   telefono_empresa?: string | null;
   direccion_empresa?: string | null;
@@ -73,6 +81,14 @@ export interface EmpresaFormData {
   descripcion_fondo_tipo?: 'color' | 'imagen';
   descripcion_imagen_fondo?: string;
   video_descripcion?: string;
+  // Campos para el modal de consejo diario
+  modal_activo?: boolean;
+  modal_titulo?: string;
+  modal_mensaje?: string;
+  modal_imagen_url?: string;
+  modal_fondo_tipo?: 'color' | 'imagen';
+  modal_fondo_color?: string;
+  modal_fondo_imagen?: string;
   correo_empresa?: string;
   telefono_empresa?: string;
   direccion_empresa?: string;

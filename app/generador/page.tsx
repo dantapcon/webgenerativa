@@ -70,6 +70,14 @@ export default function WebGeneratorPage() {
     descripcion_fondo_tipo: 'color',
     descripcion_imagen_fondo: '',
     video_descripcion: '',
+    // Campos para el modal de consejo diario
+    modal_activo: false,
+    modal_titulo: '',
+    modal_mensaje: '',
+    modal_imagen_url: '',
+    modal_fondo_tipo: 'color',
+    modal_fondo_color: '#ffffff',
+    modal_fondo_imagen: '',
     correo_empresa: '',
     telefono_empresa: '',
     direccion_empresa: '',
@@ -234,6 +242,14 @@ export default function WebGeneratorPage() {
         descripcion_fondo_tipo: 'color',
         descripcion_imagen_fondo: '',
         video_descripcion: '',
+        // Campos para el modal de consejo diario
+        modal_activo: false,
+        modal_titulo: '',
+        modal_mensaje: '',
+        modal_imagen_url: '',
+        modal_fondo_tipo: 'color',
+        modal_fondo_color: '#ffffff',
+        modal_fondo_imagen: '',
         correo_empresa: '',
         telefono_empresa: '',
         direccion_empresa: '',
@@ -467,6 +483,137 @@ export default function WebGeneratorPage() {
                         <p className="text-xs text-gray-500">Para mejores resultados, usa imágenes de tonalidad clara o con transparencia</p>
                       </div>
                     )}
+                    </div>
+
+                    {/* Modal de Ventana Flotante */}
+                    <div className="space-y-2 md:col-span-2 border-t pt-4 border-gray-200 mt-2">
+                      <h3 className="text-md font-medium mb-2">� Ventana Flotante de Bienvenida</h3>
+                      
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            id="modal_activo"
+                            name="modal_activo"
+                            checked={formData.modal_activo || false}
+                            onChange={(e) => setFormData(prev => ({ ...prev, modal_activo: e.target.checked }))}
+                            className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                          />
+                          <Label htmlFor="modal_activo" className="text-sm font-medium text-gray-700">
+                            Activar ventana flotante de bienvenida
+                          </Label>
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          Se mostrará una ventana flotante cada vez que alguien visite la página
+                        </p>
+                      </div>
+
+                      {formData.modal_activo && (
+                        <div className="space-y-4 mt-4 p-4 bg-gray-50 rounded-lg">
+                          {/* Título del modal */}
+                          <div className="space-y-2">
+                            <Label htmlFor="modal_titulo" className="text-sm font-medium text-gray-700">
+                              Título de la ventana
+                            </Label>
+                            <Input
+                              id="modal_titulo"
+                              name="modal_titulo"
+                              value={formData.modal_titulo || ''}
+                              onChange={handleInputChange}
+                              placeholder="Ej: ¡Bienvenido! o Información importante"
+                              className="w-full"
+                            />
+                          </div>
+
+                          {/* Mensaje del modal */}
+                          <div className="space-y-2">
+                            <Label htmlFor="modal_mensaje" className="text-sm font-medium text-gray-700">
+                              Mensaje de la ventana
+                            </Label>
+                            <textarea
+                              id="modal_mensaje"
+                              name="modal_mensaje"
+                              value={formData.modal_mensaje || ''}
+                              onChange={handleInputChange}
+                              placeholder="Escribe tu mensaje de bienvenida, información importante o promoción..."
+                              rows={3}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+
+                          {/* Imagen del modal */}
+                          <div className="space-y-2">
+                            <Label htmlFor="modal_imagen_url" className="text-sm font-medium text-gray-700">
+                              URL de imagen (opcional)
+                            </Label>
+                            <Input
+                              id="modal_imagen_url"
+                              name="modal_imagen_url"
+                              value={formData.modal_imagen_url || ''}
+                              onChange={handleInputChange}
+                              placeholder="https://ejemplo.com/imagen.jpg"
+                              className="w-full"
+                            />
+                            <p className="text-xs text-gray-500">
+                              Imagen que aparecerá en el modal (tamaño máximo: 300px de alto)
+                            </p>
+                          </div>
+
+                          {/* Tipo de fondo */}
+                          <div className="space-y-2">
+                            <Label htmlFor="modal_fondo_tipo" className="text-sm font-medium text-gray-700">
+                              Tipo de fondo de la ventana
+                            </Label>
+                            <select
+                              id="modal_fondo_tipo"
+                              name="modal_fondo_tipo"
+                              value={formData.modal_fondo_tipo || 'color'}
+                              onChange={handleInputChange}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="color">Color sólido</option>
+                              <option value="imagen">Imagen de fondo</option>
+                            </select>
+                          </div>
+
+                          {/* Color de fondo */}
+                          {formData.modal_fondo_tipo === 'color' && (
+                            <div className="space-y-2">
+                              <Label htmlFor="modal_fondo_color" className="text-sm font-medium text-gray-700">
+                                Color de fondo
+                              </Label>
+                              <Input
+                                id="modal_fondo_color"
+                                name="modal_fondo_color"
+                                type="color"
+                                value={formData.modal_fondo_color || '#ffffff'}
+                                onChange={handleInputChange}
+                                className="w-20 h-10"
+                              />
+                            </div>
+                          )}
+
+                          {/* Imagen de fondo */}
+                          {formData.modal_fondo_tipo === 'imagen' && (
+                            <div className="space-y-2">
+                              <Label htmlFor="modal_fondo_imagen" className="text-sm font-medium text-gray-700">
+                                URL de imagen de fondo
+                              </Label>
+                              <Input
+                                id="modal_fondo_imagen"
+                                name="modal_fondo_imagen"
+                                value={formData.modal_fondo_imagen || ''}
+                                onChange={handleInputChange}
+                                placeholder="https://ejemplo.com/fondo.jpg"
+                                className="w-full"
+                              />
+                              <p className="text-xs text-gray-500">
+                                Se aplicará una capa semi-transparente para mejorar la legibilidad
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     <div className="space-y-2">
