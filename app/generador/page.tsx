@@ -78,6 +78,8 @@ export default function WebGeneratorPage() {
     modal_fondo_tipo: 'color',
     modal_fondo_color: '#ffffff',
     modal_fondo_imagen: '',
+    // Campo para sucursales/ubicaciones
+    sucursales_activo: false,
     correo_empresa: '',
     telefono_empresa: '',
     direccion_empresa: '',
@@ -250,6 +252,8 @@ export default function WebGeneratorPage() {
         modal_fondo_tipo: 'color',
         modal_fondo_color: '#ffffff',
         modal_fondo_imagen: '',
+        // Campo para sucursales/ubicaciones
+        sucursales_activo: false,
         correo_empresa: '',
         telefono_empresa: '',
         direccion_empresa: '',
@@ -614,6 +618,30 @@ export default function WebGeneratorPage() {
                           )}
                         </div>
                       )}
+                    </div>
+
+                    {/* Sucursales/Ubicaciones */}
+                    <div className="space-y-2 md:col-span-2 border-t pt-4 border-gray-200 mt-2">
+                      <h3 className="text-md font-medium mb-2">📍 Sucursales y Ubicaciones</h3>
+                      
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            id="sucursales_activo"
+                            name="sucursales_activo"
+                            checked={formData.sucursales_activo || false}
+                            onChange={(e) => setFormData(prev => ({ ...prev, sucursales_activo: e.target.checked }))}
+                            className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                          />
+                          <Label htmlFor="sucursales_activo" className="text-sm font-medium text-gray-700">
+                            Mostrar sección de sucursales/ubicaciones
+                          </Label>
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          Agregar múltiples ubicaciones con mapas para que los clientes encuentren tus sucursales
+                        </p>
+                      </div>
                     </div>
 
                     <div className="space-y-2">

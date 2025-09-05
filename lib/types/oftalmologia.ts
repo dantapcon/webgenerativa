@@ -18,6 +18,8 @@ export interface Empresa {
   modal_fondo_tipo?: 'color' | 'imagen' | null;
   modal_fondo_color?: string | null;
   modal_fondo_imagen?: string | null;
+  // Campo para sucursales/ubicaciones
+  sucursales_activo?: boolean | null;
   correo_empresa?: string | null;
   telefono_empresa?: string | null;
   direccion_empresa?: string | null;
@@ -63,9 +65,33 @@ export interface Subcategoria {
   fecha_creacion: string;
 }
 
+export interface Sucursal {
+  id: number;
+  empresa_id: number; // Cambiado de string a number para que coincida con Empresa.id
+  nombre: string;
+  direccion: string;
+  telefono?: string | null;
+  whatsapp?: string | null;
+  email?: string | null;
+  latitud?: number | null;
+  longitud?: number | null;
+  horario_lunes?: string | null;
+  horario_martes?: string | null;
+  horario_miercoles?: string | null;
+  horario_jueves?: string | null;
+  horario_viernes?: string | null;
+  horario_sabado?: string | null;
+  horario_domingo?: string | null;
+  activo: boolean;
+  orden: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface EmpresaCompleta extends Empresa {
   categorias?: Categoria[];
   subcategorias?: Subcategoria[];
+  sucursales?: Sucursal[];
 }
 
 // Tipos para formularios
@@ -89,6 +115,8 @@ export interface EmpresaFormData {
   modal_fondo_tipo?: 'color' | 'imagen';
   modal_fondo_color?: string;
   modal_fondo_imagen?: string;
+  // Campo para sucursales/ubicaciones
+  sucursales_activo?: boolean;
   correo_empresa?: string;
   telefono_empresa?: string;
   direccion_empresa?: string;

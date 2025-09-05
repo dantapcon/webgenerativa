@@ -212,6 +212,19 @@ export class WebGeneratorService {
         subcategorias: categoria.subcategorias?.sort((a: any, b: any) => a.orden_subcategoria - b.orden_subcategoria) || []
       })) || [];
 
+      // Agregar categoría de "Ubicaciones" si sucursales_activo está habilitado
+      if (empresa.sucursales_activo) {
+        categoriasOrdenadas.push({
+          id: -1, // ID especial para ubicaciones
+          empresa_id: empresa.id,
+          nombre: 'Ubicaciones',
+          descripcion: 'Nuestras sucursales y ubicaciones',
+          orden: 999, // Al final
+          visible: true,
+          subcategorias: []
+        });
+      }
+
       return {
         ...empresa,
         categorias: categoriasOrdenadas

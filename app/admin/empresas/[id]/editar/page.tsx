@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save, Eye, Building } from 'lucide-react';
+import SucursalesManager from '@/components/admin/SucursalesManager';
 import Link from 'next/link';
 // La migración ya se ha completado
 
@@ -209,6 +210,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           modal_fondo_tipo: data.modal_fondo_tipo || 'color',
           modal_fondo_color: data.modal_fondo_color || '#ffffff',
           modal_fondo_imagen: data.modal_fondo_imagen || '',
+          // Campo para sucursales/ubicaciones
+          sucursales_activo: data.sucursales_activo || false,
           correo_empresa: data.correo_empresa || '',
           telefono_empresa: data.telefono_empresa || '',
           direccion_empresa: data.direccion_empresa || '',
@@ -313,8 +316,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             .filter((sub: any) => sub && sub.nombre && sub.nombre.trim() !== '')
             .map((sub: any) => {
               // Preparar campos con formateo especial para URLs
-              let imagenUrl = sub.imagen_url?.trim() || '';
-              let enlaceExterno = sub.enlace_externo?.trim() || '';
+              const imagenUrl = sub.imagen_url?.trim() || '';
+              const enlaceExterno = sub.enlace_externo?.trim() || '';
               
               // Formateo de enlaces para cumplir con restricciones de BD
               // Estos cambios son solo para previsualización, el backend también hace la verificación
@@ -1042,6 +1045,35 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             </CardContent>
           </Card>
 
+          {/* Sucursales/Ubicaciones */}
+          <Card>
+            <CardHeader>
+              <CardTitle>📍 Sucursales y Ubicaciones</CardTitle>
+              <CardDescription>
+                Gestionar múltiples ubicaciones de la empresa
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Activar/Desactivar Sucursales */}
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="sucursales_activo"
+                  name="sucursales_activo"
+                  checked={formData.sucursales_activo || false}
+                  onChange={(e) => setFormData(prev => ({ ...prev, sucursales_activo: e.target.checked }))}
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                />
+                <Label htmlFor="sucursales_activo" className="text-sm font-medium text-gray-700">
+                  Mostrar sección de sucursales/ubicaciones en el sitio web
+                </Label>
+              </div>
+              <p className="text-xs text-gray-500">
+                Cuando esté activado, aparecerá una nueva categoría "Ubicaciones" en la navegación del sitio
+              </p>
+            </CardContent>
+          </Card>
+
           {/* Categorías y Subcategorías */}
           <Card>
             <CardHeader>
@@ -1343,7 +1375,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                                   }
                                   
                                   // Limpiar y formatear la URL si es necesario
-                                  let url = e.target.value.trim();
+                                  const url = e.target.value.trim();
                                   
                                   // Validar que no sea una imagen base64
                                   if (url.startsWith('data:image/')) {
@@ -1491,6 +1523,18 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             </Button>
           </div>
         </form>
+
+        {/* Gestor de Sucursales - FUERA del formulario principal */}
+        {formData.sucursales_activo && empresaId && (
+          <div className="mt-8">
+            <div className="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <p className="text-sm text-blue-800">
+                🎉 ¡Funcionalidad de sucursales activada! Gestiona las ubicaciones de la empresa con mapas y geocodificación automática.
+              </p>
+            </div>
+            <SucursalesManager empresaId={empresaId} />
+          </div>
+        )}
       </div>
       
       {/* Advertencia de migración */}

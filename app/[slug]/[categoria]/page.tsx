@@ -6,6 +6,7 @@ import { ArrowLeft, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { EmpresaLayout } from '@/components/empresa-layout';
 import { generateSlug } from '@/lib/utils';
+import UbicacionesPage from '@/components/ubicaciones-page';
 
 // Función para convertir URLs de Google Drive en enlaces directos
 function formatGoogleDriveUrl(url: string): string {
@@ -60,6 +61,9 @@ export default async function CategoriaPage({ params }: PageProps) {
     notFound();
   }
 
+  // Verificar si es la categoría especial de ubicaciones
+  const esUbicaciones = categoriaEncontrada.nombre.toLowerCase() === 'ubicaciones';
+
   return (
     <EmpresaLayout empresa={empresa} categoriaActiva={categoria}>
       {/* Breadcrumb */}
@@ -78,25 +82,35 @@ export default async function CategoriaPage({ params }: PageProps) {
       {/* Contenido de la categoría */}
       <div className="py-12">
         <div className="container mx-auto px-4">
-          {/* Header de la categoría */}
-          <div className="text-center mb-12">
-            <div className="inline-block mb-6">
-              <div 
-                className="px-8 py-4 rounded-2xl text-2xl font-bold text-white shadow-lg"
-                style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
-              >
-                {categoriaEncontrada.nombre}
+          {esUbicaciones ? (
+            // Mostrar página especial de ubicaciones
+            <UbicacionesPage 
+              empresaId={empresa.id} 
+              colorPrimario={empresa.color_primario || '#2563eb'} 
+              empresaNombre={empresa.nombre_empresa}
+            />
+          ) : (
+            // Mostrar contenido normal de categorías
+            <>
+              {/* Header de la categoría */}
+              <div className="text-center mb-12">
+                <div className="inline-block mb-6">
+                  <div 
+                    className="px-8 py-4 rounded-2xl text-2xl font-bold text-white shadow-lg"
+                    style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
+                  >
+                    {categoriaEncontrada.nombre}
+                  </div>
+                </div>
+                {categoriaEncontrada.descripcion && (
+                  <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+                    {categoriaEncontrada.descripcion}
+                  </p>
+                )}
               </div>
-            </div>
-            {categoriaEncontrada.descripcion && (
-              <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                {categoriaEncontrada.descripcion}
-              </p>
-            )}
-          </div>
 
-          {/* Subcategorías */}
-          {categoriaEncontrada.subcategorias && categoriaEncontrada.subcategorias.length > 0 ? (
+              {/* Subcategorías */}
+              {categoriaEncontrada.subcategorias && categoriaEncontrada.subcategorias.length > 0 ? (
             <div className={`grid grid-cols-1 gap-8 ${
               categoriaEncontrada.tipo_display === 'vertical' 
                 ? 'max-w-3xl mx-auto' 
@@ -216,6 +230,8 @@ export default async function CategoriaPage({ params }: PageProps) {
                 Estamos trabajando en el contenido de esta categoría
               </p>
             </div>
+          )}
+            </>
           )}
         </div>
       </div>

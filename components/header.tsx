@@ -39,6 +39,7 @@ function formatGoogleDriveUrl(url: string): string {
 interface HeaderProps {
   empresa?: {
     nombre_empresa: string;
+    slug_empresa?: string;
     logo_url?: string | null;
     logo_tamano?: string | null;
     logo_posicion?: 'izquierda' | 'centro' | 'derecha' | null;
@@ -124,17 +125,6 @@ export function Header({ empresa }: HeaderProps) {
                 </p>
               </div>
             )}
-            <Button
-              asChild
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2"
-            >
-              <Link 
-                href="/dashboard"
-                className="flex items-center gap-2"
-              >
-                Volver al Inicio
-              </Link>
-            </Button>
           </div>
         </div>
 
@@ -148,17 +138,6 @@ export function Header({ empresa }: HeaderProps) {
                   {empresaData.telefono_empresa}
                 </span>
               </div>
-              <Button
-                asChild
-                size="sm"
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                <Link 
-                  href="/dashboard"
-                >
-                  Volver al Inicio
-                </Link>
-              </Button>
             </div>
           )}
         </div>
