@@ -66,8 +66,10 @@ export interface EmpresaFormData {
   nombre_empresa: string;
   slug_empresa?: string;
   descripcion_empresa?: string;
+  // Campos para personalizar el hero/banner
   hero_fondo_tipo?: 'color' | 'imagen';
   hero_imagen_fondo?: string;
+  // Campos para personalizar el fondo de la descripción
   descripcion_fondo_tipo?: 'color' | 'imagen';
   descripcion_imagen_fondo?: string;
   video_descripcion?: string;

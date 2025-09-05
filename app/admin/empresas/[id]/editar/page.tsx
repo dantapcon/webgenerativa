@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save, Eye, Building } from 'lucide-react';
 import Link from 'next/link';
+// La migración ya se ha completado
 
 // Funciones auxiliares para formatear URLs de video
 function formatYoutubeUrl(url: string): string {
@@ -124,8 +125,6 @@ export default function EditarEmpresaPage({ params }: PageProps) {
   const [formData, setFormData] = useState<EmpresaFormData>({
     nombre_empresa: '',
     descripcion_empresa: '',
-    hero_fondo_tipo: 'color',
-    hero_imagen_fondo: '',
     descripcion_fondo_tipo: 'color',
     descripcion_imagen_fondo: '',
     video_descripcion: '',
@@ -350,8 +349,11 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       // Log para debug
       console.log('Categorías a enviar:', JSON.stringify(categoriasValidadas, null, 2));
       
+      // Ya no necesitamos eliminar estos campos porque la migración ya se completó
+      const datosAEnviar = { ...formData };
+      
       // Actualizar empresa con las categorías
-      await WebGeneratorService.updateEmpresa(empresaId, formData, categoriasValidadas);
+      await WebGeneratorService.updateEmpresa(empresaId, datosAEnviar, categoriasValidadas);
       showAlert('success', 'Empresa actualizada exitosamente');
       
       // Recargar datos
@@ -470,9 +472,17 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                 </div>
               </div>
 
-              <div className="space-y-4">
+              {/* Ya no utilizaremos estos campos por ahora, ya que no existen en la base de datos
+              <div className="space-y-2 border-t pt-4 border-gray-200 mt-4">
+                <h3 className="text-md font-medium mb-2">Personalizar sección principal (Hero)</h3>
+                ...
+              </div>
+              */}
+              
+              {/* Descripción de la empresa */}
+              <div className="space-y-4 mt-4">
                 <div className="space-y-2">
-                  <Label htmlFor="descripcion_empresa">Descripción</Label>
+                  <Label htmlFor="descripcion_empresa">Descripción de la empresa</Label>
                   <textarea
                     id="descripcion_empresa"
                     name="descripcion_empresa"
@@ -481,37 +491,6 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
-                </div>
-                
-                {/* Configuración del fondo de hero */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="hero_fondo_tipo">Tipo de fondo para sección principal</Label>
-                    <select
-                      id="hero_fondo_tipo"
-                      name="hero_fondo_tipo"
-                      value={formData.hero_fondo_tipo || 'color'}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="color">Gradiente de color (por defecto)</option>
-                      <option value="imagen">Imagen de fondo</option>
-                    </select>
-                  </div>
-                  
-                  {formData.hero_fondo_tipo === 'imagen' && (
-                    <div className="space-y-2">
-                      <Label htmlFor="hero_imagen_fondo">URL de la imagen de fondo</Label>
-                      <Input
-                        id="hero_imagen_fondo"
-                        name="hero_imagen_fondo"
-                        value={formData.hero_imagen_fondo || ''}
-                        onChange={handleInputChange}
-                        placeholder="https://ejemplo.com/mi-imagen.jpg"
-                      />
-                      <p className="text-xs text-gray-500">Para mejores resultados, usa imágenes de alta resolución</p>
-                    </div>
-                  )}
                 </div>
                 
                 {/* Configuración del fondo de descripción */}
@@ -1336,6 +1315,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           </div>
         </form>
       </div>
+      
+      {/* Advertencia de migración */}
+      {/* Advertencia de migración ya no es necesaria */}
     </div>
   );
 }

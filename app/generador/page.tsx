@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Globe, Palette, Building, Users, Phone, Mail, MapPin, Image, Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 import Link from 'next/link';
 import { Header } from '@/components/header';
+// La migración ya se ha completado
 
 // Función para convertir URLs de Google Drive en enlaces directos
 function formatGoogleDriveUrl(url: string): string {
@@ -198,9 +199,12 @@ export default function WebGeneratorPage() {
         return;
       }
 
+      // Ya no necesitamos eliminar estos campos porque la migración ya se completó
+      const formDataLimpio = { ...formData };
+      
       // Preparar datos con categorías
       const dataToSubmit: EmpresaFormData = {
-        ...formData,
+        ...formDataLimpio,
         categorias: categorias.map(cat => ({
           nombre: cat.nombre,
           descripcion: cat.descripcion,
@@ -225,6 +229,11 @@ export default function WebGeneratorPage() {
       setFormData({
         nombre_empresa: '',
         descripcion_empresa: '',
+        hero_fondo_tipo: 'color',
+        hero_imagen_fondo: '',
+        descripcion_fondo_tipo: 'color',
+        descripcion_imagen_fondo: '',
+        video_descripcion: '',
         correo_empresa: '',
         telefono_empresa: '',
         direccion_empresa: '',
@@ -367,6 +376,7 @@ export default function WebGeneratorPage() {
                       </select>
                     </div>
 
+                    {/* Descripción de la empresa */}
                     <div className="space-y-2 md:col-span-2">
                       <Label htmlFor="descripcion_empresa" className="text-sm font-medium text-gray-700">
                         Descripción de la Empresa
@@ -381,43 +391,54 @@ export default function WebGeneratorPage() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="hero_fondo_tipo" className="text-sm font-medium text-gray-700">
-                        Tipo de fondo para sección principal
-                      </Label>
-                      <select
-                        id="hero_fondo_tipo"
-                        name="hero_fondo_tipo"
-                        value={formData.hero_fondo_tipo || 'color'}
-                        onChange={handleInputChange}
-                        className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="color">Gradiente de color (por defecto)</option>
-                        <option value="imagen">Imagen de fondo</option>
-                      </select>
+
+                    {/* Personalización del Hero/Banner */}
+                    <div className="space-y-2 md:col-span-2 border-t pt-4 border-gray-200 mt-2">
+                      <h3 className="text-md font-medium mb-2">🎨 Personalizar sección principal (Hero/Banner)</h3>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="hero_fondo_tipo" className="text-sm font-medium text-gray-700">
+                          Tipo de fondo para el banner principal
+                        </Label>
+                        <select
+                          id="hero_fondo_tipo"
+                          name="hero_fondo_tipo"
+                          value={formData.hero_fondo_tipo || 'color'}
+                          onChange={handleInputChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="color">Color sólido (gradiente)</option>
+                          <option value="imagen">Imagen de fondo</option>
+                        </select>
+                      </div>
+                      
+                      {formData.hero_fondo_tipo === 'imagen' && (
+                        <div className="space-y-2">
+                          <Label htmlFor="hero_imagen_fondo" className="text-sm font-medium text-gray-700">
+                            URL de la imagen de fondo para el banner
+                          </Label>
+                          <Input
+                            id="hero_imagen_fondo"
+                            name="hero_imagen_fondo"
+                            value={formData.hero_imagen_fondo || ''}
+                            onChange={handleInputChange}
+                            placeholder="https://example.com/imagen.jpg"
+                            className="w-full"
+                          />
+                          <p className="text-xs text-gray-500">
+                            Recomendado: Imagen horizontal de al menos 1920x1080px
+                          </p>
+                        </div>
+                      )}
                     </div>
 
-                    {formData.hero_fondo_tipo === 'imagen' && (
-                      <div className="space-y-2">
-                        <Label htmlFor="hero_imagen_fondo" className="text-sm font-medium text-gray-700">
-                          URL de imagen para sección principal
-                        </Label>
-                        <Input
-                          id="hero_imagen_fondo"
-                          name="hero_imagen_fondo"
-                          value={formData.hero_imagen_fondo || ''}
-                          onChange={handleInputChange}
-                          placeholder="https://ejemplo.com/mi-imagen.jpg"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                        <p className="text-xs text-gray-500">Para mejores resultados, usa imágenes de alta resolución</p>
-                      </div>
-                    )}
+                    {/* Personalización de la sección de descripción */}
+                    <div className="space-y-2 md:col-span-2 border-t pt-4 border-gray-200 mt-2">
+                      <h3 className="text-md font-medium mb-2">🖼️ Personalizar sección de descripción</h3>
                     
-                    <div className="space-y-2">
-                      <Label htmlFor="descripcion_fondo_tipo" className="text-sm font-medium text-gray-700">
-                        Tipo de fondo para descripción
+                      <div className="space-y-2">
+                        <Label htmlFor="descripcion_fondo_tipo" className="text-sm font-medium text-gray-700">
+                          Tipo de fondo para descripción
                       </Label>
                       <select
                         id="descripcion_fondo_tipo"
@@ -446,6 +467,7 @@ export default function WebGeneratorPage() {
                         <p className="text-xs text-gray-500">Para mejores resultados, usa imágenes de tonalidad clara o con transparencia</p>
                       </div>
                     )}
+                    </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="correo_empresa" className="text-sm font-medium text-gray-700 flex items-center gap-2">
@@ -696,13 +718,20 @@ export default function WebGeneratorPage() {
                       <div className="border rounded-lg overflow-hidden bg-white shadow-sm">
                         <div 
                           id="preview-header" 
-                          className="h-20 flex items-center justify-center text-white font-semibold"
+                          className="h-20 flex items-center justify-center text-white font-semibold relative overflow-hidden"
                           style={{ 
-                            background: `linear-gradient(135deg, ${formData.color_primario} 0%, ${formData.color_secundario} 100%)`,
+                            background: formData.hero_fondo_tipo === 'imagen' && formData.hero_imagen_fondo
+                              ? `url("${formData.hero_imagen_fondo}") center/cover no-repeat`
+                              : `linear-gradient(135deg, ${formData.color_primario} 0%, ${formData.color_secundario} 100%)`,
                             fontFamily: `'${formData.tipografia}', sans-serif`
                           }}
                         >
-                          {formData.nombre_empresa || 'Nombre de Empresa'}
+                          {formData.hero_fondo_tipo === 'imagen' && formData.hero_imagen_fondo && (
+                            <div className="absolute inset-0 bg-black/20"></div>
+                          )}
+                          <span className="relative z-10">
+                            {formData.nombre_empresa || 'Nombre de Empresa'}
+                          </span>
                         </div>
                         <div className="p-6 space-y-4">
                           <div 
@@ -1124,8 +1153,8 @@ export default function WebGeneratorPage() {
                             style={{ 
                               fontFamily: `'${formData.tipografia}', sans-serif`,
                               background: formData.descripcion_fondo_tipo === 'imagen' && formData.descripcion_imagen_fondo 
-                                ? `url(${formData.descripcion_imagen_fondo}) center/cover no-repeat` 
-                                : `linear-gradient(135deg, ${formData.color_primario}33, ${formData.color_secundario}33)`,
+                                ? `url("${formData.descripcion_imagen_fondo}") center/cover no-repeat` 
+                                : `linear-gradient(135deg, ${formData.color_primario || '#2563eb'}, ${formData.color_secundario || '#7c3aed'})`,
                               textShadow: formData.descripcion_fondo_tipo === 'imagen' ? '0 0 5px rgba(255, 255, 255, 0.8)' : 'none',
                               boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                               border: '1px solid #e5e7eb'
@@ -1191,6 +1220,9 @@ export default function WebGeneratorPage() {
           </p>
         </div>
       </div>
+      
+      {/* Advertencia de migración */}
+      {/* Advertencia de migración ya no es necesaria */}
     </div>
     </>
   );

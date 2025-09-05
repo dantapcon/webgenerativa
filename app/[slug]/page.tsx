@@ -92,7 +92,7 @@ export default async function EmpresaPage({ params }: PageProps) {
         className="relative text-white py-20 overflow-hidden" 
         style={{
           background: empresa.hero_fondo_tipo === 'imagen' && empresa.hero_imagen_fondo
-            ? `url(${empresa.hero_imagen_fondo}) center/cover no-repeat`
+            ? `url("${empresa.hero_imagen_fondo}") center/cover no-repeat`
             : `linear-gradient(135deg, ${empresa.color_primario || '#2563eb'}, ${empresa.color_secundario || '#7c3aed'})`
         }}
       >
@@ -145,25 +145,31 @@ export default async function EmpresaPage({ params }: PageProps) {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div 
-            className="max-w-4xl mx-auto text-center p-8 rounded-lg"
+            className="max-w-4xl mx-auto text-center p-8 rounded-lg relative overflow-hidden"
             style={{
-              background: empresa.descripcion_fondo_tipo === 'imagen' && empresa.descripcion_imagen_fondo
-                ? `url(${empresa.descripcion_imagen_fondo}) center/cover no-repeat` 
-                : `linear-gradient(135deg, ${empresa.color_primario || '#2563eb'}33, ${empresa.color_secundario || '#7c3aed'}33)`,
+              background: (empresa.descripcion_fondo_tipo === 'imagen' && empresa.descripcion_imagen_fondo) 
+                ? `url("${empresa.descripcion_imagen_fondo}") center/cover no-repeat` 
+                : `linear-gradient(135deg, ${empresa.color_primario || '#2563eb'}, ${empresa.color_secundario || '#7c3aed'})`,
               boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
             }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              {empresa.tipo_negocio === 'servicios' ? 'Nuestros Servicios Profesionales' : 'Lo Que Hacemos'}
-            </h2>
+            {/* Capa semi-transparente para mejorar legibilidad cuando es imagen */}
+            {empresa.descripcion_fondo_tipo === 'imagen' && empresa.descripcion_imagen_fondo && (
+              <div className="absolute inset-0 bg-white/70"></div>
+            )}
             
-            {/* Video Promocional */}
-            {empresa.video_promocional_url && (
-              <div className="mt-10 max-w-3xl mx-auto">
-                {empresa.video_descripcion && (
-                  <p className="text-lg leading-relaxed mb-6" style={{
-                    color: '#333',
-                    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            {/* Contenedor con posición relativa para estar por encima de la capa */}
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                {empresa.tipo_negocio === 'servicios' ? 'Nuestros Servicios Profesionales' : 'Lo Que Hacemos'}
+              </h2>
+              
+              {/* Video Promocional */}
+              {empresa.video_promocional_url && (
+                <div className="mt-10 max-w-3xl mx-auto">
+                  {empresa.video_descripcion && (
+                    <p className="text-lg leading-relaxed mb-6" style={{
+                      color: '#333',
                     padding: '12px',
                     borderRadius: '8px'
                   }}>
@@ -205,6 +211,7 @@ export default async function EmpresaPage({ params }: PageProps) {
                 </div>
               </div>
             )}
+            </div> {/* Cierre del div con posición relativa */}
           </div>
         </div>
       </section>
