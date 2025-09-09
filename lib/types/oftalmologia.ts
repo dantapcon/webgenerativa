@@ -28,7 +28,9 @@ export interface Empresa {
   subdominio_generado?: string | null;
   logo_url?: string | null;
   logo_tamano?: string | null;
+  logo_tamano_px?: number | null;
   logo_posicion?: 'izquierda' | 'centro' | 'derecha' | null;
+  titulo_tamano?: number | null;
   video_promocional_url?: string | null;
   color_primario?: string | null;
   color_secundario?: string | null;
@@ -124,7 +126,9 @@ export interface EmpresaFormData {
   dominio_deseado?: string;
   logo_url?: string;
   logo_tamano?: string;
+  logo_tamano_px?: number;
   logo_posicion?: 'izquierda' | 'centro' | 'derecha';
+  titulo_tamano?: number;
   video_promocional_url?: string;
   
   // Estilos y personalización

@@ -135,6 +135,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     tipo_negocio: '',
     dominio_deseado: '',
     logo_url: '',
+    logo_tamano_px: 48,
+    titulo_tamano: 32,
     video_promocional_url: '',
     color_primario: '#2563eb',
     color_secundario: '#1e40af',
@@ -219,7 +221,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           dominio_deseado: data.dominio_deseado || '',
           logo_url: data.logo_url || '',
           logo_tamano: data.logo_tamano || 'mediano',
+          logo_tamano_px: data.logo_tamano_px || 48,
           logo_posicion: data.logo_posicion || 'izquierda',
+          titulo_tamano: data.titulo_tamano || 32,
           video_promocional_url: data.video_promocional_url || '',
           color_primario: data.color_primario || '#2563eb',
           color_secundario: data.color_secundario || '#1e40af',
@@ -316,8 +320,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             .filter((sub: any) => sub && sub.nombre && sub.nombre.trim() !== '')
             .map((sub: any) => {
               // Preparar campos con formateo especial para URLs
-              const imagenUrl = sub.imagen_url?.trim() || '';
-              const enlaceExterno = sub.enlace_externo?.trim() || '';
+              let imagenUrl = sub.imagen_url?.trim() || '';
+              let enlaceExterno = sub.enlace_externo?.trim() || '';
               
               // Formateo de enlaces para cumplir con restricciones de BD
               // Estos cambios son solo para previsualización, el backend también hace la verificación
@@ -587,58 +591,64 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Grid principal reorganizado para mejor distribución del espacio */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                {/* Columna 1: Colores y Tipografía */}
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="color_primario">Color Primario</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="color_primario"
-                          name="color_primario"
-                          type="color"
-                          value={formData.color_primario}
-                          onChange={handleInputChange}
-                          className="w-16 h-10 p-1"
-                        />
-                        <Input
-                          value={formData.color_primario}
-                          onChange={(e) => setFormData(prev => ({ ...prev, color_primario: e.target.value }))}
-                          placeholder="#2563eb"
-                          className="flex-1"
-                        />
+                  <div className="p-4 bg-gray-50 rounded-lg border">
+                    <h4 className="font-medium text-sm text-gray-700 mb-3">Colores de la Marca</h4>
+                    <div className="space-y-3">
+                      <div className="space-y-2">
+                        <Label htmlFor="color_primario" className="text-sm">Color Primario</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="color_primario"
+                            name="color_primario"
+                            type="color"
+                            value={formData.color_primario}
+                            onChange={handleInputChange}
+                            className="w-12 h-10 p-1"
+                          />
+                          <Input
+                            value={formData.color_primario}
+                            onChange={(e) => setFormData(prev => ({ ...prev, color_primario: e.target.value }))}
+                            placeholder="#2563eb"
+                            className="flex-1 text-sm"
+                          />
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="color_secundario">Color Secundario</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="color_secundario"
-                          name="color_secundario"
-                          type="color"
-                          value={formData.color_secundario}
-                          onChange={handleInputChange}
-                          className="w-16 h-10 p-1"
-                        />
-                        <Input
-                          value={formData.color_secundario}
-                          onChange={(e) => setFormData(prev => ({ ...prev, color_secundario: e.target.value }))}
-                          placeholder="#1e40af"
-                          className="flex-1"
-                        />
+                      <div className="space-y-2">
+                        <Label htmlFor="color_secundario" className="text-sm">Color Secundario</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="color_secundario"
+                            name="color_secundario"
+                            type="color"
+                            value={formData.color_secundario}
+                            onChange={handleInputChange}
+                            className="w-12 h-10 p-1"
+                          />
+                          <Input
+                            value={formData.color_secundario}
+                            onChange={(e) => setFormData(prev => ({ ...prev, color_secundario: e.target.value }))}
+                            placeholder="#1e40af"
+                            className="flex-1 text-sm"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="tipografia">Tipografía</Label>
+                    <Label htmlFor="tipografia" className="text-sm font-medium">Tipografía</Label>
                     <select
                       id="tipografia"
                       name="tipografia"
                       value={formData.tipografia}
                       onChange={handleInputChange}
-                      className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                     >
                       <option value="Inter">Inter (Moderno)</option>
                       <option value="Roboto">Roboto (Universal)</option>
@@ -647,131 +657,218 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                       <option value="Montserrat">Montserrat (Elegante)</option>
                       <option value="Lato">Lato (Profesional)</option>
                     </select>
+                    <p className="text-xs text-gray-500">Esta tipografía se aplicará a todo el contenido</p>
                   </div>
+                </div>
 
-                    <div className="space-y-2">
-                    <Label htmlFor="logo_url">URL del Logo</Label>
-                    <div className="flex">
-                      <Input
-                        id="logo_url"
-                        name="logo_url"
-                        value={formData.logo_url}
-                        onChange={handleInputChange}
-                        placeholder="https://ejemplo.com/logo.png o URL de Google Drive"
-                        className="flex-1"
-                      />
-                    </div>
-                    
-                    {/* Opciones de personalización del logo */}
-                    <div className="grid grid-cols-2 gap-4 mt-2">
-                      <div>
-                        <Label htmlFor="logo_tamano" className="text-sm">Tamaño del Logo</Label>
-                        <select
-                          id="logo_tamano"
-                          name="logo_tamano"
-                          value={formData.logo_tamano || 'mediano'}
+                {/* Columna 2: Logo y Configuración */}
+                <div className="space-y-4">
+                  <div className="p-4 bg-gray-50 rounded-lg border">
+                    <h4 className="font-medium text-sm text-gray-700 mb-3">Configuración del Logo</h4>
+                    <div className="space-y-3">
+                      <div className="space-y-2">
+                        <Label htmlFor="logo_url" className="text-sm">URL del Logo</Label>
+                        <Input
+                          id="logo_url"
+                          name="logo_url"
+                          value={formData.logo_url}
                           onChange={handleInputChange}
-                          className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1"
-                        >
-                          <option value="pequeno">Pequeño</option>
-                          <option value="mediano">Mediano</option>
-                          <option value="grande">Grande</option>
-                        </select>
-                      </div>
-                      <div>
-                        <Label htmlFor="logo_posicion" className="text-sm">Posición del Logo</Label>
-                        <select
-                          id="logo_posicion"
-                          name="logo_posicion"
-                          value={formData.logo_posicion || 'izquierda'}
-                          onChange={handleInputChange}
-                          className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1"
-                        >
-                          <option value="izquierda">Izquierda</option>
-                          <option value="centro">Centro</option>
-                          <option value="derecha">Derecha</option>
-                        </select>
-                      </div>
-                    </div>
-                    
-                    {formData.logo_url && (
-                      <div className={`mt-2 flex ${
-                        formData.logo_posicion === 'centro' ? 'justify-center' : 
-                        formData.logo_posicion === 'derecha' ? 'justify-end' : 
-                        'justify-start'
-                      }`}>
-                        <img 
-                          src={formData.logo_url.includes('drive.google.com') ? 
-                            formatGoogleDriveUrl(formData.logo_url) : 
-                            formData.logo_url} 
-                          alt="Vista previa del logo" 
-                          className={`object-contain rounded border ${
-                            formData.logo_tamano === 'pequeno' ? 'h-10' : 
-                            formData.logo_tamano === 'grande' ? 'h-24' : 
-                            'h-16'
-                          }`}
-                          onError={(e) => {
-                            const imgElement = e.target as HTMLImageElement;
-                            const currentSrc = imgElement.src;
-                            
-                            console.error("Error cargando logo:", {
-                              originalUrl: formData.logo_url,
-                              processedUrl: currentSrc,
-                              error: e
-                            });
-                            
-                            // Si es una URL de Google Drive y falló el primer método, probar alternativo
-                            if (formData.logo_url && formData.logo_url.includes('drive.google.com') && currentSrc.includes('uc?export=view')) {
-                              console.log("Probando método alternativo para logo de Google Drive...");
-                              imgElement.src = formatGoogleDriveUrlAlternative(formData.logo_url);
-                            } else {
-                              // Si ya falló todo, mostrar placeholder
-                              imgElement.src = "https://placehold.co/400x300?text=Logo+no+disponible";
-                            }
-                          }}
-                          onLoad={() => {
-                            console.log("Logo cargado exitosamente:", formData.logo_url);
-                          }}
+                          placeholder="https://ejemplo.com/logo.png"
+                          className="text-sm"
                         />
+                        <p className="text-xs text-gray-500">
+                          Compatible con Google Drive
+                          <br />
+                          <span className="text-red-500 font-medium">⚠️ Solo URLs válidas</span>
+                        </p>
                       </div>
-                    )}
-                    <p className="text-xs text-gray-500 mt-1">
-                      Introduce la URL completa del logo. Compatible con enlaces de Google Drive.
-                      <br />
-                      <span className="text-red-500 font-medium">⚠️ No pegues imágenes directamente - solo URLs válidas</span>
-                    </p>
-                  </div>                  <div className="space-y-2">
-                    <Label htmlFor="video_promocional_url">Video Promocional</Label>
-                    <Input
-                      id="video_promocional_url"
-                      name="video_promocional_url"
-                      value={formData.video_promocional_url}
-                      onChange={handleInputChange}
-                      placeholder="https://youtube.com/watch?v=..."
-                    />
-                    <p className="text-sm text-gray-500 mt-1">
-                      Ingresa la URL de YouTube, Vimeo o un video público (e.g. https://youtube.com/watch?v=ID)
-                    </p>
-                    
-                    <div className="mt-3">
-                      <Label htmlFor="video_descripcion">Descripción del Video</Label>
-                      <textarea
-                        id="video_descripcion"
-                        name="video_descripcion"
-                        value={formData.video_descripcion || ''}
-                        onChange={handleInputChange}
-                        rows={2}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Describe brevemente el contenido del video"
-                      />
-                      <p className="text-xs text-gray-500">
-                        Este texto se mostrará junto al video en la sección de video promocional
-                      </p>
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-2">
+                          <Label htmlFor="logo_tamano_px" className="text-xs">Tamaño (px)</Label>
+                          <div className="space-y-1">
+                            <input
+                              type="range"
+                              id="logo_tamano_px"
+                              name="logo_tamano_px"
+                              min="10"
+                              max="500"
+                              step="5"
+                              value={formData.logo_tamano_px || 48}
+                              onChange={handleInputChange}
+                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                              style={{
+                                background: `linear-gradient(to right, ${formData.color_primario || '#2563eb'} 0%, ${formData.color_primario || '#2563eb'} ${((formData.logo_tamano_px || 48) - 10) / (500 - 10) * 100}%, #e5e7eb ${((formData.logo_tamano_px || 48) - 10) / (500 - 10) * 100}%, #e5e7eb 100%)`
+                              }}
+                            />
+                            <div className="flex items-center gap-1">
+                              <input
+                                type="number"
+                                min="1"
+                                max="999"
+                                value={formData.logo_tamano_px || 48}
+                                onChange={handleInputChange}
+                                name="logo_tamano_px"
+                                className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                              />
+                              <span className="text-xs text-gray-600">px</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="logo_posicion" className="text-xs">Posición</Label>
+                          <select
+                            id="logo_posicion"
+                            name="logo_posicion"
+                            value={formData.logo_posicion || 'izquierda'}
+                            onChange={handleInputChange}
+                            className="w-full h-8 px-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs"
+                          >
+                            <option value="izquierda">Izquierda</option>
+                            <option value="centro">Centro</option>
+                            <option value="derecha">Derecha</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Columna 3: Tamaño del Título y Preview */}
+                <div className="space-y-4">
+                  <div className="p-4 bg-gray-50 rounded-lg border">
+                    <h4 className="font-medium text-sm text-gray-700 mb-3">Título del Header</h4>
+                    <div className="space-y-3">
+                      <div className="space-y-2">
+                        <Label htmlFor="titulo_tamano" className="text-sm">Tamaño del Título</Label>
+                        <div className="space-y-2">
+                          <input
+                            type="range"
+                            id="titulo_tamano"
+                            name="titulo_tamano"
+                            min="16"
+                            max="64"
+                            step="2"
+                            value={formData.titulo_tamano || 32}
+                            onChange={handleInputChange}
+                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                            style={{
+                              background: `linear-gradient(to right, ${formData.color_primario || '#2563eb'} 0%, ${formData.color_primario || '#2563eb'} ${((formData.titulo_tamano || 32) - 16) / (64 - 16) * 100}%, #e5e7eb ${((formData.titulo_tamano || 32) - 16) / (64 - 16) * 100}%, #e5e7eb 100%)`
+                            }}
+                          />
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              min="16"
+                              max="64"
+                              value={formData.titulo_tamano || 32}
+                              onChange={handleInputChange}
+                              name="titulo_tamano"
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <span className="text-sm text-gray-600">px</span>
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          Rango recomendado: 16-64px
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Vista previa compacta del header */}
+                  <div className="p-3 bg-white rounded-lg border">
+                    <p className="text-xs text-gray-600 mb-2 font-medium">Vista Previa del Header:</p>
+                    <div className="flex items-center gap-2 p-2 bg-gray-50 rounded border">
+                      {formData.logo_url && (
+                        <div className="flex-shrink-0">
+                          <img 
+                            src={formData.logo_url.includes('drive.google.com') ? 
+                              formatGoogleDriveUrl(formData.logo_url) : 
+                              formData.logo_url} 
+                            alt="Logo preview" 
+                            className="object-contain rounded"
+                            style={{
+                              height: `${Math.min(formData.logo_tamano_px || 48, 40)}px`,
+                              width: 'auto'
+                            }}
+                            onError={(e) => {
+                              const target = e.target as HTMLElement;
+                              target.style.display = 'none';
+                              const fallback = target.nextElementSibling as HTMLElement;
+                              if (fallback) fallback.style.display = 'flex';
+                            }}
+                          />
+                          <div 
+                            className="bg-gray-200 rounded flex items-center justify-center"
+                            style={{
+                              height: `${Math.min(formData.logo_tamano_px || 48, 40)}px`,
+                              width: `${Math.min(formData.logo_tamano_px || 48, 40)}px`,
+                              display: 'none'
+                            }}
+                          >
+                            <span className="text-xs text-gray-500">Logo</span>
+                          </div>
+                        </div>
+                      )}
+                      <h1 
+                        style={{ 
+                          fontSize: `${Math.min(formData.titulo_tamano || 32, 24)}px`,
+                          fontFamily: `'${formData.tipografia || 'Inter'}', sans-serif`,
+                          color: formData.color_primario || '#2563eb',
+                          lineHeight: '1.1'
+                        }}
+                        className="font-bold truncate"
+                      >
+                        {formData.nombre_empresa || 'Empresa'}
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Sección de Video Promocional - Ancho completo debajo */}
+              <div className="border-t pt-6">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-sm text-gray-700">Video Promocional</h4>
+                      <div className="space-y-2">
+                        <Label htmlFor="video_promocional_url" className="text-sm">URL del Video</Label>
+                        <Input
+                          id="video_promocional_url"
+                          name="video_promocional_url"
+                          value={formData.video_promocional_url}
+                          onChange={handleInputChange}
+                          placeholder="https://youtube.com/watch?v=..."
+                          className="text-sm"
+                        />
+                        <p className="text-xs text-gray-500">
+                          Compatible con YouTube, Vimeo y otros videos públicos
+                        </p>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="video_descripcion" className="text-sm">Descripción del Video</Label>
+                        <textarea
+                          id="video_descripcion"
+                          name="video_descripcion"
+                          value={formData.video_descripcion || ''}
+                          onChange={handleInputChange}
+                          rows={3}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                          placeholder="Describe brevemente el contenido del video"
+                        />
+                        <p className="text-xs text-gray-500">
+                          Este texto se mostrará junto al video en la sección promocional
+                        </p>
+                      </div>
                     </div>
                     
                     {formData.video_promocional_url && (
-                      <div className="mt-3">
-                        <Label className="mb-2 block">Vista previa del video:</Label>
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium">Vista Previa del Video:</Label>
                         <div className="aspect-video w-full border rounded overflow-hidden bg-gray-100">
                           {formData.video_promocional_url.includes('youtube.com') || formData.video_promocional_url.includes('youtu.be') ? (
                             <iframe
@@ -810,44 +907,6 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                         </div>
                       </div>
                     )}
-                  </div>
-                </div>
-
-                {/* Vista previa */}
-                <div className="space-y-4">
-                  <h4 className="font-medium text-gray-800">Vista Previa</h4>
-                  <div className="border rounded-lg overflow-hidden bg-white shadow-sm">
-                    <div 
-                      className="h-16 flex items-center justify-center text-white font-semibold"
-                      style={{ 
-                        background: `linear-gradient(135deg, ${formData.color_primario} 0%, ${formData.color_secundario} 100%)`,
-                        fontFamily: `'${formData.tipografia}', sans-serif`
-                      }}
-                    >
-                      {formData.nombre_empresa || 'Nombre de Empresa'}
-                    </div>
-                    <div className="p-4 space-y-3">
-                      <div 
-                        className="text-gray-700 p-3 rounded-md"
-                        style={{ 
-                          fontFamily: `'${formData.tipografia}', sans-serif`,
-                          background: formData.descripcion_fondo_tipo === 'imagen' && formData.descripcion_imagen_fondo 
-                            ? `url(${formData.descripcion_imagen_fondo}) center/cover no-repeat` 
-                            : `linear-gradient(135deg, ${formData.color_primario}33, ${formData.color_secundario}33)`,
-                          textShadow: formData.descripcion_fondo_tipo === 'imagen' ? '0 0 5px rgba(255, 255, 255, 0.8)' : 'none',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                          border: '1px solid #e5e7eb'
-                        }}
-                      >
-                        {formData.descripcion_empresa || 'Descripción de la empresa...'}
-                      </div>
-                      <button
-                        className="px-4 py-2 text-white rounded-lg"
-                        style={{ backgroundColor: formData.color_primario }}
-                      >
-                        Botón de Ejemplo
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -1375,7 +1434,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                                   }
                                   
                                   // Limpiar y formatear la URL si es necesario
-                                  const url = e.target.value.trim();
+                                  let url = e.target.value.trim();
                                   
                                   // Validar que no sea una imagen base64
                                   if (url.startsWith('data:image/')) {

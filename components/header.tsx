@@ -42,7 +42,9 @@ interface HeaderProps {
     slug_empresa?: string;
     logo_url?: string | null;
     logo_tamano?: string | null;
+    logo_tamano_px?: number | null;
     logo_posicion?: 'izquierda' | 'centro' | 'derecha' | null;
+    titulo_tamano?: number | null;
     direccion_empresa?: string | null;
     telefono_empresa?: string | null;
     correo_empresa?: string | null;
@@ -57,7 +59,9 @@ export function Header({ empresa }: HeaderProps) {
     nombre_empresa: 'WebGenerator Pro',
     logo_url: null,
     logo_tamano: 'mediano',
+    logo_tamano_px: 48,
     logo_posicion: 'izquierda',
+    titulo_tamano: 32,
     direccion_empresa: null,
     telefono_empresa: null,
     correo_empresa: null,
@@ -76,11 +80,10 @@ export function Header({ empresa }: HeaderProps) {
             empresaData.logo_posicion === 'derecha' ? 'ml-auto' : ''
           }`}>
             {empresaData.logo_url && (
-              <div className={`relative ${
-                empresaData.logo_tamano === 'pequeno' ? 'w-12 h-12' : 
-                empresaData.logo_tamano === 'grande' ? 'w-24 h-24' : 
-                'w-16 h-16'
-              }`}>
+              <div className="relative" style={{
+                width: `${empresaData.logo_tamano_px || 48}px`,
+                height: `${empresaData.logo_tamano_px || 48}px`
+              }}>
                 <Image
                   src={empresaData.logo_url.includes('drive.google.com') ? 
                     formatGoogleDriveUrl(empresaData.logo_url) : 
@@ -97,9 +100,10 @@ export function Header({ empresa }: HeaderProps) {
               </div>
             )}
             <div>
-              <h1 className="text-2xl font-bold" style={{ 
+              <h1 className="font-bold" style={{ 
                 color: empresaData.color_primario || '#2563eb',
-                fontFamily: `'${empresaData.tipografia}', sans-serif`
+                fontFamily: `'${empresaData.tipografia}', sans-serif`,
+                fontSize: `${empresaData.titulo_tamano || 32}px`
               }}>
                 {empresaData.nombre_empresa}
               </h1>
@@ -120,9 +124,6 @@ export function Header({ empresa }: HeaderProps) {
                   <Phone className="h-4 w-4" style={{ color: empresaData.color_primario || '#2563eb' }} />
                   <span className="text-sm text-gray-500">Citas</span>
                 </div>
-                <p className="font-semibold" style={{ color: empresaData.color_primario || '#2563eb' }}>
-                  {empresaData.telefono_empresa}
-                </p>
               </div>
             )}
           </div>
@@ -131,13 +132,9 @@ export function Header({ empresa }: HeaderProps) {
         {/* Versión móvil del contacto */}
         <div className="md:hidden mt-4 flex flex-col gap-3">
           {empresaData.telefono_empresa && (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4" style={{ color: empresaData.color_primario || '#2563eb' }} />
-                <span className="font-semibold" style={{ color: empresaData.color_primario || '#2563eb' }}>
-                  {empresaData.telefono_empresa}
-                </span>
-              </div>
+            <div className="flex items-center gap-2">
+              <Phone className="h-4 w-4" style={{ color: empresaData.color_primario || '#2563eb' }} />
+              <span className="text-sm text-gray-500">Citas</span>
             </div>
           )}
         </div>
