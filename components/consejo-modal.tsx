@@ -3,11 +3,42 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 
+// Funciones auxiliares para formatear URLs de video
+function formatYoutubeUrl(url: string): string {
+  try {
+    let videoId = '';
+    
+    if (url.includes('youtube.com/watch')) {
+      const urlObj = new URL(url);
+      videoId = urlObj.searchParams.get('v') || '';
+    } else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1]?.split('?')[0] || '';
+    }
+    
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+  } catch (error) {
+    return '';
+  }
+}
+
+function formatVimeoUrl(url: string): string {
+  try {
+    const vimeoRegex = /vimeo\.com\/(?:video\/)?(\d+)/;
+    const matches = url.match(vimeoRegex);
+    const videoId = matches ? matches[1] : '';
+    
+    return videoId ? `https://player.vimeo.com/video/${videoId}` : '';
+  } catch (error) {
+    return '';
+  }
+}
+
 interface VentanaFlotanteProps {
   isActive: boolean;
   titulo?: string;
   mensaje?: string;
   imagenUrl?: string;
+  videoUrl?: string;
   fondoTipo?: 'color' | 'imagen';
   fondoColor?: string;
   fondoImagen?: string;
@@ -18,6 +49,7 @@ export function ConsejoModal({
   titulo,
   mensaje,
   imagenUrl,
+  videoUrl,
   fondoTipo = 'color',
   fondoColor = '#ffffff',
   fondoImagen
@@ -85,6 +117,48 @@ export function ConsejoModal({
                   e.currentTarget.style.display = 'none';
                 }}
               />
+            </div>
+          )}
+
+          {/* Video */}
+          {videoUrl && (
+            <div className="flex justify-center">
+              <div className="aspect-video w-full max-w-sm border rounded-lg overflow-hidden bg-gray-100 shadow-sm">
+                {videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be') ? (
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={formatYoutubeUrl(videoUrl)}
+                    title="Video de la ventana flotante"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="aspect-video"
+                  ></iframe>
+                ) : videoUrl.includes('vimeo.com') ? (
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={formatVimeoUrl(videoUrl)}
+                    title="Video de la ventana flotante"
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    className="aspect-video"
+                  ></iframe>
+                ) : (
+                  <video
+                    src={videoUrl}
+                    controls
+                    className="w-full h-full"
+                    onError={(e) => {
+                      e.currentTarget.outerHTML = '<div class="flex items-center justify-center h-full text-gray-500 text-sm">Video no disponible</div>';
+                    }}
+                  >
+                    Tu navegador no soporta la reproducción de videos.
+                  </video>
+                )}
+              </div>
             </div>
           )}
 

@@ -94,6 +94,7 @@ export default async function EmpresaPage({ params }: PageProps) {
         titulo={empresa.modal_titulo || undefined}
         mensaje={empresa.modal_mensaje || undefined}
         imagenUrl={empresa.modal_imagen_url || undefined}
+        videoUrl={empresa.modal_video_url || undefined}
         fondoTipo={empresa.modal_fondo_tipo || undefined}
         fondoColor={empresa.modal_fondo_color || undefined}
         fondoImagen={empresa.modal_fondo_imagen || undefined}

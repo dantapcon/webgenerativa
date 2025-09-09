@@ -209,6 +209,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           modal_titulo: data.modal_titulo || '',
           modal_mensaje: data.modal_mensaje || '',
           modal_imagen_url: data.modal_imagen_url || '',
+          modal_video_url: data.modal_video_url || '',
           modal_fondo_tipo: data.modal_fondo_tipo || 'color',
           modal_fondo_color: data.modal_fondo_color || '#ffffff',
           modal_fondo_imagen: data.modal_fondo_imagen || '',
@@ -1006,6 +1007,63 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                     </p>
                   </div>
 
+                  {/* Video opcional */}
+                  <div className="space-y-2">
+                    <Label htmlFor="modal_video_url">URL de video (opcional)</Label>
+                    <Input
+                      id="modal_video_url"
+                      name="modal_video_url"
+                      value={formData.modal_video_url || ''}
+                      onChange={handleInputChange}
+                      placeholder="https://youtube.com/watch?v=... o https://vimeo.com/..."
+                    />
+                    <p className="text-xs text-gray-500">
+                      Compatible con YouTube, Vimeo y otros videos públicos. Se puede mostrar junto con la imagen.
+                    </p>
+                    
+                    {formData.modal_video_url && (
+                      <div className="mt-2">
+                        <Label className="text-xs text-gray-600 mb-1 block">Vista previa del video:</Label>
+                        <div className="aspect-video w-full max-w-xs border rounded overflow-hidden bg-gray-100">
+                          {formData.modal_video_url.includes('youtube.com') || formData.modal_video_url.includes('youtu.be') ? (
+                            <iframe
+                              width="100%"
+                              height="100%"
+                              src={formatYoutubeUrl(formData.modal_video_url)}
+                              title="Video del modal"
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="aspect-video"
+                            ></iframe>
+                          ) : formData.modal_video_url.includes('vimeo.com') ? (
+                            <iframe
+                              width="100%"
+                              height="100%"
+                              src={formatVimeoUrl(formData.modal_video_url)}
+                              title="Video del modal"
+                              frameBorder="0"
+                              allow="autoplay; fullscreen; picture-in-picture"
+                              allowFullScreen
+                              className="aspect-video"
+                            ></iframe>
+                          ) : (
+                            <video
+                              src={formData.modal_video_url}
+                              controls
+                              className="w-full h-full"
+                              onError={(e) => {
+                                e.currentTarget.outerHTML = '<div class="flex items-center justify-center h-full text-gray-500 text-xs">Formato de video no válido</div>';
+                              }}
+                            >
+                              Tu navegador no soporta la reproducción de videos.
+                            </video>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   {/* Configuración de fondo */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Tipo de fondo */}
@@ -1079,6 +1137,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                             {formData.modal_titulo}
                           </h3>
                         )}
+                        
+                        {/* Mostrar imagen si está presente */}
                         {formData.modal_imagen_url && (
                           <div className="flex justify-center mb-2">
                             <img
@@ -1091,6 +1151,49 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                             />
                           </div>
                         )}
+                        
+                        {/* Mostrar video si está presente */}
+                        {formData.modal_video_url && (
+                          <div className="flex justify-center mb-2">
+                            <div className="aspect-video w-full max-w-xs border rounded overflow-hidden bg-gray-100">
+                              {formData.modal_video_url.includes('youtube.com') || formData.modal_video_url.includes('youtu.be') ? (
+                                <iframe
+                                  width="100%"
+                                  height="100%"
+                                  src={formatYoutubeUrl(formData.modal_video_url)}
+                                  title="Video del modal"
+                                  frameBorder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                  className="aspect-video"
+                                ></iframe>
+                              ) : formData.modal_video_url.includes('vimeo.com') ? (
+                                <iframe
+                                  width="100%"
+                                  height="100%"
+                                  src={formatVimeoUrl(formData.modal_video_url)}
+                                  title="Video del modal"
+                                  frameBorder="0"
+                                  allow="autoplay; fullscreen; picture-in-picture"
+                                  allowFullScreen
+                                  className="aspect-video"
+                                ></iframe>
+                              ) : (
+                                <video
+                                  src={formData.modal_video_url}
+                                  controls
+                                  className="w-full h-full"
+                                  onError={(e) => {
+                                    e.currentTarget.outerHTML = '<div class="flex items-center justify-center h-full text-gray-500 text-xs">Formato de video no válido</div>';
+                                  }}
+                                >
+                                  Tu navegador no soporta la reproducción de videos.
+                                </video>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                        
                         {formData.modal_mensaje && (
                           <p className="text-gray-700 text-sm whitespace-pre-line">
                             {formData.modal_mensaje}

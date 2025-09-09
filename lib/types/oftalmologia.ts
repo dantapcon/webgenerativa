@@ -15,6 +15,7 @@ export interface Empresa {
   modal_titulo?: string | null;
   modal_mensaje?: string | null;
   modal_imagen_url?: string | null;
+  modal_video_url?: string | null;
   modal_fondo_tipo?: 'color' | 'imagen' | null;
   modal_fondo_color?: string | null;
   modal_fondo_imagen?: string | null;
@@ -114,6 +115,7 @@ export interface EmpresaFormData {
   modal_titulo?: string;
   modal_mensaje?: string;
   modal_imagen_url?: string;
+  modal_video_url?: string;
   modal_fondo_tipo?: 'color' | 'imagen';
   modal_fondo_color?: string;
   modal_fondo_imagen?: string;
