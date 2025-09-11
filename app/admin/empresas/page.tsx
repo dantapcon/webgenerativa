@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import AdminEmpresasManager from '@/components/admin/AdminEmpresasManager';
 import { 
   Building, 
   Globe, 
@@ -24,7 +25,9 @@ import {
   MapPin,
   Palette,
   Settings,
-  BarChart3
+  BarChart3,
+  Users,
+  Shield
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -40,6 +43,7 @@ export default function AdminEmpresasPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterEstado, setFilterEstado] = useState<string>('todos');
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [activeTab, setActiveTab] = useState<'empresas' | 'administradores'>('empresas');
 
   const showAlert = (type: 'success' | 'error', message: string) => {
     setAlert({ type, message });
@@ -183,6 +187,38 @@ export default function AdminEmpresasPage() {
           </div>
         </div>
 
+        {/* Pestañas de navegación */}
+        <div className="mb-6">
+          <nav className="flex space-x-8">
+            <button
+              onClick={() => setActiveTab('empresas')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'empresas'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Building className="h-4 w-4" />
+                Empresas
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveTab('administradores')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'administradores'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4" />
+                Administradores
+              </div>
+            </button>
+          </nav>
+        </div>
+
         {alert && (
           <Alert className={`${alert.type === 'success' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} mb-6`}>
             <AlertDescription className={alert.type === 'success' ? 'text-green-800' : 'text-red-800'}>
@@ -191,8 +227,11 @@ export default function AdminEmpresasPage() {
           </Alert>
         )}
 
-        {/* Controles de filtros */}
-        <Card className="mb-6">
+        {/* Contenido de las pestañas */}
+        {activeTab === 'empresas' ? (
+          <>
+            {/* Controles de filtros */}
+            <Card className="mb-6">
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
@@ -459,6 +498,11 @@ export default function AdminEmpresasPage() {
               Mostrando {filteredEmpresas.length} de {empresas.length} sitios web
             </p>
           </div>
+        )}
+          </>
+        ) : (
+          /* Pestaña de Administradores */
+          <AdminEmpresasManager empresas={empresas} />
         )}
       </div>
     </div>

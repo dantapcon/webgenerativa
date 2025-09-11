@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save, Eye, Building } from 'lucide-react';
 import SucursalesManager from '@/components/admin/SucursalesManager';
+import AdminEmpresaIndividual from '@/components/admin/AdminEmpresaIndividual';
 import Link from 'next/link';
 // La migración ya se ha completado
 
@@ -1685,6 +1686,21 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             </Button>
           </div>
         </form>
+
+        {/* Administrador de la Página - FUERA del formulario principal */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Administrador de la Página</CardTitle>
+            <CardDescription>
+              Asignar un administrador para que pueda editar contenido de esta página específica
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {empresa && (
+              <AdminEmpresaIndividual empresa={empresa} />
+            )}
+          </CardContent>
+        </Card>
 
         {/* Gestor de Sucursales - FUERA del formulario principal */}
         {formData.sucursales_activo && empresaId && (
