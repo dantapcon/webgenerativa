@@ -73,20 +73,23 @@ export function useGoogleMaps() {
         return;
       }
 
-      // Crear nuevo script
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker`;
-      script.async = true;
-      script.defer = true;
-
-      script.onload = () => {
+      // Función callback para Google Maps
+      window.initGoogleMaps = () => {
         isGoogleMapsLoaded = true;
         isGoogleMapsLoading = false;
+        delete window.initGoogleMaps;
         resolve(window.google);
       };
 
+      // Crear nuevo script
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker&callback=initGoogleMaps`;
+      script.async = true;
+      script.defer = true;
+
       script.onerror = () => {
         isGoogleMapsLoading = false;
+        delete window.initGoogleMaps;
         reject(new Error('Error al cargar Google Maps'));
       };
 

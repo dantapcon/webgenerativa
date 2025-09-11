@@ -64,6 +64,7 @@ export default function SimpleGoogleMap({ sucursales, colorPrimario = '#2563eb' 
             lng: parseFloat(sucursalesConCoordenadas[0].longitud)
           },
           mapTypeId: google.maps.MapTypeId.ROADMAP,
+          mapId: 'DEMO_MAP_ID', // ID requerido para AdvancedMarkerElement
           styles: [
             {
               featureType: 'poi',
@@ -83,20 +84,48 @@ export default function SimpleGoogleMap({ sucursales, colorPrimario = '#2563eb' 
             lng: parseFloat(sucursal.longitud)
           };
 
-          // Crear marcador
-          const marker = new google.maps.Marker({
-            position,
-            map: mapInstance,
-            title: sucursal.nombre,
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 10,
-              fillColor: colorPrimario,
-              fillOpacity: 1,
-              strokeColor: '#ffffff',
-              strokeWeight: 2
+          // Crear un elemento HTML personalizado para el marcador
+          const markerContent = document.createElement('div');
+          markerContent.style.cssText = `
+            width: 20px;
+            height: 20px;
+            background-color: ${colorPrimario};
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          `;
+
+          // Crear marcador usando AdvancedMarkerElement si está disponible
+          let marker;
+          try {
+            if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
+              marker = new google.maps.marker.AdvancedMarkerElement({
+                position,
+                map: mapInstance,
+                title: sucursal.nombre,
+                content: markerContent
+              });
+            } else {
+              throw new Error('AdvancedMarkerElement not available');
             }
-          });
+          } catch (error) {
+            console.log('Usando Marker tradicional como fallback');
+            // Fallback a Marker tradicional
+            marker = new google.maps.Marker({
+              position,
+              map: mapInstance,
+              title: sucursal.nombre,
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 10,
+                fillColor: colorPrimario,
+                fillOpacity: 1,
+                strokeColor: '#ffffff',
+                strokeWeight: 2
+              }
+            });
+          }
 
           // Crear ventana de información
           const infoWindow = new google.maps.InfoWindow({
@@ -126,11 +155,18 @@ export default function SimpleGoogleMap({ sucursales, colorPrimario = '#2563eb' 
           });
 
           // Agregar event listener para mostrar info window
-          marker.addListener('click', () => {
+          const clickHandler = () => {
             // Cerrar todas las ventanas abiertas
             infoWindows.forEach(iw => iw.close());
             infoWindow.open(mapInstance, marker);
-          });
+          };
+
+          // Agregar el listener dependiendo del tipo de marcador
+          if (marker.addListener) {
+            marker.addListener('click', clickHandler);
+          } else if (marker.addEventListener) {
+            marker.addEventListener('click', clickHandler);
+          }
 
           markers.push(marker);
           infoWindows.push(infoWindow);
@@ -176,7 +212,13 @@ export default function SimpleGoogleMap({ sucursales, colorPrimario = '#2563eb' 
 
     // Cleanup function
     return () => {
-      markers.forEach(marker => marker.setMap(null));
+      markers.forEach(marker => {
+        if (marker.setMap) {
+          marker.setMap(null);
+        } else if (marker.map) {
+          marker.map = null;
+        }
+      });
       infoWindows.forEach(infoWindow => infoWindow.close());
       markers = [];
       infoWindows = [];
