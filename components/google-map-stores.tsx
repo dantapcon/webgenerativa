@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import type { Sucursal } from '@/lib/types/oftalmologia';
+import type { Sucursal } from '@/lib/types/webgenerator';
 
 interface GoogleMapWithStoresProps {
   sucursales: Sucursal[];
@@ -266,11 +266,4 @@ export default function GoogleMapWithStores({
       </div>
     </div>
   );
-}
-
-// Declaraciones globales para TypeScript
-declare global {
-  interface Window {
-    google: any;
-  }
 }

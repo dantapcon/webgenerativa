@@ -7,11 +7,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useSucursales, type SucursalFormData } from '@/hooks/useSucursales';
-import type { Sucursal } from '@/lib/types/oftalmologia';
+import type { Sucursal } from '@/lib/types/webgenerator';
 import { Plus, Edit2, Trash2, MapPin, Phone, Mail, Clock } from 'lucide-react';
 
-export default function SucursalesManager() {
-  const { sucursales, loading, addSucursal, updateSucursal, deleteSucursal } = useSucursales(4);
+interface SucursalesManagerProps {
+  empresaId: number;
+}
+
+export default function SucursalesManager({ empresaId }: SucursalesManagerProps) {
+  const { sucursales, loading, addSucursal, updateSucursal, deleteSucursal } = useSucursales(empresaId);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
 

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { EmpresaFormData, EmpresaCompleta } from '@/lib/types/oftalmologia';
-import { WebGeneratorService } from '@/lib/services/oftalmologia';
+import { EmpresaFormData, EmpresaCompleta } from '@/lib/types/webgenerator';
+import { WebGeneratorService } from '@/lib/services/webgenerator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -322,8 +322,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             .filter((sub: any) => sub && sub.nombre && sub.nombre.trim() !== '')
             .map((sub: any) => {
               // Preparar campos con formateo especial para URLs
-              let imagenUrl = sub.imagen_url?.trim() || '';
-              let enlaceExterno = sub.enlace_externo?.trim() || '';
+              const imagenUrl = sub.imagen_url?.trim() || '';
+              const enlaceExterno = sub.enlace_externo?.trim() || '';
               
               // Formateo de enlaces para cumplir con restricciones de BD
               // Estos cambios son solo para previsualización, el backend también hace la verificación
@@ -1538,7 +1538,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                                   }
                                   
                                   // Limpiar y formatear la URL si es necesario
-                                  let url = e.target.value.trim();
+                                  const url = e.target.value.trim();
                                   
                                   // Validar que no sea una imagen base64
                                   if (url.startsWith('data:image/')) {

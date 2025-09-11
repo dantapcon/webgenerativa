@@ -1,4 +1,4 @@
-import { WebGeneratorService } from '@/lib/services/oftalmologia';
+import { WebGeneratorService } from '@/lib/services/webgenerator';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
@@ -80,7 +80,6 @@ interface PageProps {
 
 export default async function EmpresaPage({ params }: PageProps) {
   const { slug } = await params;
-  
   const empresa = await WebGeneratorService.getEmpresaBySlug(slug);
   
   if (!empresa) {

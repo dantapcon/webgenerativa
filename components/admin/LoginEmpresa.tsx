@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Lock, User, LogOut } from 'lucide-react';
-import { AdminEmpresaCompleto, LoginData, AuthResponse } from '@/lib/types/oftalmologia';
+import { AdminEmpresaCompleto, LoginData, AuthResponse } from '@/lib/types/webgenerator';
 
 interface LoginEmpresaProps {
   empresaId: number;

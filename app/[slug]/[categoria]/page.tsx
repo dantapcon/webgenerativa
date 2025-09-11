@@ -1,4 +1,4 @@
-import { WebGeneratorService } from '@/lib/services/oftalmologia';
+import { WebGeneratorService } from '@/lib/services/webgenerator';
 import { notFound } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -45,7 +45,6 @@ interface PageProps {
 
 export default async function CategoriaPage({ params }: PageProps) {
   const { slug, categoria } = await params;
-  
   const empresa = await WebGeneratorService.getEmpresaBySlug(slug);
   
   if (!empresa) {
@@ -239,9 +238,8 @@ export default async function CategoriaPage({ params }: PageProps) {
   );
 }
 
-export async function generateStaticParams({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const empresa = await WebGeneratorService.getEmpresaBySlug(slug);
+export async function generateStaticParams(props: { params: { slug: string } }) {
+  const empresa = await WebGeneratorService.getEmpresaBySlug(props.params.slug);
   
   if (!empresa || !empresa.categorias) {
     return [];

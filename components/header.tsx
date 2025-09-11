@@ -93,7 +93,7 @@ export function Header({ empresa }: HeaderProps) {
                   className="object-contain"
                   onError={(e) => {
                     console.error("Error cargando logo en header:", e);
-                    // @ts-ignore - Ignorar error de tipos para este caso específico
+                    // @ts-expect-error - Ignorar error de tipos para este caso específico
                     e.target.src = "https://placehold.co/400x300?text=Logo+no+disponible";
                   }}
                 />

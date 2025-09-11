@@ -6,7 +6,7 @@ import {
   Subcategoria,
   EmpresaCompleta, 
   EmpresaFormData 
-} from '../types/oftalmologia';
+} from '../types/webgenerator';
 
 // Interfaces específicas para el servicio
 interface CategoriaServicio {
