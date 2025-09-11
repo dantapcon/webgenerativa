@@ -1,4 +1,4 @@
-import { WebGeneratorService } from '@/lib/services/webgenerator';
+import { WebGeneratorService } from '@/lib/services/oftalmologia';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';

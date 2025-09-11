@@ -96,7 +96,7 @@ Notas:
   - `app/api/admin/` — endpoints API (empresas, permisos, auth)
 - `components/` — componentes de UI, subcarpeta `admin/` para las UI de administración
 - `lib/` — servicios y utilidades
-  - `lib/services/` — lógica del negocio (webgenerator, admin, etc.)
+  - `lib/services/` — lógica del negocio (admin, oftalmologia, etc.)
   - `lib/supabase/` — wrappers y helpers de supabase: `client.ts`, `server.ts`, `middleware.ts`
 - `sql_migrations/`, `migrations/`, `setup_*.sql` — scripts SQL y migraciones
 - `types/` — definiciones TypeScript
@@ -174,7 +174,7 @@ Documenta en el repo los endpoints que agregues (archivo README o swagger/openap
 ## 9) Servicios y componentes principales
 
 - `lib/services/admin-paginas.ts` — CRUD admin (debe usarse solo server-side para operaciones con `service_role`).
-- `lib/services/webgenerator.ts` — obtiene empresas, categorías y otros datos.
+- `lib/services/oftalmologia.ts` — obtiene empresas, categorías y otros datos.
 - `components/admin/LoginAdminSupabase.tsx` — UI de login que realiza `supabase.auth.signInWithPassword` y luego consulta `admin_permisos`.
 - `components/admin/AdminEmpresaIndividual.tsx` — gestión de un administrador por empresa (crear/editar permisos) — usa APIs server.
 

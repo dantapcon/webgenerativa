@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { EmpresaFormData } from '@/lib/types/webgenerator';
-import { WebGeneratorService } from '@/lib/services/webgenerator';
+import { EmpresaFormData } from '@/lib/types/oftalmologia';
+import { WebGeneratorService } from '@/lib/services/oftalmologia';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

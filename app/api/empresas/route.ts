@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { WebGeneratorService } from '@/lib/services/webgenerator';
+import { WebGeneratorService } from '@/lib/services/oftalmologia';
 
 export async function POST(request: NextRequest) {
   try {

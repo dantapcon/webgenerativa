@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import type { Sucursal } from '@/lib/types/webgenerator';
+import type { Sucursal } from '@/lib/types/oftalmologia';
 
 interface GoogleMapWithStoresProps {
   sucursales: Sucursal[];

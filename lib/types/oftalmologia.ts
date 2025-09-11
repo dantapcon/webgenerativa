@@ -70,7 +70,7 @@ export interface Subcategoria {
 
 export interface Sucursal {
   id: number;
-  empresa_id: number;
+  empresa_id: number; // Cambiado de string a number para que coincida con Empresa.id
   nombre: string;
   direccion: string;
   telefono?: string | null;
@@ -167,6 +167,72 @@ export interface CreateEmpresaResponse {
   message: string;
   empresa_id: number;
   website_url: string;
+}
+
+// ===== TIPOS PARA CLÍNICAS OFTALMOLÓGICAS =====
+
+// Clínica oftalmológica base
+export interface ClinicaOftalmologica {
+  id: string;
+  titulo: string;
+  lema?: string | null;
+  logo_url?: string | null;
+  quienes_somos: string;
+  mision: string;
+  vision: string;
+  telefono?: string | null;
+  email?: string | null;
+  direccion?: string | null;
+  activo: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// Estilos de clínica
+export interface EstilosClinica {
+  id: string;
+  clinica_id: string;
+  color_primario: string;
+  color_secundario: string;
+  color_acento: string;
+  color_texto: string;
+  color_fondo: string;
+  fuente_principal: string;
+  fuente_titulo: string;
+  tamano_fuente: string;
+  estilo_botones: string;
+  tema_general: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// Clínica completa con estilos
+export interface ClinicaCompleta extends ClinicaOftalmologica {
+  estilos?: EstilosClinica;
+}
+
+// Formulario para clínicas
+export interface ClinicaFormData {
+  titulo: string;
+  lema?: string;
+  logo_url?: string;
+  quienes_somos: string;
+  mision: string;
+  vision: string;
+  telefono?: string;
+  email?: string;
+  direccion?: string;
+  // Estilos incluidos en el formulario
+  color_primario?: string;
+  color_secundario?: string;
+  color_acento?: string;
+  color_texto?: string;
+  color_fondo?: string;
+  fuente_principal?: string;
+  fuente_titulo?: string;
+  tamano_fuente?: string;
+  estilo_botones?: string;
+  tema_general?: string;
 }
 
 // ===== SISTEMA DE ADMINISTRACIÓN DE PÁGINAS =====

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Empresa } from '@/lib/types/webgenerator';
-import { WebGeneratorService } from '@/lib/services/webgenerator';
+import { Empresa } from '@/lib/types/oftalmologia';
+import { WebGeneratorService } from '@/lib/services/oftalmologia';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
