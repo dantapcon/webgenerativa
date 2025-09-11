@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import type { Sucursal } from '@/lib/types/oftalmologia';
+import type { Sucursal } from '@/lib/types/webgenerator';
 
 interface SimpleMapProps {
   sucursales: Sucursal[];

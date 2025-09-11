@@ -6,7 +6,7 @@ import {
   Subcategoria,
   EmpresaCompleta, 
   EmpresaFormData 
-} from '../types/oftalmologia';
+} from '../types/webgenerator';
 
 // Interfaces específicas para el servicio
 interface CategoriaServicio {
@@ -661,5 +661,5 @@ export class WebGeneratorService {
 
 export default WebGeneratorService;
 
-// Mantener exportación del servicio anterior para compatibilidad
+// Para mantener compatibilidad con código existente
 export { WebGeneratorService as OftalmologiaService };

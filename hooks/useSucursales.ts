@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import type { Sucursal } from '@/lib/types/oftalmologia';
+import type { Sucursal } from '@/lib/types/webgenerator';
 
 export interface SucursalFormData {
   nombre: string;

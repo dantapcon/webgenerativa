@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Phone, Mail, Clock, MessageSquare } from 'lucide-react';
-import type { Sucursal } from '@/lib/types/oftalmologia';
+import type { Sucursal } from '@/lib/types/webgenerator';
 import SimpleGoogleMap from '@/components/simple-google-map';
 
 interface UbicacionesPageProps {

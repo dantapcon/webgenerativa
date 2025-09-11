@@ -27,7 +27,7 @@ import {
   PermisosAdminEmpresa,
   PERMISOS_DESCRIPCION,
   Empresa 
-} from '@/lib/types/oftalmologia';
+} from '@/lib/types/webgenerator';
 
 interface AdminEmpresaIndividualProps {
   empresa: Empresa;

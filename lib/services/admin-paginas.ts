@@ -7,7 +7,7 @@ import {
   AdminPaginaFormData,
   LoginData,
   AuthResponse
-} from '../types/oftalmologia';
+} from '../types/webgenerator';
 
 // Cliente de Supabase con service_role para operaciones administrativas
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
