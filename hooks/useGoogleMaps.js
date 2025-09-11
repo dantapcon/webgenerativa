@@ -83,7 +83,7 @@ export function useGoogleMaps() {
 
       // Crear nuevo script
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker&callback=initGoogleMaps`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=marker&loading=async&callback=initGoogleMaps`;
       script.async = true;
       script.defer = true;
 
