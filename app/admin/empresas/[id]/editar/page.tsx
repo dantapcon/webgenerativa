@@ -15,6 +15,18 @@ import AdminEmpresaIndividual from '@/components/admin/AdminEmpresaIndividual';
 import Link from 'next/link';
 // La migración ya se ha completado
 
+// Tipo extendido temporalmente para incluir campos de ventana flotante
+interface EmpresaFormDataExtended extends EmpresaFormData {
+  modal_activo?: boolean;
+  modal_titulo?: string;
+  modal_mensaje?: string;
+  modal_imagen_url?: string;
+  modal_video_url?: string;
+  modal_fondo_tipo?: 'color' | 'imagen';
+  modal_fondo_color?: string;
+  modal_fondo_imagen?: string;
+}
+
 // Funciones auxiliares para formatear URLs de video
 function formatYoutubeUrl(url: string): string {
   try {
@@ -124,7 +136,7 @@ interface PageProps {
 export default function EditarEmpresaPage({ params }: PageProps) {
   const router = useRouter();
   const [empresaId, setEmpresaId] = useState<number | null>(null);
-  const [formData, setFormData] = useState<EmpresaFormData>({
+  const [formData, setFormData] = useState<EmpresaFormDataExtended>({
     nombre_empresa: '',
     descripcion_empresa: '',
     descripcion_fondo_tipo: 'color',
@@ -205,15 +217,15 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           descripcion_fondo_tipo: data.descripcion_fondo_tipo || 'color',
           descripcion_imagen_fondo: data.descripcion_imagen_fondo || '',
           video_descripcion: data.video_descripcion || '',
-          // Campos para el modal de ventana flotante
-          modal_activo: data.modal_activo || false,
-          modal_titulo: data.modal_titulo || '',
-          modal_mensaje: data.modal_mensaje || '',
-          modal_imagen_url: data.modal_imagen_url || '',
-          modal_video_url: data.modal_video_url || '',
-          modal_fondo_tipo: data.modal_fondo_tipo || 'color',
-          modal_fondo_color: data.modal_fondo_color || '#ffffff',
-          modal_fondo_imagen: data.modal_fondo_imagen || '',
+          // Campos para el modal de ventana flotante (ahora desde ventana_flotante)
+          modal_activo: data.ventana_flotante?.activo || false,
+          modal_titulo: data.ventana_flotante?.titulo || '',
+          modal_mensaje: data.ventana_flotante?.mensaje || '',
+          modal_imagen_url: data.ventana_flotante?.imagen_url || '',
+          modal_video_url: data.ventana_flotante?.video_url || '',
+          modal_fondo_tipo: data.ventana_flotante?.fondo_tipo || 'color',
+          modal_fondo_color: data.ventana_flotante?.fondo_color || '#ffffff',
+          modal_fondo_imagen: data.ventana_flotante?.fondo_imagen || '',
           // Campo para sucursales/ubicaciones
           sucursales_activo: data.sucursales_activo || false,
           correo_empresa: data.correo_empresa || '',
@@ -366,11 +378,33 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       // Log para debug
       console.log('Categorías a enviar:', JSON.stringify(categoriasValidadas, null, 2));
       
-      // Ya no necesitamos eliminar estos campos porque la migración ya se completó
-      const datosAEnviar = { ...formData };
+      // Separar datos de empresa y ventana flotante
+      const {
+        modal_activo,
+        modal_titulo,
+        modal_mensaje,
+        modal_imagen_url,
+        modal_video_url,
+        modal_fondo_tipo,
+        modal_fondo_color,
+        modal_fondo_imagen,
+        ...datosEmpresa
+      } = formData;
+
+      // Datos de ventana flotante
+      const datosVentanaFlotante = {
+        activo: modal_activo,
+        titulo: modal_titulo,
+        mensaje: modal_mensaje,
+        imagen_url: modal_imagen_url,
+        video_url: modal_video_url,
+        fondo_tipo: modal_fondo_tipo,
+        fondo_color: modal_fondo_color,
+        fondo_imagen: modal_fondo_imagen
+      };
       
-      // Actualizar empresa con las categorías
-      await WebGeneratorService.updateEmpresa(empresaId, datosAEnviar, categoriasValidadas);
+      // Actualizar empresa con las categorías y ventana flotante
+      await WebGeneratorService.updateEmpresa(empresaId, datosEmpresa, categoriasValidadas, datosVentanaFlotante);
       showAlert('success', 'Empresa actualizada exitosamente');
       
       // Recargar datos

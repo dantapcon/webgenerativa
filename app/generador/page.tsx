@@ -70,14 +70,6 @@ export default function WebGeneratorPage() {
     descripcion_fondo_tipo: 'color',
     descripcion_imagen_fondo: '',
     video_descripcion: '',
-    // Campos para el modal de consejo diario
-    modal_activo: false,
-    modal_titulo: '',
-    modal_mensaje: '',
-    modal_imagen_url: '',
-    modal_fondo_tipo: 'color',
-    modal_fondo_color: '#ffffff',
-    modal_fondo_imagen: '',
     // Campo para sucursales/ubicaciones
     sucursales_activo: false,
     correo_empresa: '',
@@ -244,14 +236,6 @@ export default function WebGeneratorPage() {
         descripcion_fondo_tipo: 'color',
         descripcion_imagen_fondo: '',
         video_descripcion: '',
-        // Campos para el modal de consejo diario
-        modal_activo: false,
-        modal_titulo: '',
-        modal_mensaje: '',
-        modal_imagen_url: '',
-        modal_fondo_tipo: 'color',
-        modal_fondo_color: '#ffffff',
-        modal_fondo_imagen: '',
         // Campo para sucursales/ubicaciones
         sucursales_activo: false,
         correo_empresa: '',
@@ -499,8 +483,11 @@ export default function WebGeneratorPage() {
                             type="checkbox"
                             id="modal_activo"
                             name="modal_activo"
-                            checked={formData.modal_activo || false}
-                            onChange={(e) => setFormData(prev => ({ ...prev, modal_activo: e.target.checked }))}
+                            // TEMPORALMENTE COMENTADO - ventana flotante se maneja por separado
+                            // checked={formData.modal_activo || false}
+                            // onChange={(e) => setFormData(prev => ({ ...prev, modal_activo: e.target.checked }))}
+                            checked={false}
+                            onChange={() => {}}
                             className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                           />
                           <Label htmlFor="modal_activo" className="text-sm font-medium text-gray-700">
@@ -512,7 +499,10 @@ export default function WebGeneratorPage() {
                         </p>
                       </div>
 
+                      {/* TEMPORALMENTE COMENTADO - ventana flotante se maneja por separado
                       {formData.modal_activo && (
+                      */}
+                      {false && (
                         <div className="space-y-4 mt-4 p-4 bg-gray-50 rounded-lg">
                           {/* Título del modal */}
                           <div className="space-y-2">
@@ -522,7 +512,7 @@ export default function WebGeneratorPage() {
                             <Input
                               id="modal_titulo"
                               name="modal_titulo"
-                              value={formData.modal_titulo || ''}
+                              value={'' /* formData.modal_titulo || '' */}
                               onChange={handleInputChange}
                               placeholder="Ej: ¡Bienvenido! o Información importante"
                               className="w-full"
@@ -537,7 +527,7 @@ export default function WebGeneratorPage() {
                             <textarea
                               id="modal_mensaje"
                               name="modal_mensaje"
-                              value={formData.modal_mensaje || ''}
+                              value={'' /* formData.modal_mensaje || '' */}
                               onChange={handleInputChange}
                               placeholder="Escribe tu mensaje de bienvenida, información importante o promoción..."
                               rows={3}
@@ -553,7 +543,7 @@ export default function WebGeneratorPage() {
                             <Input
                               id="modal_imagen_url"
                               name="modal_imagen_url"
-                              value={formData.modal_imagen_url || ''}
+                              value={'' /* formData.modal_imagen_url || '' */}
                               onChange={handleInputChange}
                               placeholder="https://ejemplo.com/imagen.jpg"
                               className="w-full"
@@ -571,7 +561,7 @@ export default function WebGeneratorPage() {
                             <select
                               id="modal_fondo_tipo"
                               name="modal_fondo_tipo"
-                              value={formData.modal_fondo_tipo || 'color'}
+                              value={'color' /* formData.modal_fondo_tipo || 'color' */}
                               onChange={handleInputChange}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
@@ -581,7 +571,7 @@ export default function WebGeneratorPage() {
                           </div>
 
                           {/* Color de fondo */}
-                          {formData.modal_fondo_tipo === 'color' && (
+                          {false /* formData.modal_fondo_tipo === 'color' */ && (
                             <div className="space-y-2">
                               <Label htmlFor="modal_fondo_color" className="text-sm font-medium text-gray-700">
                                 Color de fondo
@@ -590,7 +580,7 @@ export default function WebGeneratorPage() {
                                 id="modal_fondo_color"
                                 name="modal_fondo_color"
                                 type="color"
-                                value={formData.modal_fondo_color || '#ffffff'}
+                                value={'#ffffff' /* formData.modal_fondo_color || '#ffffff' */}
                                 onChange={handleInputChange}
                                 className="w-20 h-10"
                               />
@@ -598,7 +588,7 @@ export default function WebGeneratorPage() {
                           )}
 
                           {/* Imagen de fondo */}
-                          {formData.modal_fondo_tipo === 'imagen' && (
+                          {false /* formData.modal_fondo_tipo === 'imagen' */ && (
                             <div className="space-y-2">
                               <Label htmlFor="modal_fondo_imagen" className="text-sm font-medium text-gray-700">
                                 URL de imagen de fondo
@@ -606,7 +596,7 @@ export default function WebGeneratorPage() {
                               <Input
                                 id="modal_fondo_imagen"
                                 name="modal_fondo_imagen"
-                                value={formData.modal_fondo_imagen || ''}
+                                value={'' /* formData.modal_fondo_imagen || '' */}
                                 onChange={handleInputChange}
                                 placeholder="https://ejemplo.com/fondo.jpg"
                                 className="w-full"

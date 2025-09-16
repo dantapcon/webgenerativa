@@ -212,6 +212,17 @@ export class WebGeneratorService {
         subcategorias: categoria.subcategorias?.sort((a: any, b: any) => a.orden_subcategoria - b.orden_subcategoria) || []
       })) || [];
 
+      // Obtener ventana flotante
+      const { data: ventanaFlotante, error: ventanaError } = await supabase
+        .from('ventana_flotante')
+        .select('*')
+        .eq('empresa_id', empresa.id)
+        .single();
+
+      if (ventanaError && ventanaError.code !== 'PGRST116') {
+        console.warn('Error obteniendo ventana flotante:', ventanaError.message);
+      }
+
       // Agregar categoría de "Ubicaciones" si sucursales_activo está habilitado
       if (empresa.sucursales_activo) {
         categoriasOrdenadas.push({
@@ -227,7 +238,8 @@ export class WebGeneratorService {
 
       return {
         ...empresa,
-        categorias: categoriasOrdenadas
+        categorias: categoriasOrdenadas,
+        ventana_flotante: ventanaFlotante || undefined
       };
     } catch (error) {
       console.error('Error en getEmpresaBySlug:', error);
@@ -271,9 +283,21 @@ export class WebGeneratorService {
         subcategorias: categoria.subcategorias?.sort((a: any, b: any) => a.orden - b.orden) || []
       })) || [];
 
+      // Obtener ventana flotante
+      const { data: ventanaFlotante, error: ventanaError } = await supabase
+        .from('ventana_flotante')
+        .select('*')
+        .eq('empresa_id', empresa.id)
+        .single();
+
+      if (ventanaError && ventanaError.code !== 'PGRST116') {
+        console.warn('Error obteniendo ventana flotante:', ventanaError.message);
+      }
+
       return {
         ...empresa,
-        categorias: categoriasOrdenadas
+        categorias: categoriasOrdenadas,
+        ventana_flotante: ventanaFlotante || undefined
       };
     } catch (error) {
       console.error('Error en getEmpresaById:', error);
@@ -285,7 +309,8 @@ export class WebGeneratorService {
   static async updateEmpresa(
     id: number, 
     data: Partial<EmpresaFormData>, 
-    categoriasData?: Array<CategoriaServicio>
+    categoriasData?: Array<CategoriaServicio>,
+    ventanaFlotanteData?: any
   ): Promise<Empresa> {
     try {
       // Extraer datos que no van en la tabla empresas
@@ -301,6 +326,11 @@ export class WebGeneratorService {
 
       if (empresaError) {
         throw new Error(`Error actualizando empresa: ${empresaError.message}`);
+      }
+
+      // Actualizar ventana flotante si se proporcionaron datos
+      if (ventanaFlotanteData) {
+        await this.updateVentanaFlotante(id, ventanaFlotanteData);
       }
 
       // Si se proporcionaron categorías, actualizarlas
@@ -645,6 +675,66 @@ export class WebGeneratorService {
       }
     } catch (error) {
       console.error('Error en deleteEmpresa:', error);
+      throw error;
+    }
+  }
+
+  // Actualizar ventana flotante de una empresa
+  static async updateVentanaFlotante(empresaId: number, data: any): Promise<void> {
+    try {
+      // Verificar si ya existe una ventana flotante para esta empresa
+      const { data: existing, error: selectError } = await supabase
+        .from('ventana_flotante')
+        .select('id')
+        .eq('empresa_id', empresaId)
+        .single();
+
+      if (selectError && selectError.code !== 'PGRST116') {
+        console.warn('Error verificando ventana flotante existente:', selectError.message);
+      }
+
+      if (existing) {
+        // Actualizar existente
+        const { error: updateError } = await supabase
+          .from('ventana_flotante')
+          .update({
+            activo: data.activo,
+            titulo: data.titulo,
+            mensaje: data.mensaje,
+            imagen_url: data.imagen_url,
+            video_url: data.video_url,
+            fondo_tipo: data.fondo_tipo,
+            fondo_color: data.fondo_color,
+            fondo_imagen: data.fondo_imagen,
+            updated_at: new Date().toISOString()
+          })
+          .eq('empresa_id', empresaId);
+
+        if (updateError) {
+          throw new Error(`Error actualizando ventana flotante: ${updateError.message}`);
+        }
+      } else {
+        // Crear nueva
+        const { error: insertError } = await supabase
+          .from('ventana_flotante')
+          .insert([{
+            empresa_id: empresaId,
+            activo: data.activo || false,
+            titulo: data.titulo,
+            mensaje: data.mensaje,
+            imagen_url: data.imagen_url,
+            video_url: data.video_url,
+            fondo_tipo: data.fondo_tipo || 'color',
+            fondo_color: data.fondo_color || '#ffffff',
+            fondo_imagen: data.fondo_imagen
+          }]);
+
+        if (insertError) {
+          throw new Error(`Error creando ventana flotante: ${insertError.message}`);
+        }
+      }
+    } catch (error) {
+      console.error('Error en updateVentanaFlotante:', error);
       throw error;
     }
   }

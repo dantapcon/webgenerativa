@@ -10,15 +10,6 @@ export interface Empresa {
   descripcion_fondo_tipo?: 'color' | 'imagen' | null;
   descripcion_imagen_fondo?: string | null;
   video_descripcion?: string | null;
-  // Campos para el modal de consejo diario
-  modal_activo?: boolean | null;
-  modal_titulo?: string | null;
-  modal_mensaje?: string | null;
-  modal_imagen_url?: string | null;
-  modal_video_url?: string | null;
-  modal_fondo_tipo?: 'color' | 'imagen' | null;
-  modal_fondo_color?: string | null;
-  modal_fondo_imagen?: string | null;
   // Campo para sucursales/ubicaciones
   sucursales_activo?: boolean | null;
   correo_empresa?: string | null;
@@ -91,10 +82,26 @@ export interface Sucursal {
   updated_at: string;
 }
 
+export interface VentanaFlotante {
+  id: number;
+  empresa_id: number;
+  activo: boolean;
+  titulo?: string | null;
+  mensaje?: string | null;
+  imagen_url?: string | null;
+  video_url?: string | null;
+  fondo_tipo?: 'color' | 'imagen' | null;
+  fondo_color?: string | null;
+  fondo_imagen?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface EmpresaCompleta extends Empresa {
   categorias?: Categoria[];
   subcategorias?: Subcategoria[];
   sucursales?: Sucursal[];
+  ventana_flotante?: VentanaFlotante;
 }
 
 // Tipos para formularios
@@ -110,15 +117,6 @@ export interface EmpresaFormData {
   descripcion_fondo_tipo?: 'color' | 'imagen';
   descripcion_imagen_fondo?: string;
   video_descripcion?: string;
-  // Campos para el modal de consejo diario
-  modal_activo?: boolean;
-  modal_titulo?: string;
-  modal_mensaje?: string;
-  modal_imagen_url?: string;
-  modal_video_url?: string;
-  modal_fondo_tipo?: 'color' | 'imagen';
-  modal_fondo_color?: string;
-  modal_fondo_imagen?: string;
   // Campo para sucursales/ubicaciones
   sucursales_activo?: boolean;
   correo_empresa?: string;
@@ -152,6 +150,18 @@ export interface EmpresaFormData {
       orden: number;
     }>;
   }>;
+}
+
+// Datos del formulario para ventana flotante
+export interface VentanaFlotanteFormData {
+  activo?: boolean;
+  titulo?: string;
+  mensaje?: string;
+  imagen_url?: string;
+  video_url?: string;
+  fondo_tipo?: 'color' | 'imagen';
+  fondo_color?: string;
+  fondo_imagen?: string;
 }
 
 // Respuestas de la API

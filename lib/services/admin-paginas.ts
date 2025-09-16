@@ -57,7 +57,9 @@ export class AdminPaginasService {
         throw new Error(`Error creando administrador: ${adminError.message}`);
       }
 
-      // Crear permisos
+      // TODO: Actualizar para usar procesos_edicion en lugar de permisos_admin_empresas
+      // Crear permisos (temporalmente comentado hasta reestructurar)
+      /*
       const { data: permisos, error: permisosError } = await supabaseAdmin
         .from('permisos_admin_empresas')
         .insert([{
@@ -76,6 +78,22 @@ export class AdminPaginasService {
       if (permisosError) {
         throw new Error(`Error creando permisos: ${permisosError.message}`);
       }
+      */
+
+      // Permisos temporales para que funcione
+      const permisos = {
+        id: 'temp',
+        admin_id: admin.id,
+        puede_editar_info_basica: true,
+        puede_editar_contacto: true,
+        puede_editar_modal: true,
+        puede_editar_categorias: true,
+        puede_editar_sucursales: true,
+        puede_editar_contenido_hero: true,
+        puede_editar_videos: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
 
       return {
         ...admin,
@@ -93,11 +111,11 @@ export class AdminPaginasService {
    */
   static async getAdminEmpresa(adminId: string): Promise<AdminEmpresaCompleto | null> {
     try {
+      // Obtener admin básico
       const { data: admin, error: adminError } = await supabase
         .from('admin_paginas')
         .select(`
           *,
-          permisos:permisos_admin_empresas(*),
           empresa:empresas(*)
         `)
         .eq('id', adminId)
@@ -108,7 +126,73 @@ export class AdminPaginasService {
         throw new Error(`Error obteniendo administrador: ${adminError.message}`);
       }
 
-      return admin;
+      // Obtener el rol del usuario
+      const { data: role, error: roleError } = await supabase
+        .from('roles')
+        .select('id, role_type')
+        .eq('user_id', admin.user_id)
+        .single();
+
+      if (roleError && roleError.code !== 'PGRST116') {
+        console.warn('Error obteniendo rol:', roleError.message);
+      }
+
+      // Si es superadministrador, dar permisos completos
+      if (role?.role_type === 'superadministrador') {
+        return {
+          ...admin,
+          permisos: {
+            id: 'superadmin',
+            admin_id: admin.id,
+            puede_editar_info_basica: true,
+            puede_editar_contacto: true,
+            puede_editar_modal: true,
+            puede_editar_categorias: true,
+            puede_editar_sucursales: true,
+            puede_editar_contenido_hero: true,
+            puede_editar_videos: true,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        };
+      }
+
+      // Si es administrador, verificar permisos específicos
+      if (role?.role_type === 'administrador') {
+        const { data: procesos, error: procesosError } = await supabase
+          .from('procesos_edicion')
+          .select('*')
+          .eq('id_empresa', admin.empresa_id)
+          .eq('id_rol', role.id);
+
+        if (procesosError && procesosError.code !== 'PGRST116') {
+          console.warn('Error obteniendo procesos de edición:', procesosError.message);
+        }
+
+        const permisos = {
+          id: 'admin_permisos',
+          admin_id: admin.id,
+          puede_editar_info_basica: procesos?.some(p => p.id_permi === 'editar_info_basica') || false,
+          puede_editar_contacto: procesos?.some(p => p.id_permi === 'editar_contacto') || false,
+          puede_editar_modal: procesos?.some(p => p.id_permi === 'editar_ventana_flotante') || false,
+          puede_editar_categorias: procesos?.some(p => p.id_permi === 'editar_categorias') || false,
+          puede_editar_sucursales: procesos?.some(p => p.id_permi === 'editar_sucursales') || false,
+          puede_editar_contenido_hero: procesos?.some(p => p.id_permi === 'editar_contenido_hero') || false,
+          puede_editar_videos: procesos?.some(p => p.id_permi === 'editar_videos') || false,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+
+        return {
+          ...admin,
+          permisos
+        };
+      }
+
+      return {
+        ...admin,
+        permisos: undefined
+      };
 
     } catch (error) {
       console.error('Error en getAdminEmpresa:', error);
@@ -121,11 +205,11 @@ export class AdminPaginasService {
    */
   static async getAdminByEmpresa(empresaId: number): Promise<AdminEmpresaCompleto | null> {
     try {
+      // Primero obtener el admin_paginas básico
       const { data: admin, error: adminError } = await supabase
         .from('admin_paginas')
         .select(`
           *,
-          permisos:permisos_admin_empresas(*),
           empresa:empresas(*)
         `)
         .eq('empresa_id', empresaId)
@@ -136,7 +220,75 @@ export class AdminPaginasService {
         throw new Error(`Error obteniendo administrador: ${adminError.message}`);
       }
 
-      return admin;
+      // Obtener el rol del usuario para determinar el tipo
+      const { data: role, error: roleError } = await supabase
+        .from('roles')
+        .select('id, role_type')
+        .eq('user_id', admin.user_id)
+        .single();
+
+      if (roleError && roleError.code !== 'PGRST116') {
+        console.warn('Error obteniendo rol:', roleError.message);
+      }
+
+      // Si es superadministrador, dar permisos completos automáticamente
+      if (role?.role_type === 'superadministrador') {
+        return {
+          ...admin,
+          permisos: {
+            id: 'superadmin',
+            admin_id: admin.id,
+            puede_editar_info_basica: true,
+            puede_editar_contacto: true,
+            puede_editar_modal: true,
+            puede_editar_categorias: true,
+            puede_editar_sucursales: true,
+            puede_editar_contenido_hero: true,
+            puede_editar_videos: true,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        };
+      }
+
+      // Si es administrador, verificar permisos en procesos_edicion
+      if (role?.role_type === 'administrador') {
+        const { data: procesos, error: procesosError } = await supabase
+          .from('procesos_edicion')
+          .select('*')
+          .eq('id_empresa', empresaId)
+          .eq('id_rol', role.id);
+
+        if (procesosError && procesosError.code !== 'PGRST116') {
+          console.warn('Error obteniendo procesos de edición:', procesosError.message);
+        }
+
+        // Mapear permisos desde procesos_edicion al formato esperado
+        const permisos = {
+          id: 'admin_permisos',
+          admin_id: admin.id,
+          puede_editar_info_basica: procesos?.some(p => p.id_permi === 'editar_info_basica') || false,
+          puede_editar_contacto: procesos?.some(p => p.id_permi === 'editar_contacto') || false,
+          puede_editar_modal: procesos?.some(p => p.id_permi === 'editar_ventana_flotante') || false,
+          puede_editar_categorias: procesos?.some(p => p.id_permi === 'editar_categorias') || false,
+          puede_editar_sucursales: procesos?.some(p => p.id_permi === 'editar_sucursales') || false,
+          puede_editar_contenido_hero: procesos?.some(p => p.id_permi === 'editar_contenido_hero') || false,
+          puede_editar_videos: procesos?.some(p => p.id_permi === 'editar_videos') || false,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+
+        return {
+          ...admin,
+          permisos
+        };
+      }
+
+      // Si no es superadmin ni admin, retornar sin permisos
+      return {
+        ...admin,
+        permisos: undefined
+      };
 
     } catch (error) {
       console.error('Error en getAdminByEmpresa:', error);
@@ -176,7 +328,9 @@ export class AdminPaginasService {
         throw new Error(`Error actualizando administrador: ${adminError.message}`);
       }
 
-      // Actualizar permisos si se proporcionan
+      // TODO: Actualizar permisos usando procesos_edicion
+      // Actualizar permisos si se proporcionan (temporalmente comentado)
+      /*
       if (data.permisos) {
         const { error: permisosError } = await supabaseAdmin
           .from('permisos_admin_empresas')
@@ -187,6 +341,7 @@ export class AdminPaginasService {
           throw new Error(`Error actualizando permisos: ${permisosError.message}`);
         }
       }
+      */
 
       // Obtener admin completo actualizado
       return await this.getAdminEmpresa(adminId) as AdminEmpresaCompleto;
@@ -210,7 +365,6 @@ export class AdminPaginasService {
         .from('admin_paginas')
         .select(`
           *,
-          permisos:permisos_admin_empresas(*),
           empresa:empresas(*)
         `)
         .eq('email', email.toLowerCase())

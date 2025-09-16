@@ -90,14 +90,14 @@ export default async function EmpresaPage({ params }: PageProps) {
     <EmpresaLayout empresa={empresa}>
       {/* Modal de Consejo Diario */}
       <ConsejoModal
-        isActive={empresa.modal_activo || false}
-        titulo={empresa.modal_titulo || undefined}
-        mensaje={empresa.modal_mensaje || undefined}
-        imagenUrl={empresa.modal_imagen_url || undefined}
-        videoUrl={empresa.modal_video_url || undefined}
-        fondoTipo={empresa.modal_fondo_tipo || undefined}
-        fondoColor={empresa.modal_fondo_color || undefined}
-        fondoImagen={empresa.modal_fondo_imagen || undefined}
+        isActive={empresa.ventana_flotante?.activo || false}
+        titulo={empresa.ventana_flotante?.titulo || undefined}
+        mensaje={empresa.ventana_flotante?.mensaje || undefined}
+        imagenUrl={empresa.ventana_flotante?.imagen_url || undefined}
+        videoUrl={empresa.ventana_flotante?.video_url || undefined}
+        fondoTipo={empresa.ventana_flotante?.fondo_tipo || undefined}
+        fondoColor={empresa.ventana_flotante?.fondo_color || undefined}
+        fondoImagen={empresa.ventana_flotante?.fondo_imagen || undefined}
       />
 
       {/* Hero Section */}
