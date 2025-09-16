@@ -61,13 +61,18 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
       const response = await fetch(`/api/admin/empresas?empresa_id=${empresa.id}`);
       const result = await response.json();
       
-      if (result.success && result.data) {
+      if (response.ok && result.success && result.data) {
         setAdmin(result.data);
+      } else if (response.status === 404) {
+        // No existe administrador para esta empresa - comportamiento normal
+        setAdmin(null);
       } else {
         setAdmin(null);
+        console.warn('No se pudo cargar administrador para empresa:', empresa.id);
       }
     } catch (error) {
       console.error('Error cargando admin:', error);
+      setAdmin(null);
     } finally {
       setLoading(false);
     }

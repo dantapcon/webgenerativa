@@ -62,6 +62,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (!admin) {
+      // 404 es el comportamiento esperado cuando no hay administrador configurado para la empresa
       return NextResponse.json({
         success: false,
         error: 'Administrador no encontrado'
