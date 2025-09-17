@@ -78,13 +78,28 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+// Configuración para forzar revalidación en producción
+export const revalidate = 0; // Desactiva el cache estático
+export const dynamic = 'force-dynamic'; // Fuerza rendering dinámico
+
 export default async function EmpresaPage({ params }: PageProps) {
   const { slug } = await params;
+  
+  // Log para debugging en producción
+  console.log(`[${new Date().toISOString()}] Cargando empresa con slug: ${slug}`);
+  
   const empresa = await WebGeneratorService.getEmpresaBySlug(slug);
   
   if (!empresa) {
     notFound();
   }
+
+  // Log adicional para debugging de categorías/subcategorías
+  console.log(`[${new Date().toISOString()}] Empresa cargada: ${empresa.nombre_empresa}`);
+  console.log(`[${new Date().toISOString()}] Categorías encontradas: ${empresa.categorias?.length || 0}`);
+  empresa.categorias?.forEach(cat => {
+    console.log(`[${new Date().toISOString()}] Categoría "${cat.nombre}" - Subcategorías: ${cat.subcategorias?.length || 0}`);
+  });
 
   return (
     <EmpresaLayout empresa={empresa}>

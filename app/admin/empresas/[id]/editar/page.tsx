@@ -361,8 +361,11 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               }
               
               console.log('Subcategoría procesada:', subcategoriaLimpia);
+              console.log(`Subcategoría "${sub.nombre}" - ID: ${sub.id} - Será ${sub.id ? 'actualizada' : 'creada'}`);
               return subcategoriaLimpia;
             });
+            
+            console.log(`Categoría "${cat.nombre}" procesada con ${catProcesada.subcategorias.length} subcategorías`);
         }
         
         console.log('Categoría procesada:', catProcesada);

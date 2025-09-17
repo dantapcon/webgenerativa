@@ -43,8 +43,16 @@ interface PageProps {
   params: Promise<{ slug: string; categoria: string }>;
 }
 
+// Configuración para forzar revalidación en producción
+export const revalidate = 0; // Desactiva el cache estático
+export const dynamic = 'force-dynamic'; // Fuerza rendering dinámico
+
 export default async function CategoriaPage({ params }: PageProps) {
   const { slug, categoria } = await params;
+  
+  // Log para debugging en producción
+  console.log(`[${new Date().toISOString()}] Cargando categoría "${categoria}" para empresa "${slug}"`);
+  
   const empresa = await WebGeneratorService.getEmpresaBySlug(slug);
   
   if (!empresa) {

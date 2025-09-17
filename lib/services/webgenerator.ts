@@ -481,7 +481,8 @@ export class WebGeneratorService {
                   descripcion: subcategoria.descripcion || '',
                   imagen_url: subcategoria.imagen_url || '',
                   enlace_externo: subcategoria.enlace_externo || '',
-                  orden: subcategoria.orden
+                  orden: subcategoria.orden,
+                  visible: true // ¡IMPORTANTE! Asegurar que la subcategoría siga siendo visible
                 };
                 
                 console.log(`Actualizando subcategoría ${subcategoria.id} con:`, datosActualizados);
@@ -542,6 +543,9 @@ export class WebGeneratorService {
                   }
                   
                   if (datosActualizados.orden !== undefined) cleanData.orden = datosActualizados.orden || 0;
+                  
+                  // ¡IMPORTANTE! Siempre incluir visible: true para mantener la subcategoría visible
+                  cleanData.visible = true;
                   
                   console.log(`Datos a actualizar para subcategoría ${subcategoria.id}:`, JSON.stringify(cleanData));
                   
