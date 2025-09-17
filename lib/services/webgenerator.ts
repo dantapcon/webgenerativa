@@ -427,17 +427,42 @@ export class WebGeneratorService {
                 if (!existeSub) {
                   console.warn(`La subcategoría con ID ${subcategoria.id} no existe. Creando nueva...`);
                   // Crear como nueva subcategoría si no existe
+                  const insertData: Record<string, any> = {
+                    categoria_id: categoria.id,
+                    nombre: subcategoria.nombre,
+                    descripcion: subcategoria.descripcion || '',
+                    imagen_url: subcategoria.imagen_url || '',
+                    orden: subcategoria.orden,
+                    visible: true
+                  };
+                  
+                  // Solo incluir enlace_externo si no está vacío
+                  if (subcategoria.hasOwnProperty('enlace_externo') && subcategoria.enlace_externo && subcategoria.enlace_externo.trim()) {
+                    let enlace = subcategoria.enlace_externo.trim();
+                    console.log(`Procesando enlace externo para subcategoría existente: "${enlace}"`);
+                    
+                    // Limpiar espacios y caracteres problemáticos
+                    if (enlace.includes(' ') || enlace.includes('\n') || enlace.includes('\t')) {
+                      console.warn(`Enlace contiene espacios, limpiando: "${enlace}"`);
+                      enlace = enlace.replace(/\s+/g, '');
+                    }
+                    
+                    if (!enlace.match(/^https?:\/\//)) {
+                      enlace = `https://${enlace}`;
+                    }
+                    
+                    // Validar antes de incluir
+                    if (enlace.match(/^https?:\/\/.+/)) {
+                      insertData.enlace_externo = enlace;
+                      console.log(`Enlace externo válido para subcategoría existente: "${enlace}"`);
+                    } else {
+                      console.warn(`Enlace externo no válido para subcategoría existente: "${enlace}"`);
+                    }
+                  }
+                  
                   const { error: createNewSubError } = await supabase
                     .from('subcategorias')
-                    .insert({
-                      categoria_id: categoria.id,
-                      nombre: subcategoria.nombre,
-                      descripcion: subcategoria.descripcion || '',
-                      imagen_url: subcategoria.imagen_url || '',
-                      enlace_externo: subcategoria.enlace_externo || '',
-                      orden: subcategoria.orden,
-                      visible: true
-                    });
+                    .insert(insertData);
                   
                   if (createNewSubError) {
                     console.error('Error creando subcategoría que debería existir:', createNewSubError);
@@ -479,17 +504,35 @@ export class WebGeneratorService {
                   }
                   
                   // Corrección especial para el enlace_externo para cumplir con la restricción CHECK
-                  if (datosActualizados.enlace_externo !== undefined) {
+                  if (datosActualizados.hasOwnProperty('enlace_externo')) {
                     let enlace = datosActualizados.enlace_externo || '';
-                    // Si el enlace está vacío, establecerlo como NULL para evitar restricciones CHECK
-                    if (!enlace.trim()) {
-                      cleanData.enlace_externo = null;
-                    } else {
+                    enlace = enlace.trim();
+                    
+                    // Solo incluir el campo si hay un enlace válido
+                    if (enlace) {
+                      console.log(`Procesando enlace externo para actualización: "${enlace}"`);
+                      
+                      // Limpiar espacios y caracteres problemáticos
+                      if (enlace.includes(' ') || enlace.includes('\n') || enlace.includes('\t')) {
+                        console.warn(`Enlace contiene espacios, limpiando: "${enlace}"`);
+                        enlace = enlace.replace(/\s+/g, '');
+                      }
+                      
                       // Si hay un enlace y no empieza con http:// o https://, añadir https://
                       if (!enlace.match(/^https?:\/\//)) {
                         enlace = `https://${enlace}`;
                       }
-                      cleanData.enlace_externo = enlace;
+                      
+                      // Validar antes de incluir
+                      if (enlace.match(/^https?:\/\/.+/)) {
+                        cleanData.enlace_externo = enlace;
+                        console.log(`Enlace externo válido para actualización: "${enlace}"`);
+                      } else {
+                        console.warn(`Enlace externo no válido para actualización: "${enlace}"`);
+                      }
+                    } else {
+                      console.log('Enlace externo vacío en actualización, omitiendo campo');
+                      // No incluir el campo en la actualización si está vacío
                     }
                   }
                   
@@ -567,16 +610,34 @@ export class WebGeneratorService {
                 };
                 
                 // Manejo especial para enlace_externo
-                if (subcategoria.enlace_externo) {
-                  let enlace = subcategoria.enlace_externo;
+                if (subcategoria.hasOwnProperty('enlace_externo') && subcategoria.enlace_externo && subcategoria.enlace_externo.trim()) {
+                  let enlace = subcategoria.enlace_externo.trim();
+                  console.log(`Procesando enlace externo original: "${enlace}"`);
+                  
+                  // Verificar que el enlace no contenga caracteres problemáticos
+                  if (enlace.includes(' ') || enlace.includes('\n') || enlace.includes('\t')) {
+                    console.warn(`Enlace contiene espacios o caracteres especiales, limpiando: "${enlace}"`);
+                    enlace = enlace.replace(/\s+/g, '');
+                  }
+                  
                   // Si hay un enlace y no empieza con http:// o https://, añadir https://
                   if (!enlace.match(/^https?:\/\//)) {
                     enlace = `https://${enlace}`;
                   }
-                  datosNuevaSub.enlace_externo = enlace;
+                  
+                  // Validar que el enlace final cumpla con el patrón de la base de datos
+                  if (enlace.match(/^https?:\/\/.+/)) {
+                    datosNuevaSub.enlace_externo = enlace;
+                    console.log(`Enlace externo válido procesado: "${enlace}"`);
+                  } else {
+                    console.warn(`Enlace externo no válido después del procesamiento: "${enlace}". No se incluirá.`);
+                  }
                 } else {
-                  datosNuevaSub.enlace_externo = '';
+                  console.log('No hay enlace externo válido o campo no presente, omitiendo campo');
                 }
+                // No incluir enlace_externo en los datos si está vacío (evita constraint violation)
+                
+                console.log(`Intentando crear subcategoría con datos:`, JSON.stringify(datosNuevaSub, null, 2));
                 
                 const { data: nuevaSubcategoria, error: createSubError } = await supabase
                   .from('subcategorias')
@@ -586,6 +647,21 @@ export class WebGeneratorService {
 
                 if (createSubError) {
                   console.error('Error creando nueva subcategoría:', createSubError);
+                  console.error('Datos que causaron el error:', JSON.stringify(datosNuevaSub, null, 2));
+                  
+                  // Información adicional del error
+                  if (createSubError.details) {
+                    console.error('Detalles del error:', createSubError.details);
+                  }
+                  if (createSubError.hint) {
+                    console.error('Sugerencia:', createSubError.hint);
+                  }
+                  if (createSubError.message) {
+                    console.error('Mensaje de error:', createSubError.message);
+                  }
+                  
+                  // Continuar con el proceso a pesar del error
+                  console.log('Continuando proceso a pesar del error...');
                 } else {
                   console.log(`Subcategoría creada con éxito, ID: ${nuevaSubcategoria?.id}`);
                   // Actualizar el ID para evitar duplicación en futuras actualizaciones

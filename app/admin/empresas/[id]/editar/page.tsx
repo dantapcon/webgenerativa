@@ -341,15 +341,27 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               // Formateo de enlaces para cumplir con restricciones de BD
               // Estos cambios son solo para previsualización, el backend también hace la verificación
               
-              // Objeto limpio con todos los campos necesarios y sin propiedades opcionales
-              return {
+              // Objeto base con campos requeridos
+              const subcategoriaLimpia: any = {
                 id: sub.id,
                 nombre: sub.nombre.trim(),
                 descripcion: sub.descripcion?.trim() || '',
                 imagen_url: imagenUrl,
-                enlace_externo: enlaceExterno,
                 orden: sub.orden || 0
               };
+              
+              // Solo incluir enlace_externo si tiene contenido válido
+              // Esto evita enviar strings vacíos que fallan en la validación de BD
+              if (enlaceExterno && enlaceExterno.length > 0) {
+                subcategoriaLimpia.enlace_externo = enlaceExterno;
+              } else {
+                // Si no hay enlace, no incluir el campo para evitar problemas con la BD
+                // El backend manejará la ausencia del campo correctamente
+                console.log(`Subcategoría "${sub.nombre}" sin enlace externo, omitiendo campo`);
+              }
+              
+              console.log('Subcategoría procesada:', subcategoriaLimpia);
+              return subcategoriaLimpia;
             });
         }
         
@@ -417,6 +429,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       };
       
       // Actualizar empresa con las categorías y ventana flotante
+      console.log('Datos de categorías a enviar:', JSON.stringify(categoriasValidadas, null, 2));
+      console.log('Datos de empresa a enviar:', JSON.stringify(datosEmpresa, null, 2));
+      console.log('Datos de ventana flotante a enviar:', JSON.stringify(datosVentanaFlotante, null, 2));
+      
       await WebGeneratorService.updateEmpresa(empresaId, datosEmpresa, categoriasValidadas, datosVentanaFlotante);
       showAlert('success', 'Empresa actualizada exitosamente');
       
@@ -1328,6 +1344,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                       {/* Botones de reordenamiento para categorías */}
                       <div className="flex flex-col">
                         <Button 
+                          type="button"
                           variant="ghost" 
                           size="icon" 
                           className="h-6 w-6"
@@ -1347,6 +1364,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                           </svg>
                         </Button>
                         <Button 
+                          type="button"
                           variant="ghost" 
                           size="icon" 
                           className="h-6 w-6"
@@ -1454,6 +1472,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                         <h5 className="text-sm font-medium text-gray-700">Subcategorías de {categoria.nombre || 'esta categoría'}</h5>
                       </div>
                       <Button 
+                        type="button"
                         variant="outline" 
                         size="sm"
                         className="bg-green-50 border-green-200 hover:bg-green-100 text-green-700 flex items-center gap-1"
@@ -1464,13 +1483,17 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                           }
                           
                           // Agregar nueva subcategoría (sin ID para que se detecte como nueva)
-                          newCategorias[catIndex].subcategorias.push({
+                          const nuevaSubcategoria = {
                             nombre: '',
                             descripcion: '',
                             imagen_url: '',
-                            enlace_externo: '',
+                            enlace_externo: '', // Mantener el campo pero como string vacío
                             orden: (newCategorias[catIndex].subcategorias?.length || 0) + 1
-                          });
+                          };
+                          
+                          newCategorias[catIndex].subcategorias.push(nuevaSubcategoria);
+                          
+                          console.log('Nueva subcategoría agregada:', nuevaSubcategoria);
                           
                           setCategorias(newCategorias);
                         }}
@@ -1500,6 +1523,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                             {/* Botones de reordenamiento */}
                             <div className="flex flex-col">
                               <Button 
+                                type="button"
                                 variant="ghost" 
                                 size="icon" 
                                 className="h-6 w-6"
@@ -1521,6 +1545,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                                 </svg>
                               </Button>
                               <Button 
+                                type="button"
                                 variant="ghost" 
                                 size="icon" 
                                 className="h-6 w-6"
@@ -1544,6 +1569,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                               </Button>
                             </div>
                             <Button 
+                              type="button"
                               variant="destructive" 
                               size="sm"
                               onClick={() => {
@@ -1713,6 +1739,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               ))}
               
               <Button 
+                type="button"
                 variant="outline" 
                 onClick={() => {
                   setCategorias([
