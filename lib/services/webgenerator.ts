@@ -206,10 +206,12 @@ export class WebGeneratorService {
         console.warn('Error obteniendo categorías:', categoriasError.message);
       }
 
-      // Ordenar subcategorías dentro de cada categoría
+      // Ordenar subcategorías dentro de cada categoría y filtrar visibles (getEmpresaBySlug)
       const categoriasOrdenadas = categorias?.map(categoria => ({
         ...categoria,
-        subcategorias: categoria.subcategorias?.sort((a: any, b: any) => a.orden_subcategoria - b.orden_subcategoria) || []
+        subcategorias: categoria.subcategorias
+          ?.filter((sub: any) => sub.visible) // Solo subcategorías visibles
+          ?.sort((a: any, b: any) => a.orden - b.orden) || []
       })) || [];
 
       // Obtener ventana flotante
@@ -277,10 +279,12 @@ export class WebGeneratorService {
         console.warn('Error obteniendo categorías:', categoriasError.message);
       }
 
-      // Ordenar subcategorías dentro de cada categoría
+      // Ordenar subcategorías dentro de cada categoría y filtrar visibles (getEmpresaById)
       const categoriasOrdenadas = categorias?.map(categoria => ({
         ...categoria,
-        subcategorias: categoria.subcategorias?.sort((a: any, b: any) => a.orden - b.orden) || []
+        subcategorias: categoria.subcategorias
+          ?.filter((sub: any) => sub.visible) // Solo subcategorías visibles
+          ?.sort((a: any, b: any) => a.orden - b.orden) || []
       })) || [];
 
       // Obtener ventana flotante
@@ -357,7 +361,8 @@ export class WebGeneratorService {
                 nombre: categoria.nombre,
                 descripcion: categoria.descripcion,
                 tipo_display: categoria.tipo_display || 'horizontal',
-                orden: categoria.orden
+                orden: categoria.orden,
+                visible: true // ¡IMPORTANTE! Asegurar que la categoría siga siendo visible
               })
               .eq('id', categoria.id);
 
