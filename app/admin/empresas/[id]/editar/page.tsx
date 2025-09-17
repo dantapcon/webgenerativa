@@ -329,8 +329,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           subcategorias: [] as any[]
         };
         
-        // Procesar subcategorías si existen
-        if (cat.subcategorias && Array.isArray(cat.subcategorias) && cat.subcategorias.length > 0) {
+        // Procesar subcategorías (incluso si es un array vacío)
+        if (cat.subcategorias && Array.isArray(cat.subcategorias)) {
           catProcesada.subcategorias = cat.subcategorias
             .filter((sub: any) => sub && sub.nombre && sub.nombre.trim() !== '')
             .map((sub: any) => {
@@ -366,9 +366,16 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             });
             
             console.log(`Categoría "${cat.nombre}" procesada con ${catProcesada.subcategorias.length} subcategorías`);
+        } else {
+          console.log(`Categoría "${cat.nombre}" NO tiene subcategorías o el array no es válido`);
+          catProcesada.subcategorias = []; // Asegurar que siempre hay un array
         }
         
-        console.log('Categoría procesada:', catProcesada);
+        console.log(`Categoría "${cat.nombre}" procesada:`, catProcesada);
+        console.log(`  - Subcategorías procesadas: ${catProcesada.subcategorias.length}`);
+        catProcesada.subcategorias.forEach((sub: any, idx: number) => {
+          console.log(`  - Subcategoría ${idx + 1}: "${sub.nombre}" (ID: ${sub.id || 'nueva'})`);
+        });
         return catProcesada;
       });
     

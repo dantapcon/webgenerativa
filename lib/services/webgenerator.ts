@@ -317,8 +317,15 @@ export class WebGeneratorService {
     ventanaFlotanteData?: any
   ): Promise<Empresa> {
     try {
+      console.log('🔍 ===== INICIO UPDATE EMPRESA =====');
+      console.log('🔍 ID de empresa:', id);
+      console.log('🔍 Datos recibidos:', JSON.stringify(data, null, 2));
+      console.log('🔍 CategoriasData recibidas:', JSON.stringify(categoriasData, null, 2));
+      
       // Extraer datos que no van en la tabla empresas
       const { categorias, ...empresaData } = data;
+
+      console.log('🔍 Categorías extraídas del data.categorias:', JSON.stringify(categorias, null, 2));
 
       // Actualizar empresa
       const { data: empresa, error: empresaError } = await supabase
@@ -350,6 +357,16 @@ export class WebGeneratorService {
         }
         
         const idsCategoriasActuales = categoriasActuales?.map(c => c.id) || [];
+        
+        console.log('🔍 ===== PROCESANDO CATEGORÍAS =====');
+        console.log('🔍 Categorías actuales en BD:', idsCategoriasActuales);
+        console.log('🔍 Categorías recibidas:', categoriasData?.length || 0);
+        console.log('🔍 Detalle de categorías recibidas:', categoriasData?.map(c => ({
+          id: c.id,
+          nombre: c.nombre,
+          subcategorias_count: c.subcategorias?.length || 0,
+          subcategorias_ids: c.subcategorias?.map(s => s.id).filter(Boolean) || []
+        })));
         
         // 2. Procesar cada categoría
         for (const categoria of categoriasData) {
@@ -399,7 +416,7 @@ export class WebGeneratorService {
           }
 
           // Procesar subcategorías si la categoría tiene ID
-          if (categoria.id && categoria.subcategorias && categoria.subcategorias.length > 0) {
+          if (categoria.id) {
             // Obtener subcategorías actuales
             const { data: subcategoriasActuales, error: subError } = await supabase
               .from('subcategorias')
@@ -411,9 +428,34 @@ export class WebGeneratorService {
             }
 
             const idsSubcategoriasActuales = subcategoriasActuales?.map(s => s.id) || [];
+            const subcategoriasRecibidas = categoria.subcategorias || []; // Permitir array vacío
+            const idsSubcategoriasRecibidas = subcategoriasRecibidas.filter(s => s.id).map(s => s.id);
+            
+            console.log(`Categoría ${categoria.id} - Subcategorías en BD: [${idsSubcategoriasActuales.join(', ')}]`);
+            console.log(`Categoría ${categoria.id} - Subcategorías recibidas: [${idsSubcategoriasRecibidas.join(', ')}]`);
 
-            // Procesar cada subcategoría
-            for (const subcategoria of categoria.subcategorias) {
+            // ⚠️ CASO ESPECIAL: Si no hay subcategorías recibidas pero SÍ hay en BD, eliminar TODAS
+            if (subcategoriasRecibidas.length === 0 && idsSubcategoriasActuales.length > 0) {
+              console.log(`🔥 ELIMINACIÓN TOTAL DETECTADA: Categoría ${categoria.id} recibió 0 subcategorías pero tiene ${idsSubcategoriasActuales.length} en BD`);
+              console.log(`Eliminando TODAS las subcategorías de la categoría ${categoria.id}: [${idsSubcategoriasActuales.join(', ')}]`);
+              
+              const { error: deleteAllSubError } = await supabase
+                .from('subcategorias')
+                .delete()
+                .in('id', idsSubcategoriasActuales);
+
+              if (deleteAllSubError) {
+                console.error('❌ Error eliminando TODAS las subcategorías:', deleteAllSubError);
+              } else {
+                console.log(`✅ TODAS las subcategorías eliminadas exitosamente para categoría ${categoria.id}`);
+              }
+              
+              // Continuar con el siguiente ciclo ya que no hay nada más que procesar para esta categoría
+              continue;
+            }
+
+            // Procesar cada subcategoría recibida (puede ser array vacío)
+            for (const subcategoria of subcategoriasRecibidas) {
               console.log(`Procesando subcategoría:`, subcategoria);
               
               if (subcategoria.id) {
@@ -481,8 +523,8 @@ export class WebGeneratorService {
                   descripcion: subcategoria.descripcion || '',
                   imagen_url: subcategoria.imagen_url || '',
                   enlace_externo: subcategoria.enlace_externo || '',
-                  orden: subcategoria.orden,
-                  visible: true // ¡IMPORTANTE! Asegurar que la subcategoría siga siendo visible
+                  orden: subcategoria.orden
+                  // visible se manejará en la lógica de cleanData
                 };
                 
                 console.log(`Actualizando subcategoría ${subcategoria.id} con:`, datosActualizados);
@@ -544,7 +586,8 @@ export class WebGeneratorService {
                   
                   if (datosActualizados.orden !== undefined) cleanData.orden = datosActualizados.orden || 0;
                   
-                  // ¡IMPORTANTE! Siempre incluir visible: true para mantener la subcategoría visible
+                  // Mantener las subcategorías como visibles cuando se actualizan
+                  // (La eliminación se maneja por separado mediante splice en el frontend)
                   cleanData.visible = true;
                   
                   console.log(`Datos a actualizar para subcategoría ${subcategoria.id}:`, JSON.stringify(cleanData));
@@ -681,6 +724,7 @@ export class WebGeneratorService {
 
             // Eliminar subcategorías que ya no existen
             if (idsSubcategoriasActuales.length > 0) {
+              console.log(`Eliminando ${idsSubcategoriasActuales.length} subcategorías con IDs: ${idsSubcategoriasActuales.join(', ')}`);
               const { error: deleteSubError } = await supabase
                 .from('subcategorias')
                 .delete()
@@ -688,7 +732,11 @@ export class WebGeneratorService {
 
               if (deleteSubError) {
                 console.error('Error eliminando subcategorías:', deleteSubError);
+              } else {
+                console.log(`${idsSubcategoriasActuales.length} subcategorías eliminadas exitosamente`);
               }
+            } else {
+              console.log(`No hay subcategorías para eliminar en la categoría ${categoria.id}`);
             }
           }
         }
