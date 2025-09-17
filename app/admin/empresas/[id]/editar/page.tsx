@@ -159,6 +159,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [activeSection, setActiveSection] = useState('info-basica');
   
   // Estado para categorías y subcategorías
   const [categorias, setCategorias] = useState<Array<{
@@ -359,6 +360,18 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     return resultado;
   };
 
+  // Secciones del menú lateral
+  const menuSections = [
+    { id: 'info-basica', label: 'Información Básica', icon: '📝' },
+    { id: 'info-contacto', label: 'Información de Contacto', icon: '📞' },
+    { id: 'personalizacion', label: 'Personalización Visual', icon: '🎨' },
+    { id: 'config-adicional', label: 'Configuración Adicional', icon: '⚙️' },
+    { id: 'ventana-flotante', label: '💬 Ventana Flotante de Bienvenida', icon: '💬' },
+    { id: 'sucursales', label: '📍 Sucursales y Ubicaciones', icon: '📍' },
+    { id: 'categorias', label: 'Categorías', icon: '📂' },
+    { id: 'administrador', label: 'Administrador de la Página', icon: '👤' }
+  ];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!empresaId) return;
@@ -448,46 +461,87 @@ export default function EditarEmpresaPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" asChild>
-              <Link href="/admin/empresas">
-                <ArrowLeft className="h-4 w-4" />
-                Volver
+      <div className="flex">
+        {/* Menú Lateral */}
+        <div className="w-80 bg-white shadow-lg min-h-screen">
+          <div className="p-6 border-b">
+            <div className="flex items-center gap-3 mb-4">
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/admin/empresas">
+                  <ArrowLeft className="h-4 w-4" />
+                  Volver
+                </Link>
+              </Button>
+            </div>
+            <h1 className="text-xl font-bold text-gray-900">Editar Empresa</h1>
+            <p className="text-sm text-gray-600">{empresa.nombre_empresa}</p>
+            <Button variant="outline" size="sm" className="mt-3 w-full" asChild>
+              <Link href={`/${empresa.slug_empresa}`} target="_blank">
+                <Eye className="h-4 w-4 mr-2" />
+                Ver Sitio
               </Link>
             </Button>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Editar Empresa</h1>
-              <p className="text-gray-600">{empresa.nombre_empresa}</p>
-            </div>
           </div>
-          <Button variant="outline" asChild>
-            <Link href={`/${empresa.slug_empresa}`} target="_blank">
-              <Eye className="h-4 w-4 mr-2" />
-              Ver Sitio
-            </Link>
-          </Button>
+          
+          <nav className="p-4">
+            <ul className="space-y-2">
+              {menuSections.map((section) => (
+                <li key={section.id}>
+                  <button
+                    onClick={() => setActiveSection(section.id)}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
+                      activeSection === section.id
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="text-lg">{section.icon}</span>
+                    <span className="text-sm font-medium">{section.label}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
 
-        {alert && (
-          <Alert className={`${alert.type === 'success' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} mb-6`}>
-            <AlertDescription className={alert.type === 'success' ? 'text-green-800' : 'text-red-800'}>
-              {alert.message}
-            </AlertDescription>
-          </Alert>
-        )}
+        {/* Contenido Principal */}
+        <div className="flex-1 p-8">
+          {alert && (
+            <Alert className={`${alert.type === 'success' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} mb-6`}>
+              <AlertDescription className={alert.type === 'success' ? 'text-green-800' : 'text-red-800'}>
+                {alert.message}
+              </AlertDescription>
+            </Alert>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Información básica */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Información Básica</CardTitle>
-              <CardDescription>
-                Datos principales de la empresa
-              </CardDescription>
-            </CardHeader>
+          {/* Renderizado condicional de secciones */}
+          {activeSection === 'sucursales' && empresaId ? (
+            <div>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">📍 Gestión de Sucursales</h2>
+                <p className="text-gray-600">Administrar las ubicaciones de la empresa</p>
+              </div>
+              <SucursalesManager empresaId={empresaId} />
+            </div>
+          ) : activeSection === 'administrador' ? (
+            <div>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">👤 Administrador de la Página</h2>
+                <p className="text-gray-600">Gestionar el administrador específico de esta empresa</p>
+              </div>
+              <AdminEmpresaIndividual empresa={empresa} />
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Información básica */}
+              {activeSection === 'info-basica' && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Información Básica</CardTitle>
+                    <CardDescription>
+                      Datos principales de la empresa
+                    </CardDescription>
+                  </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -577,8 +631,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               </div>
             </CardContent>
           </Card>
+              )}
 
           {/* Información de contacto */}
+          {activeSection === 'info-contacto' && (
           <Card>
             <CardHeader>
               <CardTitle>Información de Contacto</CardTitle>
@@ -617,8 +673,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               </div>
             </CardContent>
           </Card>
+              )}
 
           {/* Personalización */}
+          {activeSection === 'personalizacion' && (
           <Card>
             <CardHeader>
               <CardTitle>Personalización Visual</CardTitle>
@@ -948,8 +1006,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               </div>
             </CardContent>
           </Card>
+              )}
 
           {/* Configuración adicional */}
+          {activeSection === 'config-adicional' && (
           <Card>
             <CardHeader>
               <CardTitle>Configuración Adicional</CardTitle>
@@ -970,8 +1030,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               </div>
             </CardContent>
           </Card>
+              )}
 
           {/* Ventana Flotante */}
+          {activeSection === 'ventana-flotante' && (
           <Card>
             <CardHeader>
               <CardTitle>💬 Ventana Flotante de Bienvenida</CardTitle>
@@ -1241,37 +1303,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               )}
             </CardContent>
           </Card>
+              )}
 
-          {/* Sucursales/Ubicaciones */}
-          <Card>
-            <CardHeader>
-              <CardTitle>📍 Sucursales y Ubicaciones</CardTitle>
-              <CardDescription>
-                Gestionar múltiples ubicaciones de la empresa
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Activar/Desactivar Sucursales */}
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="sucursales_activo"
-                  name="sucursales_activo"
-                  checked={formData.sucursales_activo || false}
-                  onChange={(e) => setFormData(prev => ({ ...prev, sucursales_activo: e.target.checked }))}
-                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                />
-                <Label htmlFor="sucursales_activo" className="text-sm font-medium text-gray-700">
-                  Mostrar sección de sucursales/ubicaciones en el sitio web
-                </Label>
-              </div>
-              <p className="text-xs text-gray-500">
-                Cuando esté activado, aparecerá una nueva categoría "Ubicaciones" en la navegación del sitio
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Categorías y Subcategorías */}
+          {/* Sucursales/Ubicaciones - Manejado fuera del formulario */}
+          {activeSection === 'categorias' && (
           <Card>
             <CardHeader>
               <CardTitle>Categorías</CardTitle>
@@ -1695,62 +1730,37 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               </Button>
             </CardContent>
           </Card>
-
-          {/* Botones de acción */}
-          <div className="flex justify-end gap-4">
-            <Button type="button" variant="outline" asChild>
-              <Link href="/admin/empresas">Cancelar</Link>
-            </Button>
-            <Button 
-              type="submit" 
-              disabled={isSaving}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              {isSaving ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Guardando...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Guardar Cambios
-                </>
               )}
-            </Button>
-          </div>
-        </form>
+            </form>
+          )}
 
-        {/* Administrador de la Página - FUERA del formulario principal */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>Administrador de la Página</CardTitle>
-            <CardDescription>
-              Asignar un administrador para que pueda editar contenido de esta página específica
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {empresa && (
-              <AdminEmpresaIndividual empresa={empresa} />
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Gestor de Sucursales - FUERA del formulario principal */}
-        {formData.sucursales_activo && empresaId && (
-          <div className="mt-8">
-            <div className="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-sm text-blue-800">
-                🎉 ¡Funcionalidad de sucursales activada! Gestiona las ubicaciones de la empresa con mapas y geocodificación automática.
-              </p>
+          {/* Botones de acción fijos en la parte inferior para formularios */}
+          {activeSection !== 'sucursales' && activeSection !== 'administrador' && (
+            <div className="mt-8 flex justify-end gap-4 bg-white p-6 rounded-lg border shadow-sm">
+              <Button type="button" variant="outline" asChild>
+                <Link href="/admin/empresas">Cancelar</Link>
+              </Button>
+              <Button 
+                onClick={handleSubmit}
+                disabled={isSaving}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                {isSaving ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Guardando...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    Guardar Cambios
+                  </>
+                )}
+              </Button>
             </div>
-            <SucursalesManager empresaId={empresaId} />
-          </div>
-        )}
+          )}
+        </div>
       </div>
-      
-      {/* Advertencia de migración */}
-      {/* Advertencia de migración ya no es necesaria */}
     </div>
   );
 }
