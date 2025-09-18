@@ -15,7 +15,6 @@ import {
   EyeOff, 
   Plus,
   Edit,
-  Shield,
   CheckCircle,
   XCircle,
   Save,
@@ -23,11 +22,17 @@ import {
 } from 'lucide-react';
 import { 
   AdminEmpresaCompleto, 
-  AdminPaginaFormData, 
-  PermisosAdminEmpresa,
-  PERMISOS_DESCRIPCION,
   Empresa 
 } from '@/lib/types/webgenerator';
+
+// Interfaz simplificada para el formulario de administradores
+interface SimpleAdminFormData {
+  empresa_id: number;
+  email: string;
+  password: string;
+  nombre: string;
+  activo: boolean;
+}
 
 interface AdminEmpresaIndividualProps {
   empresa: Empresa;
@@ -38,14 +43,12 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState<AdminPaginaFormData>({
+  const [formData, setFormData] = useState<SimpleAdminFormData>({
     empresa_id: empresa.id,
     email: '',
     password: '',
     nombre: '',
-    activo: true,
-    login_habilitado: false,
-    permisos: {}
+    activo: true
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -58,7 +61,7 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
   const loadAdmin = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/admin/empresas?empresa_id=${empresa.id}`);
+      const response = await fetch(`/api/admin/get-admin?empresa_id=${empresa.id}`);
       const result = await response.json();
       
       if (response.ok && result.success && result.data) {
@@ -85,19 +88,40 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
     setSuccess('');
 
     try {
-      const url = '/api/admin/empresas';
+      // Preparar datos para la nueva API
+      const body = {
+        nombres: formData.nombre,
+        apellidos: '', // Campo opcional
+        email: formData.email,
+        password: formData.password,
+        telefono: '', // Campo opcional
+        fecha_nacimiento: null, // Campo opcional
+        empresa_id: formData.empresa_id,
+        activo: formData.activo
+      };
+
+      const url = editMode ? '/api/admin/get-admin' : '/api/admin/create-admin';
       const method = editMode ? 'PUT' : 'POST';
-      
-      const body = editMode && admin 
-        ? { admin_id: admin.id, ...formData }
-        : formData;
+
+      // Si está editando, usar la nueva API
+      const requestBody = editMode && admin 
+        ? { 
+            admin_id: admin.id, 
+            nombres: formData.nombre,
+            apellidos: '',
+            email: formData.email,
+            telefono: '',
+            fecha_nacimiento: null,
+            activo: formData.activo
+          }
+        : body;
 
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(requestBody),
       });
 
       const result = await response.json();
@@ -123,9 +147,7 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
       email: '',
       password: '',
       nombre: '',
-      activo: true,
-      login_habilitado: false,
-      permisos: {}
+      activo: true
     });
     setShowForm(false);
     setEditMode(false);
@@ -141,43 +163,16 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
       email: admin.email,
       password: '', // No prellenar contraseña
       nombre: admin.nombre,
-      activo: admin.activo,
-      login_habilitado: admin.login_habilitado,
-      permisos: admin.permisos || {}
+      activo: admin.activo
     });
     setShowForm(true);
-  };
-
-  const toggleLogin = async () => {
-    if (!admin) return;
-    
-    try {
-      const response = await fetch('/api/admin/auth', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          empresa_id: empresa.id,
-          enabled: !admin.login_habilitado
-        }),
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        await loadAdmin();
-        setSuccess(`Login ${!admin.login_habilitado ? 'habilitado' : 'deshabilitado'} exitosamente`);
-      }
-    } catch (error) {
-      setError('Error al cambiar estado de login');
-    }
   };
 
   const deleteAdmin = async () => {
     if (!admin || !window.confirm('¿Estás seguro de eliminar este administrador?')) return;
     
     try {
-      const response = await fetch(`/api/admin/empresas?admin_id=${admin.id}`, {
+      const response = await fetch(`/api/admin/get-admin?id=${admin.id}`, {
         method: 'DELETE'
       });
 
@@ -189,16 +184,6 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
     } catch (error) {
       setError('Error al eliminar administrador');
     }
-  };
-
-  const updatePermiso = (permiso: keyof PermisosAdminEmpresa, value: boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      permisos: {
-        ...prev.permisos,
-        [permiso]: value
-      }
-    }));
   };
 
   if (loading && !admin) {
@@ -265,14 +250,6 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={toggleLogin}
-                >
-                  <Shield className="h-3 w-3 mr-1" />
-                  {admin.login_habilitado ? 'Deshabilitar' : 'Habilitar'}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
                   onClick={handleEdit}
                 >
                   <Edit className="h-3 w-3 mr-1" />
@@ -325,7 +302,7 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
                     <Input
                       id="nombre"
                       value={formData.nombre}
-                      onChange={(e) => setFormData(prev => ({ ...prev, nombre: e.target.value }))}
+                      onChange={(e) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, nombre: e.target.value }))}
                       placeholder="Ej: Juan Pérez"
                       required
                     />
@@ -337,7 +314,7 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
                       id="email"
                       type="email"
                       value={formData.email}
-                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                      onChange={(e) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, email: e.target.value }))}
                       placeholder="admin@empresa.com"
                       required
                     />
@@ -352,7 +329,7 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
                         id="password"
                         type={showPassword ? 'text' : 'password'}
                         value={formData.password}
-                        onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                        onChange={(e) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, password: e.target.value }))}
                         placeholder="••••••••"
                         required={!editMode}
                       />
@@ -375,43 +352,9 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
                     <Checkbox
                       id="activo"
                       checked={formData.activo}
-                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, activo: !!checked }))}
+                      onCheckedChange={(checked) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, activo: !!checked }))}
                     />
                     <Label htmlFor="activo">Administrador activo</Label>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="login_habilitado"
-                      checked={formData.login_habilitado}
-                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, login_habilitado: !!checked }))}
-                    />
-                    <Label htmlFor="login_habilitado">Login habilitado</Label>
-                  </div>
-                </div>
-
-                {/* Permisos */}
-                <div>
-                  <h3 className="font-medium mb-3 flex items-center gap-2">
-                    <Settings className="h-4 w-4" />
-                    Permisos de Edición
-                  </h3>
-                  <div className="grid grid-cols-1 gap-3">
-                    {Object.entries(PERMISOS_DESCRIPCION).map(([key, description]) => (
-                      <div key={key} className="flex items-start space-x-2">
-                        <Checkbox
-                          id={key}
-                          checked={!!(formData.permisos as any)?.[key]}
-                          onCheckedChange={(checked) => updatePermiso(key as keyof PermisosAdminEmpresa, !!checked)}
-                        />
-                        <div>
-                          <Label htmlFor={key} className="text-sm font-medium">
-                            {key.replace('puede_editar_', '').replace(/_/g, ' ').toUpperCase()}
-                          </Label>
-                          <p className="text-xs text-gray-600">{description as string}</p>
-                        </div>
-                      </div>
-                    ))}
                   </div>
                 </div>
 

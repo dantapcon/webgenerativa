@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
 import { EmpresaLayout } from '@/components/empresa-layout';
 import { ConsejoModal } from '@/components/consejo-modal';
-import LoginAdminSupabase from '@/components/admin/LoginAdminSupabase';
 
 // Función para convertir URLs de Google Drive en enlaces directos
 function formatGoogleDriveUrl(url: string): string {
@@ -284,11 +283,6 @@ export default async function EmpresaPage({ params }: PageProps) {
           </div>
         </div>
       </section>
-
-      {/* Componente de Login Administrativo */}
-      <LoginAdminSupabase 
-        empresaId={empresa.id} 
-      />
     </EmpresaLayout>
   );
 }

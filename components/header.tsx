@@ -126,6 +126,20 @@ export function Header({ empresa }: HeaderProps) {
                 </div>
               </div>
             )}
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="border-2 hover:bg-gray-50"
+              style={{ 
+                borderColor: empresaData.color_primario || '#2563eb',
+                color: empresaData.color_primario || '#2563eb'
+              }}
+            >
+              <Link href="/auth/login">
+                Iniciar Sesión
+              </Link>
+            </Button>
           </div>
         </div>
 
@@ -137,6 +151,22 @@ export function Header({ empresa }: HeaderProps) {
               <span className="text-sm text-gray-500">Citas</span>
             </div>
           )}
+          <div className="flex justify-center">
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="border-2 hover:bg-gray-50"
+              style={{ 
+                borderColor: empresaData.color_primario || '#2563eb',
+                color: empresaData.color_primario || '#2563eb'
+              }}
+            >
+              <Link href="/auth/login">
+                Iniciar Sesión
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </header>
