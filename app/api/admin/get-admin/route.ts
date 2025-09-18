@@ -80,6 +80,7 @@ export async function GET(request: NextRequest) {
 
     const adminWithRole = {
       ...admin,
+      nombre: admin.nombres, // Alias para compatibilidad
       role: roleData?.roles || null
     };
     

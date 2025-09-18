@@ -22,11 +22,21 @@ import {
   XCircle,
   Save
 } from 'lucide-react';
+
+// Interfaz simplificada para el formulario
+interface SimpleAdminFormData {
+  empresa_id: number;
+  email: string;
+  password: string;
+  nombre: string;
+  apellidos: string;
+  telefono: string;
+  fecha_nacimiento: string | null;
+  activo: boolean;
+}
+
 import { 
   AdminEmpresaCompleto, 
-  AdminPaginaFormData, 
-  PermisosAdminEmpresa,
-  PERMISOS_DESCRIPCION,
   Empresa 
 } from '@/lib/types/webgenerator';
 
@@ -39,14 +49,15 @@ export default function AdminEmpresasManager({ empresas }: AdminEmpresasManagerP
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingAdmin, setEditingAdmin] = useState<AdminEmpresaCompleto | null>(null);
-  const [formData, setFormData] = useState<AdminPaginaFormData>({
+  const [formData, setFormData] = useState<SimpleAdminFormData>({
     empresa_id: 0,
     email: '',
     password: '',
     nombre: '',
-    activo: true,
-    login_habilitado: false,
-    permisos: {}
+    apellidos: '',
+    telefono: '',
+    fecha_nacimiento: null,
+    activo: true
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -106,9 +117,10 @@ export default function AdminEmpresasManager({ empresas }: AdminEmpresasManagerP
       email: '',
       password: '',
       nombre: '',
-      activo: true,
-      login_habilitado: false,
-      permisos: {}
+      apellidos: '',
+      telefono: '',
+      fecha_nacimiento: null,
+      activo: true
     });
     setEditingAdmin(null);
     setShowForm(false);
@@ -122,44 +134,12 @@ export default function AdminEmpresasManager({ empresas }: AdminEmpresasManagerP
       email: admin.email,
       password: '', // No prellenar contraseña
       nombre: admin.nombre,
-      activo: admin.activo,
-      login_habilitado: admin.login_habilitado,
-      permisos: admin.permisos || {}
+      apellidos: admin.apellidos || '',
+      telefono: admin.telefono || '',
+      fecha_nacimiento: admin.fecha_nacimiento || null,
+      activo: admin.activo
     });
     setShowForm(true);
-  };
-
-  const toggleLogin = async (admin: AdminEmpresaCompleto) => {
-    try {
-      const response = await fetch('/api/admin/auth', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          empresa_id: admin.empresa_id,
-          enabled: !admin.login_habilitado
-        }),
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        await loadAdmins();
-        setSuccess(`Login ${!admin.login_habilitado ? 'habilitado' : 'deshabilitado'}`);
-      }
-    } catch (error) {
-      setError('Error al cambiar estado de login');
-    }
-  };
-
-  const updatePermiso = (permiso: keyof PermisosAdminEmpresa, value: boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      permisos: {
-        ...prev.permisos,
-        [permiso]: value
-      }
-    }));
   };
 
   return (
@@ -199,17 +179,6 @@ export default function AdminEmpresasManager({ empresas }: AdminEmpresasManagerP
                     ) : (
                       <Badge variant="secondary">Inactivo</Badge>
                     )}
-                    {admin.login_habilitado ? (
-                      <Badge variant="default" className="bg-green-600">
-                        <CheckCircle className="h-3 w-3 mr-1" />
-                        Login Habilitado
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline">
-                        <XCircle className="h-3 w-3 mr-1" />
-                        Login Deshabilitado
-                      </Badge>
-                    )}
                   </div>
                   
                   <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -224,14 +193,6 @@ export default function AdminEmpresasManager({ empresas }: AdminEmpresasManagerP
                 </div>
 
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => toggleLogin(admin)}
-                  >
-                    <Shield className="h-3 w-3 mr-1" />
-                    {admin.login_habilitado ? 'Deshabilitar' : 'Habilitar'}
-                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
@@ -264,7 +225,7 @@ export default function AdminEmpresasManager({ empresas }: AdminEmpresasManagerP
                     <select
                       id="empresa"
                       value={formData.empresa_id}
-                      onChange={(e) => setFormData(prev => ({ ...prev, empresa_id: parseInt(e.target.value) }))}
+                      onChange={(e) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, empresa_id: parseInt(e.target.value) }))}
                       className="w-full p-2 border rounded"
                       required
                       disabled={!!editingAdmin}
@@ -283,7 +244,7 @@ export default function AdminEmpresasManager({ empresas }: AdminEmpresasManagerP
                     <Input
                       id="nombre"
                       value={formData.nombre}
-                      onChange={(e) => setFormData(prev => ({ ...prev, nombre: e.target.value }))}
+                      onChange={(e) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, nombre: e.target.value }))}
                       placeholder="Ej: Juan Pérez"
                       required
                     />
@@ -295,7 +256,7 @@ export default function AdminEmpresasManager({ empresas }: AdminEmpresasManagerP
                       id="email"
                       type="email"
                       value={formData.email}
-                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                      onChange={(e) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, email: e.target.value }))}
                       placeholder="admin@empresa.com"
                       required
                     />
@@ -310,7 +271,7 @@ export default function AdminEmpresasManager({ empresas }: AdminEmpresasManagerP
                         id="password"
                         type={showPassword ? 'text' : 'password'}
                         value={formData.password}
-                        onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                        onChange={(e) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, password: e.target.value }))}
                         placeholder="••••••••"
                         required={!editingAdmin}
                       />
@@ -333,43 +294,9 @@ export default function AdminEmpresasManager({ empresas }: AdminEmpresasManagerP
                     <Checkbox
                       id="activo"
                       checked={formData.activo}
-                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, activo: !!checked }))}
+                      onCheckedChange={(checked) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, activo: !!checked }))}
                     />
                     <Label htmlFor="activo">Administrador activo</Label>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="login_habilitado"
-                      checked={formData.login_habilitado}
-                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, login_habilitado: !!checked }))}
-                    />
-                    <Label htmlFor="login_habilitado">Login habilitado</Label>
-                  </div>
-                </div>
-
-                {/* Permisos */}
-                <div>
-                  <h3 className="font-medium mb-3 flex items-center gap-2">
-                    <Settings className="h-4 w-4" />
-                    Permisos de Edición
-                  </h3>
-                  <div className="grid grid-cols-1 gap-3">
-                    {Object.entries(PERMISOS_DESCRIPCION).map(([key, description]) => (
-                      <div key={key} className="flex items-start space-x-2">
-                        <Checkbox
-                          id={key}
-                          checked={!!(formData.permisos as any)?.[key]}
-                          onCheckedChange={(checked) => updatePermiso(key as keyof PermisosAdminEmpresa, !!checked)}
-                        />
-                        <div>
-                          <Label htmlFor={key} className="text-sm font-medium">
-                            {key.replace('puede_editar_', '').replace(/_/g, ' ').toUpperCase()}
-                          </Label>
-                          <p className="text-xs text-gray-600">{description as string}</p>
-                        </div>
-                      </div>
-                    ))}
                   </div>
                 </div>
 

@@ -31,6 +31,9 @@ interface SimpleAdminFormData {
   email: string;
   password: string;
   nombre: string;
+  apellidos: string;
+  telefono: string;
+  fecha_nacimiento: string | null;
   activo: boolean;
 }
 
@@ -48,6 +51,9 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
     email: '',
     password: '',
     nombre: '',
+    apellidos: '',
+    telefono: '',
+    fecha_nacimiento: null,
     activo: true
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -91,11 +97,11 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
       // Preparar datos para la nueva API
       const body = {
         nombres: formData.nombre,
-        apellidos: '', // Campo opcional
+        apellidos: formData.apellidos || '',
         email: formData.email,
         password: formData.password,
-        telefono: '', // Campo opcional
-        fecha_nacimiento: null, // Campo opcional
+        telefono: formData.telefono || '',
+        fecha_nacimiento: formData.fecha_nacimiento || null,
         empresa_id: formData.empresa_id,
         activo: formData.activo
       };
@@ -108,10 +114,10 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
         ? { 
             admin_id: admin.id, 
             nombres: formData.nombre,
-            apellidos: '',
+            apellidos: formData.apellidos || '',
             email: formData.email,
-            telefono: '',
-            fecha_nacimiento: null,
+            telefono: formData.telefono || '',
+            fecha_nacimiento: formData.fecha_nacimiento || null,
             activo: formData.activo
           }
         : body;
@@ -147,6 +153,9 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
       email: '',
       password: '',
       nombre: '',
+      apellidos: '',
+      telefono: '',
+      fecha_nacimiento: null,
       activo: true
     });
     setShowForm(false);
@@ -163,6 +172,9 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
       email: admin.email,
       password: '', // No prellenar contraseña
       nombre: admin.nombre,
+      apellidos: admin.apellidos || '',
+      telefono: admin.telefono || '',
+      fecha_nacimiento: admin.fecha_nacimiento || null,
       activo: admin.activo
     });
     setShowForm(true);
@@ -172,7 +184,7 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
     if (!admin || !window.confirm('¿Estás seguro de eliminar este administrador?')) return;
     
     try {
-      const response = await fetch(`/api/admin/get-admin?id=${admin.id}`, {
+      const response = await fetch(`/api/admin/get-admin?admin_id=${admin.id}`, {
         method: 'DELETE'
       });
 
@@ -222,17 +234,6 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
                     <Badge variant="default">Activo</Badge>
                   ) : (
                     <Badge variant="secondary">Inactivo</Badge>
-                  )}
-                  {admin.login_habilitado ? (
-                    <Badge variant="default" className="bg-green-600">
-                      <CheckCircle className="h-3 w-3 mr-1" />
-                      Login Habilitado
-                    </Badge>
-                  ) : (
-                    <Badge variant="outline">
-                      <XCircle className="h-3 w-3 mr-1" />
-                      Login Deshabilitado
-                    </Badge>
                   )}
                 </div>
                 
@@ -298,13 +299,23 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
                 {/* Información básica */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="nombre">Nombre completo</Label>
+                    <Label htmlFor="nombre">Nombres</Label>
                     <Input
                       id="nombre"
                       value={formData.nombre}
                       onChange={(e) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, nombre: e.target.value }))}
-                      placeholder="Ej: Juan Pérez"
+                      placeholder="Ej: Juan Carlos"
                       required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="apellidos">Apellidos</Label>
+                    <Input
+                      id="apellidos"
+                      value={formData.apellidos}
+                      onChange={(e) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, apellidos: e.target.value }))}
+                      placeholder="Ej: Pérez García"
                     />
                   </div>
 
@@ -320,7 +331,27 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
                     />
                   </div>
 
-                  <div className="md:col-span-2">
+                  <div>
+                    <Label htmlFor="telefono">Teléfono</Label>
+                    <Input
+                      id="telefono"
+                      value={formData.telefono}
+                      onChange={(e) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, telefono: e.target.value }))}
+                      placeholder="Ej: 0987654321"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="fecha_nacimiento">Fecha de Nacimiento</Label>
+                    <Input
+                      id="fecha_nacimiento"
+                      type="date"
+                      value={formData.fecha_nacimiento || ''}
+                      onChange={(e) => setFormData((prev: SimpleAdminFormData) => ({ ...prev, fecha_nacimiento: e.target.value || null }))}
+                    />
+                  </div>
+
+                  <div className="md:col-span-1">
                     <Label htmlFor="password">
                       {editMode ? 'Nueva contraseña (dejar vacío para mantener)' : 'Contraseña'}
                     </Label>

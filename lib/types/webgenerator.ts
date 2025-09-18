@@ -276,9 +276,21 @@ export interface PermisosAdminEmpresa {
 }
 
 // Datos completos del admin con permisos
-export interface AdminEmpresaCompleto extends AdminPagina {
-  permisos?: PermisosAdminEmpresa;
+export interface AdminEmpresaCompleto {
+  id: number;
+  user_id: string;
+  empresa_id: number;
+  nombres: string;
+  apellidos?: string | null;
+  email: string;
+  telefono?: string | null;
+  fecha_nacimiento?: string | null;
+  activo: boolean;
+  created_at: string;
+  updated_at?: string | null;
   empresa?: Empresa;
+  // Campos heredados para compatibilidad
+  nombre: string; // Alias para nombres
 }
 
 // Formularios para crear/editar administradores
