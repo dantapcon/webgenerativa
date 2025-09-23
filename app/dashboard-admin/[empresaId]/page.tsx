@@ -181,10 +181,25 @@ export default function DashboardAdmin() {
 
   const handleLogout = async () => {
     try {
+      // 1. Llamar al endpoint de logout
       await fetch('/api/admin/auth', { method: 'DELETE' });
-      router.push('/auth/login');
+      
+      // 2. Limpiar cualquier storage local
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        sessionStorage.clear();
+      }
+      
+      // 3. Forzar recarga completa para limpiar estado
+      window.location.href = '/auth/login';
     } catch (error) {
       console.error('Error cerrando sesión:', error);
+      // En caso de error, forzar limpieza local y redirección
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = '/auth/login';
+      }
     }
   };
 

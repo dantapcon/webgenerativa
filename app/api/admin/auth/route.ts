@@ -209,21 +209,43 @@ export async function GET(request: NextRequest) {
 // Cerrar sesión
 export async function DELETE(request: NextRequest) {
   try {
-    // Eliminar cookie de sesión
-    const cookie = serialize('authToken', '', {
-      path: '/',
-      httpOnly: true,
-      sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 0 // Expira inmediatamente
-    });
+    // 1. Cerrar sesión en Supabase Auth
+    const { error: signOutError } = await supabase.auth.signOut();
+    
+    if (signOutError) {
+      console.error('Error cerrando sesión en Supabase:', signOutError);
+    }
 
     const response = NextResponse.json({
       success: true,
       message: 'Sesión cerrada exitosamente'
     });
 
-    response.headers.set('Set-Cookie', cookie);
+    // Establecer las cookies para eliminarlas individualmente
+    response.cookies.set('authToken', '', {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 0
+    });
+
+    response.cookies.set('sb-access-token', '', {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 0
+    });
+
+    response.cookies.set('sb-refresh-token', '', {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 0
+    });
+
     return response;
 
   } catch (error: any) {
