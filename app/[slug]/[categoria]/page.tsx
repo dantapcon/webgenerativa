@@ -86,9 +86,28 @@ export default async function CategoriaPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Contenido de la categoría */}
-      <div className="py-12">
-        <div className="container mx-auto px-4">
+      {/* Contenido de la categoría con fondo personalizado */}
+      <div 
+        className="py-12 min-h-screen"
+        style={{
+          backgroundColor: categoriaEncontrada.fondo_tipo === 'color' 
+            ? (categoriaEncontrada.fondo_color || '#ffffff')
+            : 'transparent',
+          backgroundImage: categoriaEncontrada.fondo_tipo === 'imagen' && categoriaEncontrada.fondo_imagen
+            ? `url(${categoriaEncontrada.fondo_imagen})`
+            : 'none',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        {/* Overlay para mejorar la legibilidad cuando hay imagen de fondo */}
+        {categoriaEncontrada.fondo_tipo === 'imagen' && categoriaEncontrada.fondo_imagen && (
+          <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+        )}
+        
+        <div className="container mx-auto px-4 relative z-10">
           {esUbicaciones ? (
             // Mostrar página especial de ubicaciones
             <UbicacionesPage 
@@ -103,16 +122,33 @@ export default async function CategoriaPage({ params }: PageProps) {
               <div className="text-center mb-12">
                 <div className="inline-block mb-6">
                   <div 
-                    className="px-8 py-4 rounded-2xl text-2xl font-bold text-white shadow-lg"
-                    style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
+                    className="px-8 py-4 rounded-2xl text-2xl font-bold text-white shadow-lg backdrop-blur-sm"
+                    style={{ 
+                      backgroundColor: categoriaEncontrada.fondo_tipo === 'imagen' && categoriaEncontrada.fondo_imagen
+                        ? 'rgba(0, 0, 0, 0.7)'
+                        : (empresa.color_primario || '#2563eb')
+                    }}
                   >
                     {categoriaEncontrada.nombre}
                   </div>
                 </div>
                 {categoriaEncontrada.descripcion && (
-                  <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                    {categoriaEncontrada.descripcion}
-                  </p>
+                  <div 
+                    className="inline-block px-6 py-3 rounded-lg backdrop-blur-sm"
+                    style={{
+                      backgroundColor: categoriaEncontrada.fondo_tipo === 'imagen' && categoriaEncontrada.fondo_imagen
+                        ? 'rgba(255, 255, 255, 0.9)'
+                        : 'transparent'
+                    }}
+                  >
+                    <p className={`text-xl max-w-4xl mx-auto leading-relaxed ${
+                      categoriaEncontrada.fondo_tipo === 'imagen' && categoriaEncontrada.fondo_imagen
+                        ? 'text-gray-800'
+                        : 'text-gray-600'
+                    }`}>
+                      {categoriaEncontrada.descripcion}
+                    </p>
+                  </div>
                 )}
               </div>
 

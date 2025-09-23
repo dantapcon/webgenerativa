@@ -48,10 +48,10 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims;
 
   // Solo proteger rutas específicas que requieren autenticación de Supabase
+  // Removemos /generador de aquí ya que manejará su propia autenticación
   if (
     !user &&
-    (request.nextUrl.pathname.startsWith("/protected") ||
-     request.nextUrl.pathname === "/generador")
+    request.nextUrl.pathname.startsWith("/protected")
   ) {
     // no user, redirigir al login para estas rutas protegidas
     const url = request.nextUrl.clone();

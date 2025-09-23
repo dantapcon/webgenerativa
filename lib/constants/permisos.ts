@@ -63,6 +63,15 @@ export const SECCIONES_EDITABLES = {
     descripcion: 'Gestionar categorías, productos y servicios',
     icono: '📂', 
     campos: [] // Los datos específicos están en tablas categorias, productos, servicios
+  },
+
+  // Fondos personalizados de categorías
+  'fondos_categorias': {
+    id: 'fondos_categorias',
+    nombre: 'Fondos de Categorías',
+    descripcion: 'Configurar colores e imágenes de fondo para cada categoría',
+    icono: '🖼️',
+    campos: ['fondo_tipo', 'fondo_color', 'fondo_imagen'] // Campos específicos de tabla categorias
   }
 } as const;
 

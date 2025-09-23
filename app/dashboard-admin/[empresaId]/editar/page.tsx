@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { SECCIONES_EDITABLES } from '@/lib/constants/permisos';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import CategoriaFondoManager from '@/components/admin/CategoriaFondoManager';
 
 interface UserSession {
   userId: string;
@@ -70,6 +71,7 @@ export default function EditarEmpresaAdmin() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [mensaje, setMensaje] = useState<{ tipo: 'success' | 'error'; texto: string } | null>(null);
   const [permisos, setPermisos] = useState<PermisoAdmin[]>([]);
   const [empresa, setEmpresa] = useState<Empresa | null>(null);
   const [adminInfo, setAdminInfo] = useState<any>(null);
@@ -366,6 +368,22 @@ export default function EditarEmpresaAdmin() {
           </div>
         );
         
+      case 'fondos_categorias':
+        return (
+          <div className="space-y-6">
+            <CategoriaFondoManager 
+              empresaId={parseInt(empresaId)}
+              onCambiosGuardados={() => {
+                setMensaje({
+                  tipo: 'success',
+                  texto: 'Configuración de fondos actualizada exitosamente'
+                });
+                setTimeout(() => setMensaje(null), 3000);
+              }}
+            />
+          </div>
+        );
+        
       default:
         return (
           <Alert className="border-orange-200 bg-orange-50">
@@ -490,6 +508,13 @@ export default function EditarEmpresaAdmin() {
               <Alert className="mb-6 border-green-200 bg-green-50">
                 <CheckCircle className="h-4 w-4" />
                 <AlertDescription>{success}</AlertDescription>
+              </Alert>
+            )}
+
+            {mensaje && (
+              <Alert className={`mb-6 ${mensaje.tipo === 'success' ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}`}>
+                {mensaje.tipo === 'success' ? <CheckCircle className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
+                <AlertDescription>{mensaje.texto}</AlertDescription>
               </Alert>
             )}
             

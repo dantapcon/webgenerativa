@@ -200,7 +200,7 @@ export default function AdminEmpresasPage() {
             <Button asChild className="bg-blue-600 hover:bg-blue-700">
               <Link href="/generador" className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
-                Crear Nuevo Sitio
+                Crear Nueva Empresa
               </Link>
             </Button>
             <Button asChild variant="outline">
@@ -366,13 +366,13 @@ export default function AdminEmpresasPage() {
               <p className="text-gray-600 mb-6">
                 {searchTerm || filterEstado !== 'todos' 
                   ? 'Intenta ajustar los filtros de búsqueda'
-                  : 'Comienza creando tu primer sitio web'
+                  : 'Comienza creando tu primera empresa'
                 }
               </p>
               <Button asChild>
                 <Link href="/generador">
                   <Plus className="h-4 w-4 mr-2" />
-                  Crear Primer Sitio
+                  Crear Primera Empresa
                 </Link>
               </Button>
             </CardContent>

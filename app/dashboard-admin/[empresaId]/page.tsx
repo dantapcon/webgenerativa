@@ -17,7 +17,8 @@ import {
   MapPin,
   FolderOpen,
   Lock,
-  CheckCircle
+  CheckCircle,
+  Image
 } from 'lucide-react';
 import { SECCIONES_EDITABLES } from '@/lib/constants/permisos';
 
@@ -169,7 +170,8 @@ export default function DashboardAdmin() {
       'configuracion_adicional': Settings,
       'ventana_flotante': ExternalLink,
       'sucursales': MapPin,
-      'categorias': FolderOpen
+      'categorias': FolderOpen,
+      'fondos_categorias': Image
     };
     return iconMap[seccionId] || Settings;
   };

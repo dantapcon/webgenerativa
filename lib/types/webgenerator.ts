@@ -44,6 +44,9 @@ export interface Categoria {
   orden: number;
   visible: boolean;
   fecha_creacion: string;
+  fondo_tipo?: 'color' | 'imagen';
+  fondo_color?: string;
+  fondo_imagen?: string | null;
   subcategorias?: Subcategoria[];
 }
 

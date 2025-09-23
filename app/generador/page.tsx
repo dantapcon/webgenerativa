@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { EmpresaFormData } from '@/lib/types/webgenerator';
 import { WebGeneratorService } from '@/lib/services/webgenerator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -11,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Globe, Palette, Building, Users, Phone, Mail, MapPin, Image, Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 import Link from 'next/link';
-import { Header } from '@/components/header';
+import { GeneratorHeader } from '@/components/generator-header';
 // La migración ya se ha completado
 
 // Función para convertir URLs de Google Drive en enlaces directos
@@ -62,6 +63,7 @@ interface SubcategoriaForm {
 }
 
 export default function WebGeneratorPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState<EmpresaFormData>({
     nombre_empresa: '',
     descripcion_empresa: '',
@@ -227,6 +229,42 @@ export default function WebGeneratorPage() {
       showAlert('success', `¡Empresa "${result.empresa.nombre_empresa}" creada exitosamente!`);
       showAlert('success', `Sitio web disponible en: /${result.empresa.slug_empresa}`);
       
+      // Redireccionar después de un breve delay para mostrar el mensaje
+      setTimeout(async () => {
+        try {
+          // Verificar el rol del usuario para determinar dónde redireccionar
+          const authResponse = await fetch('/api/admin/auth');
+          const authResult = await authResponse.json();
+
+          if (authResult.success) {
+            const user = authResult.user;
+            
+            // Redireccionar según el tipo de usuario
+            if (user.role === 1) {
+              // Superadministrador - volver a administrar empresas
+              router.push('/admin/empresas');
+            } else if (user.role === 2) {
+              // Administrador - ir a su dashboard específico si tiene empresa asignada
+              if (user.empresaId) {
+                router.push(`/dashboard-admin/${user.empresaId}`);
+              } else {
+                router.push('/admin/empresas');
+              }
+            } else {
+              // Usuario normal - ir al sitio creado
+              router.push(`/${result.empresa.slug_empresa}`);
+            }
+          } else {
+            // Sin autenticación - ir al sitio creado
+            router.push(`/${result.empresa.slug_empresa}`);
+          }
+        } catch (error) {
+          console.error('Error en redirección:', error);
+          // Fallback: ir al sitio creado
+          router.push(`/${result.empresa.slug_empresa}`);
+        }
+      }, 2000);
+      
       // Limpiar formulario
       setFormData({
         nombre_empresa: '',
@@ -281,7 +319,7 @@ export default function WebGeneratorPage() {
 
   return (
     <>
-      <Header />
+      <GeneratorHeader />
       <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-indigo-100 py-8">
         <div className="container mx-auto max-w-6xl px-4">
         <Card className="bg-white/95 backdrop-blur-sm shadow-2xl">

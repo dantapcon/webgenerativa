@@ -34,8 +34,8 @@ export default function DashboardPage() {
 
       // Redirigir según el rol
       if (user.role === 1) {
-        // Superadministrador - redirigir a su dashboard
-        router.push('/admin/empresas');
+        // Superadministrador - redirigir a su dashboard principal
+        router.push('/admin');
       } else if (user.role === 2) {
         // Administrador - redirigir a su dashboard específico
         if (user.empresaId) {
