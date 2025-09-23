@@ -72,13 +72,12 @@ export async function POST(request: NextRequest) {
     };
     
     // 4. Verificar permisos según el rol y empresa
-    let redirectPath = '/dashboard';
+    const redirectPath = '/dashboard'; // Siempre redirigir a dashboard para que maneje la lógica
     let hasAccess = false;
 
     if (userRole.numero === 1) {
       // Superadministrador: acceso a todo
       hasAccess = true;
-      redirectPath = '/dashboard';
     } else if (userRole.numero === 2) {
       // Administrador: buscar la empresa a la que pertenece
       const { data: adminData, error: adminError } = await supabase
@@ -89,7 +88,6 @@ export async function POST(request: NextRequest) {
 
       if (adminData && !adminError) {
         hasAccess = true;
-        redirectPath = `/dashboard-admin/${adminData.empresa_id}`;
         // Actualizar el empresa_id en el payload
         userPayload.empresaId = adminData.empresa_id;
       } else {
@@ -102,7 +100,6 @@ export async function POST(request: NextRequest) {
     } else if (userRole.numero === 3) {
       // Cliente: acceso limitado
       hasAccess = true;
-      redirectPath = '/dashboard-cliente';
     }
 
     if (!hasAccess) {
