@@ -27,7 +27,8 @@ import {
   Settings,
   BarChart3,
   Users,
-  Shield
+  Shield,
+  LogOut
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -146,6 +147,15 @@ export default function AdminEmpresasPage() {
     });
   };
 
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/auth', { method: 'DELETE' });
+      window.location.href = '/auth/login';
+    } catch (error) {
+      console.error('Error cerrando sesión:', error);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -183,6 +193,14 @@ export default function AdminEmpresasPage() {
                 <BarChart3 className="h-4 w-4" />
                 Ver Estadísticas
               </Link>
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Cerrar Sesión
             </Button>
           </div>
         </div>
