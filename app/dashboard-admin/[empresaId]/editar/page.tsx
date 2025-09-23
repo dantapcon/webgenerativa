@@ -24,6 +24,7 @@ import {
 import { SECCIONES_EDITABLES } from '@/lib/constants/permisos';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import CategoriaFondoManager from '@/components/admin/CategoriaFondoManager';
+import CategoriaEditor from '@/components/admin/CategoriaEditor';
 
 interface UserSession {
   userId: string;
@@ -365,6 +366,22 @@ export default function EditarEmpresaAdmin() {
                 placeholder="https://ejemplo.com/logo.png"
               />
             </div>
+          </div>
+        );
+        
+      case 'categorias':
+        return (
+          <div className="space-y-6">
+            <CategoriaEditor 
+              empresaId={parseInt(empresaId)}
+              onCambiosGuardados={() => {
+                setMensaje({
+                  tipo: 'success',
+                  texto: 'Categorías actualizadas exitosamente'
+                });
+                setTimeout(() => setMensaje(null), 3000);
+              }}
+            />
           </div>
         );
         

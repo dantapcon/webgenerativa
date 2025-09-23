@@ -145,6 +145,9 @@ export interface EmpresaFormData {
     descripcion?: string;
     tipo_display?: 'horizontal' | 'vertical';
     orden: number;
+    fondo_tipo?: 'color' | 'imagen';
+    fondo_color?: string;
+    fondo_imagen?: string;
     subcategorias?: Array<{
       nombre: string;
       descripcion?: string;

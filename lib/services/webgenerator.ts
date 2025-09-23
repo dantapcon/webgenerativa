@@ -15,6 +15,9 @@ interface CategoriaServicio {
   descripcion: string;
   tipo_display?: 'horizontal' | 'vertical';
   orden: number;
+  fondo_tipo?: 'color' | 'imagen';
+  fondo_color?: string;
+  fondo_imagen?: string;
   subcategorias: {
     id?: number;
     nombre: string;
@@ -34,6 +37,15 @@ export class WebGeneratorService {
   // Crear una nueva empresa con categorías y subcategorías
   static async createEmpresa(data: EmpresaFormData): Promise<{ empresa: Empresa; mensaje: string }> {
     try {
+      // Validar datos requeridos
+      if (!data.nombre_empresa || data.nombre_empresa.trim().length === 0) {
+        throw new Error('El nombre de la empresa es requerido');
+      }
+
+      if (data.nombre_empresa.trim().length < 2) {
+        throw new Error('El nombre de la empresa debe tener al menos 2 caracteres');
+      }
+
       // Generar slug único si no se proporciona
       let slug = data.slug_empresa || data.nombre_empresa.toLowerCase()
         .replace(/[^a-z0-9\s]/g, '')
@@ -91,8 +103,12 @@ export class WebGeneratorService {
               empresa_id: empresa.id,
               nombre: categoria.nombre,
               descripcion: categoria.descripcion || null,
+              tipo_display: categoria.tipo_display || 'horizontal',
               orden: categoria.orden || 0,
-              visible: true
+              visible: true,
+              fondo_tipo: categoria.fondo_tipo || 'color',
+              fondo_color: categoria.fondo_color || '#ffffff',
+              fondo_imagen: categoria.fondo_imagen || null
             }])
             .select()
             .single();
@@ -329,6 +345,17 @@ export class WebGeneratorService {
       // Eliminar ventana_flotante de los datos de empresa si existe
       const { ventana_flotante: _, ...empresaData } = tempEmpresaData;
 
+      // Validar y limpiar el email
+      if (empresaData.correo_empresa !== undefined) {
+        if (typeof empresaData.correo_empresa === 'string') {
+          empresaData.correo_empresa = empresaData.correo_empresa.trim();
+          // Si está vacío, convertir a null para la base de datos
+          if (empresaData.correo_empresa === '') {
+            empresaData.correo_empresa = null;
+          }
+        }
+      }
+
       console.log('🔍 Categorías extraídas del data.categorias:', JSON.stringify(categorias, null, 2));
       console.log('🔍 Ventana flotante extraída:', JSON.stringify(ventana_flotante, null, 2));
 
@@ -387,6 +414,9 @@ export class WebGeneratorService {
                 descripcion: categoria.descripcion,
                 tipo_display: categoria.tipo_display || 'horizontal',
                 orden: categoria.orden,
+                fondo_tipo: categoria.fondo_tipo || 'color',
+                fondo_color: categoria.fondo_color || '#ffffff',
+                fondo_imagen: categoria.fondo_imagen || '',
                 visible: true // ¡IMPORTANTE! Asegurar que la categoría siga siendo visible
               })
               .eq('id', categoria.id);
@@ -410,6 +440,9 @@ export class WebGeneratorService {
                 descripcion: categoria.descripcion || '',
                 tipo_display: categoria.tipo_display || 'horizontal',
                 orden: categoria.orden,
+                fondo_tipo: categoria.fondo_tipo || 'color',
+                fondo_color: categoria.fondo_color || '#ffffff',
+                fondo_imagen: categoria.fondo_imagen || '',
                 visible: true
               })
               .select()

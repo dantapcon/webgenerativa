@@ -51,6 +51,9 @@ interface CategoriaForm {
   descripcion: string;
   tipo_display?: 'horizontal' | 'vertical';
   orden: number;
+  fondo_tipo?: 'color' | 'imagen';
+  fondo_color?: string;
+  fondo_imagen?: string;
   subcategorias: SubcategoriaForm[];
 }
 
@@ -125,6 +128,9 @@ export default function WebGeneratorPage() {
       descripcion: '',
       tipo_display: 'horizontal', // Valor predeterminado
       orden: categorias.length,
+      fondo_tipo: 'color',
+      fondo_color: '#ffffff',
+      fondo_imagen: '',
       subcategorias: []
     };
     setCategorias([...categorias, nuevaCategoria]);
@@ -214,6 +220,9 @@ export default function WebGeneratorPage() {
           descripcion: cat.descripcion,
           tipo_display: cat.tipo_display || 'horizontal',
           orden: cat.orden,
+          fondo_tipo: cat.fondo_tipo || 'color',
+          fondo_color: cat.fondo_color || '#ffffff',
+          fondo_imagen: cat.fondo_imagen || '',
           subcategorias: cat.subcategorias.map(sub => ({
             nombre: sub.nombre,
             descripcion: sub.descripcion,
@@ -1054,6 +1063,60 @@ export default function WebGeneratorPage() {
                                 <option value="vertical">Vertical</option>
                               </select>
                               <p className="text-xs text-gray-500 mt-1">Define cómo se mostrarán las subcategorías</p>
+                            </div>
+                          </div>
+
+                          {/* Personalización de Fondo */}
+                          <div className="space-y-4 mt-6 pt-4 border-t border-green-100">
+                            <div className="flex items-center bg-green-100 rounded-md px-3 py-2 text-green-800 mb-4">
+                              <Palette className="text-green-600 mr-2 h-4 w-4" />
+                              <h5 className="font-medium">Personalización de Fondo</h5>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <div className="space-y-2">
+                                <Label className="text-sm font-medium text-gray-700">Tipo de Fondo</Label>
+                                <select
+                                  value={categoria.fondo_tipo || 'color'}
+                                  onChange={(e) => actualizarCategoria(categoriaIndex, 'fondo_tipo', e.target.value)}
+                                  className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                                >
+                                  <option value="color">Color Sólido</option>
+                                  <option value="imagen">Imagen de Fondo</option>
+                                </select>
+                              </div>
+                              
+                              {categoria.fondo_tipo === 'color' ? (
+                                <div className="space-y-2">
+                                  <Label className="text-sm font-medium text-gray-700">Color de Fondo</Label>
+                                  <div className="flex items-center gap-2">
+                                    <input
+                                      type="color"
+                                      value={categoria.fondo_color || '#ffffff'}
+                                      onChange={(e) => actualizarCategoria(categoriaIndex, 'fondo_color', e.target.value)}
+                                      className="w-12 h-10 border border-gray-300 rounded-md cursor-pointer"
+                                    />
+                                    <Input
+                                      value={categoria.fondo_color || '#ffffff'}
+                                      onChange={(e) => actualizarCategoria(categoriaIndex, 'fondo_color', e.target.value)}
+                                      placeholder="#ffffff"
+                                      className="h-10 flex-1"
+                                    />
+                                  </div>
+                                  <p className="text-xs text-gray-500">Color hexadecimal para el fondo de la categoría</p>
+                                </div>
+                              ) : (
+                                <div className="space-y-2 md:col-span-2">
+                                  <Label className="text-sm font-medium text-gray-700">URL de Imagen de Fondo</Label>
+                                  <Input
+                                    value={categoria.fondo_imagen || ''}
+                                    onChange={(e) => actualizarCategoria(categoriaIndex, 'fondo_imagen', e.target.value)}
+                                    placeholder="https://ejemplo.com/imagen.jpg"
+                                    className="h-10"
+                                  />
+                                  <p className="text-xs text-gray-500">URL de la imagen que se usará como fondo de la categoría</p>
+                                </div>
+                              )}
                             </div>
                           </div>
 

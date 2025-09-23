@@ -168,6 +168,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     descripcion: string;
     tipo_display?: 'horizontal' | 'vertical';
     orden: number;
+    fondo_tipo?: 'color' | 'imagen';
+    fondo_color?: string;
+    fondo_imagen?: string;
     subcategorias: Array<{
       id?: number;
       nombre: string;
@@ -253,6 +256,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             descripcion: cat.descripcion || '',
             tipo_display: cat.tipo_display || 'horizontal',
             orden: cat.orden,
+            fondo_tipo: cat.fondo_tipo || 'color',
+            fondo_color: cat.fondo_color || '#ffffff',
+            fondo_imagen: cat.fondo_imagen || '',
             subcategorias: cat.subcategorias ? cat.subcategorias.map(sub => ({
               id: sub.id,
               nombre: sub.nombre,
@@ -309,6 +315,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       descripcion: string;
       tipo_display?: 'horizontal' | 'vertical';
       orden: number;
+      fondo_tipo?: 'color' | 'imagen';
+      fondo_color?: string;
+      fondo_imagen?: string;
       subcategorias: SubcategoriaType[];
     };
     
@@ -326,6 +335,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           descripcion: cat.descripcion?.trim() || '',
           tipo_display: cat.tipo_display || 'horizontal',
           orden: cat.orden || 0,
+          fondo_tipo: cat.fondo_tipo || 'color',
+          fondo_color: cat.fondo_color || '#ffffff',
+          fondo_imagen: cat.fondo_imagen || '',
           subcategorias: [] as any[]
         };
         
@@ -407,6 +419,15 @@ export default function EditarEmpresaPage({ params }: PageProps) {
         return;
       }
 
+      // Validar email si está presente
+      if (formData.correo_empresa && formData.correo_empresa.trim()) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.correo_empresa.trim())) {
+          showAlert('error', 'El email debe tener un formato válido');
+          return;
+        }
+      }
+
       // Validar y procesar categorías
       const categoriasValidadas = procesarCategorias();
       
@@ -425,6 +446,17 @@ export default function EditarEmpresaPage({ params }: PageProps) {
         modal_fondo_imagen,
         ...datosEmpresa
       } = formData;
+
+      // Limpiar y validar el email
+      if (datosEmpresa.correo_empresa) {
+        datosEmpresa.correo_empresa = datosEmpresa.correo_empresa.trim();
+        // Si el email está vacío después del trim, enviarlo como undefined
+        if (datosEmpresa.correo_empresa === '') {
+          datosEmpresa.correo_empresa = undefined;
+        }
+      } else {
+        datosEmpresa.correo_empresa = undefined;
+      }
 
       // Datos de ventana flotante
       const datosVentanaFlotante = {
@@ -446,10 +478,35 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       await WebGeneratorService.updateEmpresa(empresaId, datosEmpresa, categoriasValidadas, datosVentanaFlotante);
       showAlert('success', 'Empresa actualizada exitosamente');
       
-      // Recargar datos
-      setTimeout(() => {
-        router.push('/admin/empresas');
-      }, 2000);
+      // Recargar datos para mostrar los cambios guardados
+      if (empresaId) {
+        const data = await WebGeneratorService.getEmpresaById(empresaId);
+        if (data) {
+          setEmpresa(data);
+          
+          // Actualizar categorías con los datos frescos de la BD
+          if (data.categorias && data.categorias.length > 0) {
+            setCategorias(data.categorias.map(cat => ({
+              id: cat.id,
+              nombre: cat.nombre,
+              descripcion: cat.descripcion || '',
+              tipo_display: cat.tipo_display || 'horizontal',
+              orden: cat.orden,
+              fondo_tipo: cat.fondo_tipo || 'color',
+              fondo_color: cat.fondo_color || '#ffffff',
+              fondo_imagen: cat.fondo_imagen || '',
+              subcategorias: cat.subcategorias ? cat.subcategorias.map(sub => ({
+                id: sub.id,
+                nombre: sub.nombre,
+                descripcion: sub.descripcion || '',
+                imagen_url: sub.imagen_url || '',
+                enlace_externo: sub.enlace_externo || '',
+                orden: sub.orden
+              })) : []
+            })));
+          }
+        }
+      }
       
     } catch (error) {
       console.error('Error actualizando empresa:', error);
@@ -1468,6 +1525,75 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                         }}
                       />
                     </div>
+                    
+                    {/* Personalización de Fondo */}
+                    <div className="pt-4 border-t border-gray-200">
+                      <h6 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+                        🎨 Fondo de la Categoría
+                      </h6>
+                      
+                      <div className="grid gap-3">
+                        <div>
+                          <Label htmlFor={`cat-fondo-tipo-${catIndex}`}>Tipo de Fondo</Label>
+                          <select
+                            id={`cat-fondo-tipo-${catIndex}`}
+                            value={categoria.fondo_tipo || 'color'}
+                            onChange={(e) => {
+                              const newCategorias = [...categorias];
+                              newCategorias[catIndex].fondo_tipo = e.target.value as 'color' | 'imagen';
+                              setCategorias(newCategorias);
+                            }}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="color">Color Sólido</option>
+                            <option value="imagen">Imagen de Fondo</option>
+                          </select>
+                        </div>
+                        
+                        {categoria.fondo_tipo === 'color' ? (
+                          <div>
+                            <Label htmlFor={`cat-fondo-color-${catIndex}`}>Color de Fondo</Label>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="color"
+                                id={`cat-fondo-color-${catIndex}`}
+                                value={categoria.fondo_color || '#ffffff'}
+                                onChange={(e) => {
+                                  const newCategorias = [...categorias];
+                                  newCategorias[catIndex].fondo_color = e.target.value;
+                                  setCategorias(newCategorias);
+                                }}
+                                className="w-12 h-10 border border-gray-300 rounded-md cursor-pointer"
+                              />
+                              <Input
+                                value={categoria.fondo_color || '#ffffff'}
+                                onChange={(e) => {
+                                  const newCategorias = [...categorias];
+                                  newCategorias[catIndex].fondo_color = e.target.value;
+                                  setCategorias(newCategorias);
+                                }}
+                                placeholder="#ffffff"
+                                className="flex-1"
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <div>
+                            <Label htmlFor={`cat-fondo-imagen-${catIndex}`}>URL de Imagen de Fondo</Label>
+                            <Input
+                              id={`cat-fondo-imagen-${catIndex}`}
+                              value={categoria.fondo_imagen || ''}
+                              onChange={(e) => {
+                                const newCategorias = [...categorias];
+                                newCategorias[catIndex].fondo_imagen = e.target.value;
+                                setCategorias(newCategorias);
+                              }}
+                              placeholder="https://ejemplo.com/imagen.jpg"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                   
                   {/* Subcategorías */}
@@ -1758,6 +1884,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                       nombre: '',
                       descripcion: '',
                       orden: categorias.length + 1,
+                      fondo_tipo: 'color',
+                      fondo_color: '#ffffff',
+                      fondo_imagen: '',
                       subcategorias: []
                     }
                   ]);
