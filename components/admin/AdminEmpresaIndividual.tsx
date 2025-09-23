@@ -18,12 +18,25 @@ import {
   CheckCircle,
   XCircle,
   Save,
-  Trash2
+  Trash2,
+  Shield,
+  ChevronUp,
+  ChevronDown
 } from 'lucide-react';
 import { 
   AdminEmpresaCompleto, 
   Empresa 
 } from '@/lib/types/webgenerator';
+import { SECCIONES_EDITABLES } from '@/lib/constants/permisos';
+
+// Tipo para permisos del administrador
+interface PermisoAdmin {
+  id_permi: number;
+  nombre_permi: string;
+  descripcion_per: string;
+  id_empresa: number;
+  id_rol: number;
+}
 
 // Interfaz simplificada para el formulario de administradores
 interface SimpleAdminFormData {
@@ -59,6 +72,11 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  // Estado para manejo de permisos
+  const [permisos, setPermisos] = useState<PermisoAdmin[]>([]);
+  const [loadingPermisos, setLoadingPermisos] = useState(false);
+  const [mostrarPermisos, setMostrarPermisos] = useState(false);
 
   useEffect(() => {
     loadAdmin();
@@ -198,6 +216,86 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
     }
   };
 
+  // Funciones para gestión de permisos
+  const cargarPermisos = async () => {
+    if (!admin) return;
+    
+    setLoadingPermisos(true);
+    try {
+      const response = await fetch(`/api/admin/permisos?admin_id=${admin.id}&empresa_id=${empresa.id}`);
+      const result = await response.json();
+      
+      if (result.success) {
+        setPermisos(result.data.permisos_activos || []);
+      } else {
+        console.error('Error en API permisos:', result.error);
+      }
+    } catch (error) {
+      console.error('Error cargando permisos:', error);
+    } finally {
+      setLoadingPermisos(false);
+    }
+  };
+
+  const guardarPermisos = async () => {
+    if (!admin) return;
+
+    setLoadingPermisos(true);
+    try {
+      const response = await fetch('/api/admin/permisos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          admin_id: admin.id,
+          empresa_id: empresa.id,
+          permisos_seleccionados: permisos
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        setSuccess('Permisos actualizados exitosamente');
+      } else {
+        setError(result.error || 'Error actualizando permisos');
+      }
+    } catch (error) {
+      setError('Error al guardar permisos');
+    } finally {
+      setLoadingPermisos(false);
+    }
+  };
+
+  const togglePermiso = (permisoId: string) => {
+    setPermisos(current => {
+      const tienePermiso = current.some(p => p.nombre_permi === permisoId);
+      
+      if (tienePermiso) {
+        // Remover permiso
+        return current.filter(p => p.nombre_permi !== permisoId);
+      } else {
+        // Agregar permiso (crear uno temporal para el estado local)
+        const nuevoPermiso: PermisoAdmin = {
+          id_permi: 0, // Se asignará al guardar
+          nombre_permi: permisoId,
+          descripcion_per: SECCIONES_EDITABLES[permisoId as keyof typeof SECCIONES_EDITABLES]?.descripcion || '',
+          id_empresa: empresa.id,
+          id_rol: admin?.id || 0
+        };
+        return [...current, nuevoPermiso];
+      }
+    });
+  };
+
+  // Cargar permisos cuando se cargue el admin
+  useEffect(() => {
+    if (admin && mostrarPermisos) {
+      cargarPermisos();
+    }
+  }, [admin, mostrarPermisos]);
+
   if (loading && !admin) {
     return (
       <div className="text-center py-4">
@@ -283,6 +381,104 @@ export default function AdminEmpresaIndividual({ empresa }: AdminEmpresaIndividu
             Crear Administrador
           </Button>
         </div>
+      )}
+
+      {/* Sección de Permisos - Solo mostrar si hay administrador */}
+      {admin && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-blue-600" />
+                <CardTitle className="text-lg">Permisos de Edición</CardTitle>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setMostrarPermisos(!mostrarPermisos)}
+              >
+                {mostrarPermisos ? (
+                  <>
+                    <ChevronUp className="h-4 w-4 mr-2" />
+                    Ocultar
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4 mr-2" />
+                    Gestionar
+                  </>
+                )}
+              </Button>
+            </div>
+          </CardHeader>
+          
+          {mostrarPermisos && (
+            <CardContent>
+              {loadingPermisos ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <p className="text-sm text-gray-600 mb-4">
+                    Selecciona las secciones que el administrador puede editar en la página de la empresa.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.values(SECCIONES_EDITABLES).map((seccion) => {
+                      const tienePermiso = permisos.some(p => p.nombre_permi === seccion.id);
+                      
+                      return (
+                        <div
+                          key={seccion.id}
+                          className={`border rounded-lg p-4 transition-colors ${
+                            tienePermiso 
+                              ? 'border-blue-200 bg-blue-50' 
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <Checkbox
+                              id={seccion.id}
+                              checked={tienePermiso}
+                              onCheckedChange={() => togglePermiso(seccion.id)}
+                              className="mt-1"
+                            />
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-lg">{seccion.icono}</span>
+                                <Label 
+                                  htmlFor={seccion.id}
+                                  className="text-sm font-medium cursor-pointer"
+                                >
+                                  {seccion.nombre}
+                                </Label>
+                              </div>
+                              <p className="text-xs text-gray-600">
+                                {seccion.descripcion}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  <div className="pt-4 border-t">
+                    <Button
+                      onClick={guardarPermisos}
+                      disabled={loading}
+                      className="w-full"
+                    >
+                      <Save className="h-4 w-4 mr-2" />
+                      {loading ? 'Guardando permisos...' : 'Guardar Permisos'}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          )}
+        </Card>
       )}
 
       {/* Formulario de creación/edición */}

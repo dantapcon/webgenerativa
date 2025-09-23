@@ -323,9 +323,14 @@ export class WebGeneratorService {
       console.log('🔍 CategoriasData recibidas:', JSON.stringify(categoriasData, null, 2));
       
       // Extraer datos que no van en la tabla empresas
-      const { categorias, ...empresaData } = data;
+      const { categorias, ...tempEmpresaData } = data as any;
+      const ventana_flotante = (data as any).ventana_flotante;
+      
+      // Eliminar ventana_flotante de los datos de empresa si existe
+      const { ventana_flotante: _, ...empresaData } = tempEmpresaData;
 
       console.log('🔍 Categorías extraídas del data.categorias:', JSON.stringify(categorias, null, 2));
+      console.log('🔍 Ventana flotante extraída:', JSON.stringify(ventana_flotante, null, 2));
 
       // Actualizar empresa
       const { data: empresa, error: empresaError } = await supabase
@@ -342,6 +347,9 @@ export class WebGeneratorService {
       // Actualizar ventana flotante si se proporcionaron datos
       if (ventanaFlotanteData) {
         await this.updateVentanaFlotante(id, ventanaFlotanteData);
+      } else if (ventana_flotante) {
+        // Si la ventana flotante viene en los datos principales
+        await this.updateVentanaFlotante(id, ventana_flotante);
       }
 
       // Si se proporcionaron categorías, actualizarlas
