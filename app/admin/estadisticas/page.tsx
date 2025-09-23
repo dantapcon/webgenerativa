@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Empresa } from '@/lib/types/webgenerator';
 import { WebGeneratorService } from '@/lib/services/webgenerator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,9 +18,45 @@ import {
   Activity
 } from 'lucide-react';
 
+interface UserSession {
+  userId: string;
+  role: number;
+  roleName: string;
+  email: string;
+}
+
 export default function EstadisticasPage() {
+  const router = useRouter();
+  const [userSession, setUserSession] = useState<UserSession | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [empresas, setEmpresas] = useState<Empresa[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const verificarAutenticacion = async () => {
+    setAuthLoading(true);
+    try {
+      const response = await fetch('/api/admin/auth');
+      const result = await response.json();
+      
+      if (result.success && result.user) {
+        // Verificar que es superadministrador
+        if (result.user.role !== 1) {
+          router.push('/auth/login');
+          return;
+        }
+        setUserSession(result.user);
+      } else {
+        router.push('/auth/login');
+        return;
+      }
+    } catch (error) {
+      console.error('Error verificando autenticación:', error);
+      router.push('/auth/login');
+      return;
+    } finally {
+      setAuthLoading(false);
+    }
+  };
 
   const cargarEmpresas = async () => {
     setIsLoading(true);
@@ -34,8 +71,29 @@ export default function EstadisticasPage() {
   };
 
   useEffect(() => {
-    cargarEmpresas();
+    verificarAutenticacion();
   }, []);
+
+  useEffect(() => {
+    if (userSession) {
+      cargarEmpresas();
+    }
+  }, [userSession]);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userSession) {
+    return null;
+  }
 
   if (isLoading) {
     return (

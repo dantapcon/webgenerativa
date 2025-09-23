@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Empresa } from '@/lib/types/webgenerator';
 import { WebGeneratorService } from '@/lib/services/webgenerator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -37,7 +38,17 @@ interface EmpresaConEstado extends Empresa {
   estado_texto: string;
 }
 
+interface UserSession {
+  userId: string;
+  role: number;
+  roleName: string;
+  email: string;
+}
+
 export default function AdminEmpresasPage() {
+  const router = useRouter();
+  const [userSession, setUserSession] = useState<UserSession | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [empresas, setEmpresas] = useState<EmpresaConEstado[]>([]);
   const [filteredEmpresas, setFilteredEmpresas] = useState<EmpresaConEstado[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,6 +60,32 @@ export default function AdminEmpresasPage() {
   const showAlert = (type: 'success' | 'error', message: string) => {
     setAlert({ type, message });
     setTimeout(() => setAlert(null), 5000);
+  };
+
+  const verificarAutenticacion = async () => {
+    setAuthLoading(true);
+    try {
+      const response = await fetch('/api/admin/auth');
+      const result = await response.json();
+      
+      if (result.success && result.user) {
+        // Verificar que es superadministrador
+        if (result.user.role !== 1) {
+          router.push('/auth/login');
+          return;
+        }
+        setUserSession(result.user);
+      } else {
+        router.push('/auth/login');
+        return;
+      }
+    } catch (error) {
+      console.error('Error verificando autenticación:', error);
+      router.push('/auth/login');
+      return;
+    } finally {
+      setAuthLoading(false);
+    }
   };
 
   const getEstadoInfo = (estado: string) => {
@@ -134,8 +171,14 @@ export default function AdminEmpresasPage() {
   }, [searchTerm, filterEstado, empresas]);
 
   useEffect(() => {
-    cargarEmpresas();
+    verificarAutenticacion();
   }, []);
+
+  useEffect(() => {
+    if (userSession) {
+      cargarEmpresas();
+    }
+  }, [userSession]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
@@ -171,6 +214,21 @@ export default function AdminEmpresasPage() {
     }
   };
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userSession) {
+    return null; // La redirección ya se maneja en verificarAutenticacion
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -194,6 +252,9 @@ export default function AdminEmpresasPage() {
             </h1>
             <p className="text-gray-600 mt-2">
               Gestiona todas las páginas web creadas con WebGenerator Pro
+            </p>
+            <p className="text-sm text-gray-500 mt-1">
+              Conectado como: {userSession.email} ({userSession.roleName})
             </p>
           </div>
           <div className="flex flex-col md:flex-row gap-4">
