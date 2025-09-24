@@ -4,37 +4,7 @@ import { Mail, Phone, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
-
-// Función para convertir URLs de Google Drive en enlaces directos
-function formatGoogleDriveUrl(url: string): string {
-  try {
-    if (!url || !url.includes('drive.google.com')) return url;
-    
-    // Extraer el ID del archivo de Google Drive
-    let fileId = '';
-    
-    // Formato: drive.google.com/file/d/ID/view
-    if (url.includes('/file/d/')) {
-      const parts = url.split('/file/d/');
-      if (parts.length > 1) {
-        fileId = parts[1].split('/')[0];
-      }
-    }
-    // Formato: drive.google.com/open?id=ID
-    else if (url.includes('open?id=')) {
-      const urlObj = new URL(url);
-      fileId = urlObj.searchParams.get('id') || '';
-    }
-    
-    if (!fileId) return url;
-    
-    // MÉTODO PROBADO Y CONFIRMADO: Formato correcto para imágenes de Google Drive
-    return `https://drive.google.com/uc?export=view&id=${fileId}`;
-  } catch (error) {
-    console.error('Error formateando URL de Google Drive:', error);
-    return url;
-  }
-}
+import { processImageUrl } from '@/lib/utils/image-url';
 
 interface HeaderProps {
   empresa?: {
@@ -85,9 +55,7 @@ export function Header({ empresa }: HeaderProps) {
                 height: `${empresaData.logo_tamano_px || 48}px`
               }}>
                 <Image
-                  src={empresaData.logo_url.includes('drive.google.com') ? 
-                    formatGoogleDriveUrl(empresaData.logo_url) : 
-                    empresaData.logo_url}
+                  src={processImageUrl(empresaData.logo_url)}
                   alt={`Logo ${empresaData.nombre_empresa}`}
                   fill
                   className="object-contain"

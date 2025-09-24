@@ -7,37 +7,7 @@ import Link from 'next/link';
 import { EmpresaLayout } from '@/components/empresa-layout';
 import { generateSlug } from '@/lib/utils';
 import UbicacionesPage from '@/components/ubicaciones-page';
-
-// Función para convertir URLs de Google Drive en enlaces directos
-function formatGoogleDriveUrl(url: string): string {
-  try {
-    if (!url || !url.includes('drive.google.com')) return url;
-    
-    // Extraer el ID del archivo de Google Drive
-    let fileId = '';
-    
-    // Formato: drive.google.com/file/d/ID/view
-    if (url.includes('/file/d/')) {
-      const parts = url.split('/file/d/');
-      if (parts.length > 1) {
-        fileId = parts[1].split('/')[0];
-      }
-    }
-    // Formato: drive.google.com/open?id=ID
-    else if (url.includes('open?id=')) {
-      const urlObj = new URL(url);
-      fileId = urlObj.searchParams.get('id') || '';
-    }
-    
-    if (!fileId) return url;
-    
-    // MÉTODO PROBADO Y CONFIRMADO: Formato correcto para imágenes de Google Drive
-    return `https://drive.google.com/uc?export=view&id=${fileId}`;
-  } catch (error) {
-    console.error('Error formateando URL de Google Drive:', error);
-    return url;
-  }
-}
+import { processImageUrl } from '@/lib/utils/image-url';
 
 interface PageProps {
   params: Promise<{ slug: string; categoria: string }>;
@@ -47,7 +17,7 @@ interface PageProps {
 export const revalidate = 0; // Desactiva el cache estático
 export const dynamic = 'force-dynamic'; // Fuerza rendering dinámico
 
-export default async function CategoriaPage({ params }: PageProps) {
+export default async function CategoriaPage({ params }: { params: { slug: string, categoria: string } }) {
   const { slug, categoria } = await params;
   
   // Log para debugging en producción
@@ -94,7 +64,7 @@ export default async function CategoriaPage({ params }: PageProps) {
             ? (categoriaEncontrada.fondo_color || '#ffffff')
             : 'transparent',
           backgroundImage: categoriaEncontrada.fondo_tipo === 'imagen' && categoriaEncontrada.fondo_imagen
-            ? `url(${categoriaEncontrada.fondo_imagen})`
+            ? `url(${processImageUrl(categoriaEncontrada.fondo_imagen)})`
             : 'none',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -169,9 +139,7 @@ export default async function CategoriaPage({ params }: PageProps) {
                         {subcategoria.imagen_url && (
                           <div className="relative overflow-hidden rounded-lg md:w-48 md:h-48 md:flex-shrink-0 mb-4 md:mb-0">
                             <img 
-                              src={subcategoria.imagen_url.includes('drive.google.com') ? 
-                                formatGoogleDriveUrl(subcategoria.imagen_url) : 
-                                subcategoria.imagen_url} 
+                              src={processImageUrl(subcategoria.imagen_url)} 
                               alt={subcategoria.nombre}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             />
@@ -221,9 +189,7 @@ export default async function CategoriaPage({ params }: PageProps) {
                         {subcategoria.imagen_url && (
                           <div className="relative overflow-hidden h-56 mb-4 rounded-lg">
                             <img 
-                              src={subcategoria.imagen_url.includes('drive.google.com') ? 
-                                formatGoogleDriveUrl(subcategoria.imagen_url) : 
-                                subcategoria.imagen_url} 
+                              src={processImageUrl(subcategoria.imagen_url)} 
                               alt={subcategoria.nombre}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             />

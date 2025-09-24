@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+import { processImageUrl } from '@/lib/utils/image-url';
 
 // Funciones auxiliares para formatear URLs de video
 function formatYoutubeUrl(url: string): string {
@@ -77,7 +78,7 @@ export function ConsejoModal({
 
   const modalStyle = {
     background: fondoTipo === 'imagen' && fondoImagen
-      ? `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("${fondoImagen}") center/cover no-repeat`
+      ? `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("${processImageUrl(fondoImagen)}") center/cover no-repeat`
       : fondoColor || '#ffffff'
   };
 
@@ -110,7 +111,7 @@ export function ConsejoModal({
           {imagenUrl && (
             <div className="flex justify-center">
               <img
-                src={imagenUrl}
+                src={processImageUrl(imagenUrl)}
                 alt="Imagen de la ventana flotante"
                 className="max-w-full h-auto rounded-lg shadow-sm max-h-48 object-cover"
                 onError={(e) => {
