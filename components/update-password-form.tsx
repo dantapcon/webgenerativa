@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export function UpdatePasswordForm({
@@ -25,51 +25,23 @@ export function UpdatePasswordForm({
   const [isLoading, setIsLoading] = useState(false);
   const [isValidSession, setIsValidSession] = useState<boolean | null>(null);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const handlePasswordReset = async () => {
+    const checkSession = async () => {
       const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
       
-      // Obtener parámetros de la URL que Supabase puede enviar
-      const accessToken = searchParams.get('access_token');
-      const refreshToken = searchParams.get('refresh_token');
-      const type = searchParams.get('type');
-      
-      if (accessToken && refreshToken && type === 'recovery') {
-        try {
-          // Establecer la sesión con los tokens de recovery
-          const { data, error } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
-          });
-          
-          if (error) {
-            setError("Error al procesar el enlace de restablecimiento: " + error.message);
-            setIsValidSession(false);
-            return;
-          }
-          
-          setIsValidSession(true);
-        } catch (err) {
-          setError("Error al procesar el enlace de restablecimiento");
-          setIsValidSession(false);
-        }
+      // Verificar si hay una sesión válida y si es una sesión de recovery
+      if (session?.user) {
+        setIsValidSession(true);
       } else {
-        // Si no hay tokens en la URL, verificar si hay una sesión existente
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (session?.user) {
-          setIsValidSession(true);
-        } else {
-          setIsValidSession(false);
-          setError("Sesión expirada o inválida. Por favor solicita un nuevo enlace de restablecimiento.");
-        }
+        setIsValidSession(false);
+        setError("Sesión expirada o inválida. Por favor solicita un nuevo enlace de restablecimiento.");
       }
     };
 
-    handlePasswordReset();
-  }, [searchParams]);
+    checkSession();
+  }, []);
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();

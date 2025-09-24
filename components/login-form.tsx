@@ -29,11 +29,21 @@ export function LoginForm({
 
   useEffect(() => {
     const message = searchParams.get('message');
+    const errorMessage = searchParams.get('error');
+    
     if (message) {
       setSuccessMessage(message);
       // Limpiar el parámetro de la URL después de mostrar el mensaje
       const newUrl = new URL(window.location.href);
       newUrl.searchParams.delete('message');
+      window.history.replaceState({}, '', newUrl.toString());
+    }
+    
+    if (errorMessage) {
+      setError(errorMessage);
+      // Limpiar el parámetro de la URL después de mostrar el error
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('error');
       window.history.replaceState({}, '', newUrl.toString());
     }
   }, [searchParams]);

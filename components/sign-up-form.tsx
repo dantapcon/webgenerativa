@@ -40,11 +40,16 @@ export function SignUpForm({
     }
 
     try {
+      // Determinar la URL base correcta
+      const baseUrl = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+        ? 'https://webgenerativa.vercel.app'
+        : window.location.origin;
+
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
+          emailRedirectTo: `${baseUrl}/protected`,
         },
       });
       if (error) throw error;
