@@ -1,3 +1,5 @@
+'use client';
+
 import { processImageUrl } from '@/lib/utils/image-url';
 
 export default function TestImagePage() {

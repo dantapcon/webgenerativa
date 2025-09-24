@@ -17,7 +17,7 @@ interface PageProps {
 export const revalidate = 0; // Desactiva el cache estático
 export const dynamic = 'force-dynamic'; // Fuerza rendering dinámico
 
-export default async function CategoriaPage({ params }: { params: { slug: string, categoria: string } }) {
+export default async function CategoriaPage({ params }: PageProps) {
   const { slug, categoria } = await params;
   
   // Log para debugging en producción
