@@ -170,6 +170,7 @@ export function ConsejoModal({
           )}
 
           {/* Botón de cerrar inferior (opcional) */}
+          {/* 
           <div className="flex justify-center pt-4">
             <button
               onClick={handleClose}
@@ -178,6 +179,7 @@ export function ConsejoModal({
               Entendido
             </button>
           </div>
+          */}
         </div>
       </div>
 
