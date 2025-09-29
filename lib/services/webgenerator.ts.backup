@@ -141,67 +141,6 @@ export class WebGeneratorService {
         }
       }
 
-      // Procesar productos si existen
-      if (data.productos && data.productos.length > 0) {
-        console.log('🛍️ Procesando productos para la empresa:', empresa.id);
-        
-        // Primero necesitamos obtener las categorías creadas para mapear productos
-        const { data: categoriasCreadas } = await supabase
-          .from('categorias')
-          .select('id, nombre')
-          .eq('empresa_id', empresa.id);
-
-        const { data: subcategoriasCreadas } = await supabase
-          .from('subcategorias')
-          .select('id, nombre, categoria_id, categorias!inner(id, nombre, empresa_id)')
-          .eq('categorias.empresa_id', empresa.id);
-
-        for (const producto of data.productos) {
-          let categoria_id = null;
-          let subcategoria_id = null;
-
-          // Buscar categoría por nombre si se especifica
-          if (producto.categoria_nombre && categoriasCreadas) {
-            const categoria = categoriasCreadas.find(c => 
-              c.nombre.toLowerCase() === producto.categoria_nombre!.toLowerCase()
-            );
-            categoria_id = categoria?.id || null;
-          }
-
-          // Buscar subcategoría por nombre si se especifica
-          if (producto.subcategoria_nombre && categoria_id && subcategoriasCreadas) {
-            const subcategoria = subcategoriasCreadas.find(s => 
-              s.nombre.toLowerCase() === producto.subcategoria_nombre!.toLowerCase() &&
-              s.categoria_id === categoria_id
-            );
-            subcategoria_id = subcategoria?.id || null;
-          }
-
-          // Crear el producto
-          const { error: productoError } = await supabase
-            .from('productos')
-            .insert([{
-              empresa_id: empresa.id,
-              categoria_id,
-              subcategoria_id,
-              nombre: producto.nombre,
-              descripcion: producto.descripcion || null,
-              precio: producto.precio || null,
-              imagen_url: producto.imagen_url || null,
-              orden: producto.orden || 0,
-              activo: producto.activo !== false, // Por defecto true
-              descuento_prom: producto.descuento_prom || 0,
-              promocion_activa: producto.promocion_activa || false
-            }]);
-
-          if (productoError) {
-            console.error(`Error creando producto ${producto.nombre}:`, productoError);
-          } else {
-            console.log(`✅ Producto creado: ${producto.nombre}`);
-          }
-        }
-      }
-
       return { 
         empresa, 
         mensaje: `Empresa creada exitosamente. URL: ${process.env.NEXT_PUBLIC_BASE_URL}/${slug}` 
@@ -344,20 +283,6 @@ export class WebGeneratorService {
         console.warn('Error obteniendo ventana flotante:', ventanaError.message);
       }
 
-      // Agregar categoría de "Ubicaciones" si sucursales_activo está habilitado
-      if (empresa.sucursales_activo) {
-        categoriasOrdenadas.push({
-          id: -1, // ID especial para ubicaciones
-          empresa_id: empresa.id,
-          nombre: 'Ubicaciones',
-          descripcion: 'Nuestras sucursales y ubicaciones',
-          orden: 999, // Al final
-          visible: true,
-          fecha_creacion: new Date().toISOString(),
-          subcategorias: []
-        });
-      }
-
       return {
         ...empresa,
         categorias: categoriasOrdenadas,
@@ -368,6 +293,72 @@ export class WebGeneratorService {
     } catch (error) {
       console.error('Error en getEmpresaBySlug:', error);
       return null;
+    }
+  }
+        .single();
+
+      if (empresaError) {
+        if (empresaError.code === 'PGRST116') {
+          return null; // No encontrado
+        }
+        throw new Error(`Error obteniendo empresa: ${empresaError.message}`);
+      }
+
+      // Obtener categorías con sus subcategorías
+      const { data: categorias, error: categoriasError } = await supabase
+        .from('categorias')
+        .select(`
+          *,
+          subcategorias (*)
+        `)
+        .eq('empresa_id', empresa.id)
+        .eq('visible', true)
+        .order('orden', { ascending: true });
+
+      if (categoriasError) {
+        console.warn('Error obteniendo categorías:', categoriasError.message);
+      }
+
+      // Ordenar subcategorías dentro de cada categoría y filtrar visibles (getEmpresaBySlug)
+      const categoriasOrdenadas = categorias?.map(categoria => ({
+        ...categoria,
+        subcategorias: categoria.subcategorias
+          ?.filter((sub: any) => sub.visible) // Solo subcategorías visibles
+          ?.sort((a: any, b: any) => a.orden - b.orden) || []
+      })) || [];
+
+      // Obtener ventana flotante
+      const { data: ventanaFlotante, error: ventanaError } = await supabase
+        .from('ventana_flotante')
+        .select('*')
+        .eq('empresa_id', empresa.id)
+        .single();
+
+      if (ventanaError && ventanaError.code !== 'PGRST116') {
+        console.warn('Error obteniendo ventana flotante:', ventanaError.message);
+      }
+
+      // Agregar categoría de "Ubicaciones" si sucursales_activo está habilitado
+      if (empresa.sucursales_activo) {
+        categoriasOrdenadas.push({
+          id: -1, // ID especial para ubicaciones
+          empresa_id: empresa.id,
+          nombre: 'Ubicaciones',
+          descripcion: 'Nuestras sucursales y ubicaciones',
+          orden: 999, // Al final
+          visible: true,
+          subcategorias: []
+        });
+      }
+
+      return {
+        ...empresa,
+        categorias: categoriasOrdenadas,
+        ventana_flotante: ventanaFlotante || undefined
+      };
+    } catch (error) {
+      console.error('Error en getEmpresaBySlug:', error);
+      throw error;
     }
   }
 
@@ -420,22 +411,9 @@ export class WebGeneratorService {
         console.warn('Error obteniendo ventana flotante:', ventanaError.message);
       }
 
-      // Obtener productos
-      const { data: productos, error: productosError } = await supabase
-        .from('productos')
-        .select('*')
-        .eq('empresa_id', empresa.id)
-        .eq('activo', true)
-        .order('orden', { ascending: true });
-
-      if (productosError) {
-        console.warn('Error obteniendo productos:', productosError.message);
-      }
-
       return {
         ...empresa,
         categorias: categoriasOrdenadas,
-        productos: productos || [],
         ventana_flotante: ventanaFlotante || undefined
       };
     } catch (error) {
@@ -910,81 +888,6 @@ export class WebGeneratorService {
 
           if (deleteCatError) {
             console.error('Error eliminando categorías:', deleteCatError);
-          }
-        }
-      }
-
-      // Procesar productos si se proporcionaron
-      if (data.productos && Array.isArray(data.productos)) {
-        console.log('🛍️ Actualizando productos para la empresa:', id);
-        
-        // 1. Eliminar todos los productos actuales (simplificación para la versión inicial)
-        // En una versión más avanzada se podría hacer una actualización más inteligente
-        const { error: deleteProductosError } = await supabase
-          .from('productos')
-          .delete()
-          .eq('empresa_id', id);
-
-        if (deleteProductosError) {
-          console.error('Error eliminando productos actuales:', deleteProductosError);
-        } else {
-          console.log('✅ Productos actuales eliminados');
-        }
-
-        // 2. Obtener las categorías actuales para mapear productos
-        const { data: categoriasActuales } = await supabase
-          .from('categorias')
-          .select('id, nombre')
-          .eq('empresa_id', id);
-
-        const { data: subcategoriasActuales } = await supabase
-          .from('subcategorias')
-          .select('id, nombre, categoria_id, categorias!inner(id, nombre, empresa_id)')
-          .eq('categorias.empresa_id', id);
-
-        // 3. Crear productos nuevos
-        for (const producto of data.productos) {
-          let categoria_id = null;
-          let subcategoria_id = null;
-
-          // Buscar categoría por nombre si se especifica
-          if (producto.categoria_nombre && categoriasActuales) {
-            const categoria = categoriasActuales.find(c => 
-              c.nombre.toLowerCase() === producto.categoria_nombre!.toLowerCase()
-            );
-            categoria_id = categoria?.id || null;
-          }
-
-          // Buscar subcategoría por nombre si se especifica
-          if (producto.subcategoria_nombre && categoria_id && subcategoriasActuales) {
-            const subcategoria = subcategoriasActuales.find(s => 
-              s.nombre.toLowerCase() === producto.subcategoria_nombre!.toLowerCase() &&
-              s.categoria_id === categoria_id
-            );
-            subcategoria_id = subcategoria?.id || null;
-          }
-
-          // Crear el producto
-          const { error: productoError } = await supabase
-            .from('productos')
-            .insert([{
-              empresa_id: id,
-              categoria_id,
-              subcategoria_id,
-              nombre: producto.nombre,
-              descripcion: producto.descripcion || null,
-              precio: producto.precio || null,
-              imagen_url: producto.imagen_url || null,
-              orden: producto.orden || 0,
-              activo: producto.activo !== false, // Por defecto true
-              descuento_prom: producto.descuento_prom || 0,
-              promocion_activa: producto.promocion_activa || false
-            }]);
-
-          if (productoError) {
-            console.error(`Error creando producto ${producto.nombre}:`, productoError);
-          } else {
-            console.log(`✅ Producto actualizado: ${producto.nombre}`);
           }
         }
       }

@@ -20,7 +20,10 @@ export async function GET(request: NextRequest) {
 
     const { data: categorias, error } = await supabase
       .from('categorias')
-      .select('*')
+      .select(`
+        *,
+        subcategorias (*)
+      `)
       .eq('empresa_id', parseInt(empresaId))
       .order('orden', { ascending: true });
 

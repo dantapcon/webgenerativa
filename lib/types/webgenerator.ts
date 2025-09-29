@@ -100,10 +100,31 @@ export interface VentanaFlotante {
   updated_at: string;
 }
 
+export interface Producto {
+  id: number;
+  empresa_id: number;
+  categoria_id?: number | null;
+  subcategoria_id?: number | null;
+  nombre: string;
+  descripcion?: string | null;
+  precio?: number | null;
+  imagen_url?: string | null;
+  orden: number;
+  activo: boolean;
+  fecha_creacion: string;
+  fecha_actualizacion: string;
+  descuento_prom: number; // Descuento promocional (0-100)
+  promocion_activa: boolean;
+  // Relaciones
+  categoria?: Categoria;
+  subcategoria?: Subcategoria;
+}
+
 export interface EmpresaCompleta extends Empresa {
   categorias?: Categoria[];
   subcategorias?: Subcategoria[];
   sucursales?: Sucursal[];
+  productos?: Producto[];
   ventana_flotante?: VentanaFlotante;
 }
 
@@ -156,6 +177,20 @@ export interface EmpresaFormData {
       orden: number;
     }>;
   }>;
+
+  // Productos de la empresa
+  productos?: Array<{
+    nombre: string;
+    descripcion?: string;
+    precio?: number | null;
+    imagen_url?: string;
+    orden: number;
+    activo?: boolean;
+    descuento_prom?: number;
+    promocion_activa?: boolean;
+    categoria_nombre?: string; // Para asociar con categoría por nombre
+    subcategoria_nombre?: string; // Para asociar con subcategoría por nombre
+  }>;
 }
 
 // Datos del formulario para ventana flotante
@@ -168,6 +203,21 @@ export interface VentanaFlotanteFormData {
   fondo_tipo?: 'color' | 'imagen';
   fondo_color?: string;
   fondo_imagen?: string;
+}
+
+// Formulario para productos
+export interface ProductoFormData {
+  empresa_id?: number;
+  categoria_id?: number | null;
+  subcategoria_id?: number | null;
+  nombre: string;
+  descripcion?: string;
+  precio?: number | null;
+  imagen_url?: string;
+  orden?: number;
+  activo?: boolean;
+  descuento_prom?: number; // 0-100
+  promocion_activa?: boolean;
 }
 
 // Respuestas de la API

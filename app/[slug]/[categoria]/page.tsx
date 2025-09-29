@@ -8,6 +8,7 @@ import { EmpresaLayout } from '@/components/empresa-layout';
 import { generateSlug } from '@/lib/utils';
 import UbicacionesPage from '@/components/ubicaciones-page';
 import { processImageUrl } from '@/lib/utils/image-url';
+import ProductosGrid from '@/components/ProductosGrid';
 
 interface PageProps {
   params: Promise<{ slug: string; categoria: string }>;
@@ -40,6 +41,12 @@ export default async function CategoriaPage({ params }: PageProps) {
 
   // Verificar si es la categoría especial de ubicaciones
   const esUbicaciones = categoriaEncontrada.nombre.toLowerCase() === 'ubicaciones';
+
+  // Filtrar productos de esta categoría específica que NO tienen subcategoría
+  // (productos que pertenecen directamente a la categoría, no a subcategorías)
+  const productosDeCategoria = empresa.productos?.filter(
+    producto => producto.categoria_id === categoriaEncontrada.id && !producto.subcategoria_id
+  ) || [];
 
   return (
     <EmpresaLayout empresa={empresa} categoriaActiva={categoria}>
@@ -158,11 +165,31 @@ export default async function CategoriaPage({ params }: PageProps) {
                             </p>
                           )}
                           
+                          {/* Botón para navegar a la subcategoría */}
+                          <Button
+                            asChild
+                            className="w-full group/btn text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                            style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
+                          >
+                            <Link
+                              href={`/${slug}/${categoria}/${generateSlug(subcategoria.nombre)}`}
+                              className="flex items-center justify-center gap-2"
+                            >
+                              Ver productos
+                              <ExternalLink className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                            </Link>
+                          </Button>
+                          
+                          {/* Enlace externo adicional si existe */}
                           {subcategoria.enlace_externo && (
                             <Button
                               asChild
-                              className="w-full group/btn text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                              style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
+                              variant="outline"
+                              className="w-full mt-2 group/btn font-semibold py-3 rounded-lg border-2 hover:shadow-lg transition-all duration-300"
+                              style={{ 
+                                borderColor: empresa.color_primario || '#2563eb',
+                                color: empresa.color_primario || '#2563eb'
+                              }}
                             >
                               <a
                                 href={subcategoria.enlace_externo}
@@ -203,12 +230,31 @@ export default async function CategoriaPage({ params }: PageProps) {
                           </p>
                         )}
                         
-                        {/* Botón de enlace */}
+                        {/* Botón para navegar a la subcategoría */}
+                        <Button
+                          asChild
+                          className="w-full group/btn text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                          style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
+                        >
+                          <Link
+                            href={`/${slug}/${categoria}/${generateSlug(subcategoria.nombre)}`}
+                            className="flex items-center justify-center gap-2"
+                          >
+                            Ver productos
+                            <ExternalLink className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                          </Link>
+                        </Button>
+                        
+                        {/* Enlace externo adicional si existe */}
                         {subcategoria.enlace_externo && (
                           <Button
                             asChild
-                            className="w-full group/btn text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                            style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
+                            variant="outline"
+                            className="w-full mt-2 group/btn font-semibold py-3 rounded-lg border-2 hover:shadow-lg transition-all duration-300"
+                            style={{ 
+                              borderColor: empresa.color_primario || '#2563eb',
+                              color: empresa.color_primario || '#2563eb'
+                            }}
                           >
                             <a
                               href={subcategoria.enlace_externo}
@@ -238,6 +284,32 @@ export default async function CategoriaPage({ params }: PageProps) {
               <p className="text-gray-500">
                 Estamos trabajando en el contenido de esta categoría
               </p>
+            </div>
+          )}
+
+          {/* Sección de productos de la categoría */}
+          {productosDeCategoria.length > 0 && (
+            <div className="mt-16">
+              <div className="text-center mb-12">
+                <div 
+                  className="inline-block px-6 py-3 rounded-lg backdrop-blur-sm mb-4"
+                  style={{
+                    backgroundColor: categoriaEncontrada.fondo_tipo === 'imagen' && categoriaEncontrada.fondo_imagen
+                      ? 'rgba(0, 0, 0, 0.7)'
+                      : (empresa.color_primario || '#2563eb')
+                  }}
+                >
+                  <h2 className="text-2xl font-bold text-white">
+                    Productos Disponibles
+                  </h2>
+                </div>
+              </div>
+              
+              <ProductosGrid
+                productos={productosDeCategoria}
+                mostrarCategoria={false}
+                className="max-w-6xl mx-auto"
+              />
             </div>
           )}
             </>

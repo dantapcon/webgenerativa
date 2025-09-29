@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ArrowLeft, Save, Eye, Building } from 'lucide-react';
 import SucursalesManager from '@/components/admin/SucursalesManager';
 import AdminEmpresaIndividual from '@/components/admin/AdminEmpresaIndividual';
+import ProductosManager from '@/components/admin/ProductosManager';
 import Link from 'next/link';
 // La migración ya se ha completado
 
@@ -401,6 +402,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     { id: 'personalizacion', label: 'Personalización Visual', icon: '🎨' },
     { id: 'config-adicional', label: 'Configuración Adicional', icon: '⚙️' },
     { id: 'ventana-flotante', label: '💬 Ventana Flotante de Bienvenida', icon: '💬' },
+    { id: 'productos', label: 'Productos', icon: '📦' },
     { id: 'sucursales', label: '📍 Sucursales y Ubicaciones', icon: '📍' },
     { id: 'categorias', label: 'Categorías', icon: '📂' },
     { id: 'administrador', label: 'Administrador de la Página', icon: '👤' }
@@ -598,7 +600,15 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           )}
 
           {/* Renderizado condicional de secciones */}
-          {activeSection === 'sucursales' && empresaId ? (
+          {activeSection === 'productos' && empresaId ? (
+            <div>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">📦 Gestión de Productos</h2>
+                <p className="text-gray-600">Administrar el catálogo de productos de la empresa</p>
+              </div>
+              <ProductosManager empresaId={empresaId} />
+            </div>
+          ) : activeSection === 'sucursales' && empresaId ? (
             <div>
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-gray-900">📍 Gestión de Sucursales</h2>
@@ -1901,7 +1911,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           )}
 
           {/* Botones de acción fijos en la parte inferior para formularios */}
-          {activeSection !== 'sucursales' && activeSection !== 'administrador' && (
+          {activeSection !== 'productos' && activeSection !== 'sucursales' && activeSection !== 'administrador' && (
             <div className="mt-8 flex justify-end gap-4 bg-white p-6 rounded-lg border shadow-sm">
               <Button type="button" variant="outline" asChild>
                 <Link href="/admin/empresas">Cancelar</Link>

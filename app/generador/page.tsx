@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Globe, Palette, Building, Users, Phone, Mail, MapPin, Image, Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
+import { Globe, Palette, Building, Users, Phone, Mail, MapPin, Image, Plus, Trash2, ArrowUp, ArrowDown, Package } from 'lucide-react';
 import Link from 'next/link';
 import { GeneratorHeader } from '@/components/generator-header';
 // La migración ya se ha completado
@@ -90,6 +90,17 @@ export default function WebGeneratorPage() {
   });
 
   const [categorias, setCategorias] = useState<CategoriaForm[]>([]);
+  const [productos, setProductos] = useState<Array<{
+    nombre: string;
+    descripcion: string;
+    precio: number;
+    precio_descuento?: number;
+    categoria_nombre: string;
+    subcategoria_nombre?: string;
+    imagen_url?: string;
+    disponible: boolean;
+    orden: number;
+  }>>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [activeStep, setActiveStep] = useState(1);
@@ -198,6 +209,47 @@ export default function WebGeneratorPage() {
     setCategorias(nuevasCategorias);
   };
 
+  // Funciones para manejar productos
+  const agregarProducto = () => {
+    const nuevoProducto = {
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      categoria_nombre: categorias.length > 0 ? categorias[0].nombre : '',
+      subcategoria_nombre: '',
+      imagen_url: '',
+      disponible: true,
+      orden: productos.length
+    };
+    setProductos([...productos, nuevoProducto]);
+  };
+
+  const eliminarProducto = (index: number) => {
+    setProductos(productos.filter((_, i) => i !== index));
+  };
+
+  const actualizarProducto = (index: number, campo: string, valor: any) => {
+    setProductos(productos.map((prod, i) => 
+      i === index ? { ...prod, [campo]: valor } : prod
+    ));
+  };
+
+  const moverProducto = (index: number, direccion: 'up' | 'down') => {
+    const newProductos = [...productos];
+    const newIndex = direccion === 'up' ? index - 1 : index + 1;
+    
+    if (newIndex >= 0 && newIndex < productos.length) {
+      [newProductos[index], newProductos[newIndex]] = [newProductos[newIndex], newProductos[index]];
+      
+      // Actualizar órdenes
+      newProductos.forEach((prod, i) => {
+        prod.orden = i;
+      });
+      
+      setProductos(newProductos);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -212,7 +264,7 @@ export default function WebGeneratorPage() {
       // Ya no necesitamos eliminar estos campos porque la migración ya se completó
       const formDataLimpio = { ...formData };
       
-      // Preparar datos con categorías
+      // Preparar datos con categorías y productos
       const dataToSubmit: EmpresaFormData = {
         ...formDataLimpio,
         categorias: categorias.map(cat => ({
@@ -230,6 +282,17 @@ export default function WebGeneratorPage() {
             enlace_externo: sub.enlace_externo,
             orden: sub.orden
           }))
+        })),
+        productos: productos.map(prod => ({
+          nombre: prod.nombre,
+          descripcion: prod.descripcion,
+          precio: prod.precio,
+          precio_descuento: prod.precio_descuento,
+          categoria_nombre: prod.categoria_nombre,
+          subcategoria_nombre: prod.subcategoria_nombre,
+          imagen_url: prod.imagen_url,
+          disponible: prod.disponible,
+          orden: prod.orden
         }))
       };
 
@@ -360,7 +423,8 @@ export default function WebGeneratorPage() {
                   { step: 1, title: 'Datos Básicos' },
                   { step: 2, title: 'Personalización' },
                   { step: 3, title: 'Contenido' },
-                  { step: 4, title: 'Vista Previa' }
+                  { step: 4, title: 'Productos' },
+                  { step: 5, title: 'Vista Previa' }
                 ].map(({ step, title }) => (
                   <div key={step} className="flex items-center">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
@@ -1299,14 +1363,189 @@ export default function WebGeneratorPage() {
                       onClick={() => setActiveStep(4)}
                       className="px-6 py-2"
                     >
+                      Siguiente: Productos
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Paso 4: Productos */}
+              {activeStep === 4 && (
+                <div className="space-y-6">
+                  <div className="text-center mb-6">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-2">Productos</h3>
+                    <p className="text-gray-600">Añade productos a tu catálogo (opcional)</p>
+                  </div>
+
+                  <div className="space-y-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Package className="h-5 w-5 text-blue-600" />
+                          Catálogo de Productos
+                        </CardTitle>
+                        <CardDescription>
+                          Puedes añadir productos ahora o más tarde desde el panel de administración
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {productos.map((producto, index) => (
+                          <Card key={index} className="p-4 border-l-4 border-l-blue-500">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor={`producto-nombre-${index}`}>Nombre del producto *</Label>
+                                <Input
+                                  id={`producto-nombre-${index}`}
+                                  value={producto.nombre}
+                                  onChange={(e) => actualizarProducto(index, 'nombre', e.target.value)}
+                                  placeholder="Ej: Hamburguesa clásica"
+                                />
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor={`producto-precio-${index}`}>Precio *</Label>
+                                <Input
+                                  id={`producto-precio-${index}`}
+                                  type="number"
+                                  step="0.01"
+                                  value={producto.precio}
+                                  onChange={(e) => actualizarProducto(index, 'precio', parseFloat(e.target.value))}
+                                  placeholder="0.00"
+                                />
+                              </div>
+                              
+                              <div className="md:col-span-2">
+                                <Label htmlFor={`producto-descripcion-${index}`}>Descripción</Label>
+                                <textarea
+                                  id={`producto-descripcion-${index}`}
+                                  value={producto.descripcion}
+                                  onChange={(e) => actualizarProducto(index, 'descripcion', e.target.value)}
+                                  placeholder="Describe tu producto..."
+                                  rows={2}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor={`producto-categoria-${index}`}>Categoría</Label>
+                                <select
+                                  id={`producto-categoria-${index}`}
+                                  value={producto.categoria_nombre}
+                                  onChange={(e) => actualizarProducto(index, 'categoria_nombre', e.target.value)}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                  <option value="">Sin categoría</option>
+                                  {categorias.map((cat, catIndex) => (
+                                    <option key={catIndex} value={cat.nombre}>
+                                      {cat.nombre}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor={`producto-imagen-${index}`}>URL de imagen</Label>
+                                <Input
+                                  id={`producto-imagen-${index}`}
+                                  value={producto.imagen_url || ''}
+                                  onChange={(e) => actualizarProducto(index, 'imagen_url', e.target.value)}
+                                  placeholder="https://ejemplo.com/imagen.jpg"
+                                />
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center mt-4 pt-4 border-t">
+                              <div className="flex items-center space-x-2">
+                                <input
+                                  type="checkbox"
+                                  id={`producto-disponible-${index}`}
+                                  checked={producto.disponible}
+                                  onChange={(e) => actualizarProducto(index, 'disponible', e.target.checked)}
+                                  className="rounded border-gray-300"
+                                />
+                                <Label htmlFor={`producto-disponible-${index}`}>Disponible</Label>
+                              </div>
+                              
+                              <div className="flex items-center space-x-2">
+                                {index > 0 && (
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => moverProducto(index, 'up')}
+                                  >
+                                    <ArrowUp className="h-4 w-4" />
+                                  </Button>
+                                )}
+                                {index < productos.length - 1 && (
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => moverProducto(index, 'down')}
+                                  >
+                                    <ArrowDown className="h-4 w-4" />
+                                  </Button>
+                                )}
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => eliminarProducto(index)}
+                                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </Card>
+                        ))}
+                        
+                        <div className="text-center">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={agregarProducto}
+                            className="px-6 py-2"
+                          >
+                            <Plus className="h-4 w-4 mr-2" />
+                            Agregar Producto
+                          </Button>
+                        </div>
+                        
+                        {productos.length === 0 && (
+                          <div className="text-center py-8 text-gray-500">
+                            <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                            <p>No hay productos añadidos aún</p>
+                            <p className="text-sm">Puedes añadir productos más tarde desde el panel de administración</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <Button 
+                      type="button"
+                      variant="outline"
+                      onClick={() => setActiveStep(3)}
+                      className="px-6 py-2"
+                    >
+                      Anterior
+                    </Button>
+                    <Button 
+                      type="button"
+                      onClick={() => setActiveStep(5)}
+                      className="px-6 py-2"
+                    >
                       Ver Vista Previa
                     </Button>
                   </div>
                 </div>
               )}
 
-              {/* Paso 4: Vista Previa y Confirmación */}
-              {activeStep === 4 && (
+              {/* Paso 5: Vista Previa y Confirmación */}
+              {activeStep === 5 && (
                 <div className="space-y-6">
                   <div className="text-center mb-6">
                     <h3 className="text-xl font-semibold text-gray-800 mb-2">Vista Previa y Confirmación</h3>
@@ -1460,7 +1699,7 @@ export default function WebGeneratorPage() {
                     <Button 
                       type="button"
                       variant="outline"
-                      onClick={() => setActiveStep(3)}
+                      onClick={() => setActiveStep(4)}
                       className="px-6 py-2"
                     >
                       Anterior
