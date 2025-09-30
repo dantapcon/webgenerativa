@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { processImageUrl } from '@/lib/utils/image-url';
+import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
 
 // Funciones auxiliares para formatear URLs de video
 function formatYoutubeUrl(url: string): string {
@@ -43,6 +44,8 @@ interface VentanaFlotanteProps {
   fondoTipo?: 'color' | 'imagen';
   fondoColor?: string;
   fondoImagen?: string;
+  brillo?: number;
+  opacidad?: number;
 }
 
 export function ConsejoModal({
@@ -53,7 +56,9 @@ export function ConsejoModal({
   videoUrl,
   fondoTipo = 'color',
   fondoColor = '#ffffff',
-  fondoImagen
+  fondoImagen,
+  brillo = 100,
+  opacidad = 100
 }: VentanaFlotanteProps) {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -79,7 +84,7 @@ export function ConsejoModal({
   const modalStyle = {
     background: fondoTipo === 'imagen' && fondoImagen
       ? `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("${processImageUrl(fondoImagen)}") center/cover no-repeat`
-      : fondoColor || '#ffffff'
+      : aplicarBrilloOpacidad(fondoColor || '#ffffff', brillo, opacidad)
   };
 
   return (

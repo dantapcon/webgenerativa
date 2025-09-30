@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
 import { EmpresaLayout } from '@/components/empresa-layout';
 import { ConsejoModal } from '@/components/consejo-modal';
+import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
 
 // Función para convertir URLs de Google Drive en enlaces directos
 function formatGoogleDriveUrl(url: string): string {
@@ -93,14 +94,18 @@ export default async function EmpresaPage({ params }: PageProps) {
     notFound();
   }
 
-  // Obtener color de fondo de ventana flotante desde colorimetría o fallback
+  // Obtener color, brillo y opacidad de fondo de ventana flotante desde colorimetría o fallback
   const colorFondoVentana = empresa.ventana_flotante?.colores?.fondo?.color || empresa.ventana_flotante?.fondo_color || '#ffffff';
+  const brilloVentanaFlotante = empresa.ventana_flotante?.colores?.fondo?.brillo || 100;
+  const opacidadVentanaFlotante = empresa.ventana_flotante?.colores?.fondo?.opacidad || 100;
 
   // Log para debugging del color de ventana flotante
   console.log(`[${new Date().toISOString()}] Color ventana flotante:`, {
     desde_colorimetria: empresa.ventana_flotante?.colores?.fondo?.color,
     desde_campo_legacy: empresa.ventana_flotante?.fondo_color,
     color_final: colorFondoVentana,
+    brillo: brilloVentanaFlotante,
+    opacidad: opacidadVentanaFlotante,
     activo: empresa.ventana_flotante?.activo
   });
 
@@ -123,6 +128,8 @@ export default async function EmpresaPage({ params }: PageProps) {
         fondoTipo={empresa.ventana_flotante?.fondo_tipo || undefined}
         fondoColor={colorFondoVentana}
         fondoImagen={empresa.ventana_flotante?.fondo_imagen || undefined}
+        brillo={brilloVentanaFlotante}
+        opacidad={opacidadVentanaFlotante}
       />
 
       {/* Hero Section */}

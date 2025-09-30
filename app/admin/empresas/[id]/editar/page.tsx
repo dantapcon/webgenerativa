@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { EmpresaFormData, EmpresaCompleta } from '@/lib/types/webgenerator';
 import { WebGeneratorService } from '@/lib/services/webgenerator';
+import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -185,6 +186,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     }>;
   }>>([]);
 
+  // Estado para controles de brillo y opacidad
+  const [categoriasBrilloOpacidad, setCategoriasBrilloOpacidad] = useState<Record<number, {brillo: number, opacidad: number}>>({});
+  const [ventanaFlotanteBrilloOpacidad, setVentanaFlotanteBrilloOpacidad] = useState<{brillo: number, opacidad: number}>({brillo: 100, opacidad: 100});
+
   const showAlert = (type: 'success' | 'error', message: string) => {
     setAlert({ type, message });
     setTimeout(() => setAlert(null), 5000);
@@ -244,6 +249,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
 
         // Cargar color de ventana flotante desde colorimetría API ANTES de poblar formulario
         let colorVentanaFlotante = data.ventana_flotante?.fondo_color || '#ffffff';
+        let brilloVentanaFlotante = 100;
+        let opacidadVentanaFlotante = 100;
+        
         if (data.ventana_flotante?.id) {
           try {
             const colorResponse = await fetch(`/api/colorimetria?referencia_id=${data.ventana_flotante.id}&tipo_elemento=ventana_flotante`);
@@ -251,7 +259,15 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               const colorData = await colorResponse.json();
               if (colorData.success && colorData.data && colorData.data.fondo) {
                 colorVentanaFlotante = colorData.data.fondo.color;
-                console.log('Color ventana flotante cargado desde API:', colorVentanaFlotante);
+                brilloVentanaFlotante = colorData.data.fondo.brillo || 100;
+                opacidadVentanaFlotante = colorData.data.fondo.opacidad || 100;
+                console.log('Color ventana flotante cargado desde API:', colorVentanaFlotante, `Brillo: ${brilloVentanaFlotante}%, Opacidad: ${opacidadVentanaFlotante}%`);
+                
+                // Actualizar estado de brillo y opacidad
+                setVentanaFlotanteBrilloOpacidad({
+                  brillo: brilloVentanaFlotante,
+                  opacidad: opacidadVentanaFlotante
+                });
               }
             }
           } catch (error) {
@@ -302,6 +318,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           const categoriasConColores = await Promise.all(
             data.categorias.map(async (cat) => {
               let colorCategoria = cat.fondo_color || '#ffffff';
+              let brilloCategoria = 100;
+              let opacidadCategoria = 100;
               
               // Cargar color desde colorimetría API si la categoría tiene ID
               if (cat.id) {
@@ -313,7 +331,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                     console.log(`🎨 Respuesta API para categoría "${cat.nombre}":`, colorData);
                     if (colorData.success && colorData.data && colorData.data.fondo) {
                       colorCategoria = colorData.data.fondo.color;
-                      console.log(`✅ Color cargado para categoría ${cat.nombre}:`, colorCategoria);
+                      brilloCategoria = colorData.data.fondo.brillo || 100;
+                      opacidadCategoria = colorData.data.fondo.opacidad || 100;
+                      console.log(`✅ Color cargado para categoría ${cat.nombre}:`, colorCategoria, `Brillo: ${brilloCategoria}%, Opacidad: ${opacidadCategoria}%`);
                     } else {
                       console.log(`⚠️ No hay color en API para categoría ${cat.nombre}, usando fallback:`, colorCategoria);
                     }
@@ -336,6 +356,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                 fondo_tipo: cat.fondo_tipo || 'color',
                 fondo_color: colorCategoria,
                 fondo_imagen: cat.fondo_imagen || '',
+                brilloCategoria,
+                opacidadCategoria,
                 subcategorias: cat.subcategorias ? cat.subcategorias.map(sub => ({
                   id: sub.id,
                   nombre: sub.nombre,
@@ -347,6 +369,19 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               };
             })
           );
+          
+          // Actualizar estado de brillo y opacidad para todas las categorías de una vez
+          const brilloOpacidadMap: Record<number, {brillo: number, opacidad: number}> = {};
+          categoriasConColores.forEach(cat => {
+            if (cat.id) {
+              brilloOpacidadMap[cat.id] = {
+                brillo: cat.brilloCategoria,
+                opacidad: cat.opacidadCategoria
+              };
+            }
+          });
+          setCategoriasBrilloOpacidad(brilloOpacidadMap);
+          
           console.log('🎨 Categorías finales con colores:', categoriasConColores.map(cat => ({
             nombre: cat.nombre,
             id: cat.id,
@@ -394,13 +429,16 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     // Guardar en API si la categoría tiene ID
     if (categoria.id && empresaId) {
       try {
+        // Obtener valores actuales de brillo y opacidad o usar valores por defecto
+        const valoresActuales = categoriasBrilloOpacidad[categoria.id] || {brillo: 100, opacidad: 100};
+        
         const colorData = {
           referencia_id: categoria.id,
           tipo_elemento: 'categoria',
           subtipo: 'fondo',
           color: newColor,
-          brillo: 100,
-          opacidad: 100
+          brillo: valoresActuales.brillo,
+          opacidad: valoresActuales.opacidad
         };
 
         const response = await fetch('/api/colorimetria', {
@@ -425,6 +463,56 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     }
   };
 
+  // Función para manejar cambios de brillo/opacidad en categorías
+  const handleCategoriaBrilloOpacidadChange = async (catIndex: number, tipo: 'brillo' | 'opacidad', valor: number) => {
+    const categoria = categorias[catIndex];
+    
+    if (categoria.id) {
+      // Actualizar estado local
+      setCategoriasBrilloOpacidad(prev => ({
+        ...prev,
+        [categoria.id!]: {
+          ...prev[categoria.id!] || {brillo: 100, opacidad: 100},
+          [tipo]: valor
+        }
+      }));
+
+      // Guardar en API
+      try {
+        const valoresActuales = categoriasBrilloOpacidad[categoria.id] || {brillo: 100, opacidad: 100};
+        const nuevosValores = {...valoresActuales, [tipo]: valor};
+        
+        const colorData = {
+          referencia_id: categoria.id,
+          tipo_elemento: 'categoria',
+          subtipo: 'fondo',
+          color: categoria.fondo_color || '#ffffff',
+          brillo: nuevosValores.brillo,
+          opacidad: nuevosValores.opacidad
+        };
+
+        const response = await fetch('/api/colorimetria', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(colorData),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Error API response:', errorData);
+          throw new Error(`Error al guardar ${tipo} de categoría: ${errorData.error || 'Unknown error'}`);
+        }
+
+        console.log(`${tipo} de categoría ${categoria.nombre} guardado:`, valor);
+      } catch (error) {
+        console.error(`Error guardando ${tipo} de categoría:`, error);
+        showAlert('error', `Error al guardar el ${tipo} de la categoría`);
+      }
+    }
+  };
+
   // Función para manejar cambios de color en ventana flotante y guardar en API
   const handleVentanaFlotanteColorChange = async (newColor: string) => {
     // Actualizar estado local inmediatamente
@@ -441,8 +529,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           tipo_elemento: 'ventana_flotante',
           subtipo: 'fondo',
           color: newColor,
-          brillo: 100,
-          opacidad: 100
+          brillo: ventanaFlotanteBrilloOpacidad.brillo,
+          opacidad: ventanaFlotanteBrilloOpacidad.opacidad
         };
 
         const response = await fetch('/api/colorimetria', {
@@ -463,6 +551,50 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       } catch (error) {
         console.error('Error guardando color de ventana flotante:', error);
         showAlert('error', 'Error al guardar el color de la ventana flotante');
+      }
+    }
+  };
+
+  // Función para manejar cambios de brillo/opacidad en ventana flotante
+  const handleVentanaFlotanteBrilloOpacidadChange = async (tipo: 'brillo' | 'opacidad', valor: number) => {
+    // Actualizar estado local
+    setVentanaFlotanteBrilloOpacidad(prev => ({
+      ...prev,
+      [tipo]: valor
+    }));
+
+    // Guardar en API si la ventana flotante tiene ID
+    if (empresa?.ventana_flotante?.id) {
+      try {
+        const nuevosValores = {...ventanaFlotanteBrilloOpacidad, [tipo]: valor};
+        
+        const colorData = {
+          referencia_id: empresa.ventana_flotante.id,
+          tipo_elemento: 'ventana_flotante',
+          subtipo: 'fondo',
+          color: formData.modal_fondo_color || '#ffffff',
+          brillo: nuevosValores.brillo,
+          opacidad: nuevosValores.opacidad
+        };
+
+        const response = await fetch('/api/colorimetria', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(colorData),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Error API response:', errorData);
+          throw new Error(`Error al guardar ${tipo} de ventana flotante: ${errorData.error || 'Unknown error'}`);
+        }
+
+        console.log(`${tipo} de ventana flotante guardado:`, valor);
+      } catch (error) {
+        console.error(`Error guardando ${tipo} de ventana flotante:`, error);
+        showAlert('error', `Error al guardar el ${tipo} de la ventana flotante`);
       }
     }
   };
@@ -1537,24 +1669,71 @@ export default function EditarEmpresaPage({ params }: PageProps) {
 
                     {/* Color de fondo */}
                     {formData.modal_fondo_tipo === 'color' && (
-                      <div className="space-y-2">
-                        <Label htmlFor="modal_fondo_color">Color de fondo</Label>
-                        <div className="flex gap-2">
-                          <Input
-                            id="modal_fondo_color"
-                            name="modal_fondo_color"
-                            type="color"
-                            value={formData.modal_fondo_color || '#ffffff'}
-                            onChange={(e) => handleVentanaFlotanteColorChange(e.target.value)}
-                            className="w-16 h-10 p-1"
-                          />
-                          <Input
-                            type="text"
-                            value={formData.modal_fondo_color || '#ffffff'}
-                            onChange={(e) => handleVentanaFlotanteColorChange(e.target.value)}
-                            className="flex-1 h-10"
-                            placeholder="#ffffff"
-                          />
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="modal_fondo_color">Color de fondo</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              id="modal_fondo_color"
+                              name="modal_fondo_color"
+                              type="color"
+                              value={formData.modal_fondo_color || '#ffffff'}
+                              onChange={(e) => handleVentanaFlotanteColorChange(e.target.value)}
+                              className="w-16 h-10 p-1"
+                            />
+                            <Input
+                              type="text"
+                              value={formData.modal_fondo_color || '#ffffff'}
+                              onChange={(e) => handleVentanaFlotanteColorChange(e.target.value)}
+                              className="flex-1 h-10"
+                              placeholder="#ffffff"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Controles de Brillo y Opacidad */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {/* Brillo */}
+                          <div className="space-y-2">
+                            <Label htmlFor="modal_brillo">
+                              Brillo: {ventanaFlotanteBrilloOpacidad.brillo}%
+                            </Label>
+                            <input
+                              id="modal_brillo"
+                              type="range"
+                              min="0"
+                              max="200"
+                              value={ventanaFlotanteBrilloOpacidad.brillo}
+                              onChange={(e) => handleVentanaFlotanteBrilloOpacidadChange('brillo', parseInt(e.target.value))}
+                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                            />
+                            <div className="flex justify-between text-xs text-gray-500">
+                              <span>0%</span>
+                              <span>100%</span>
+                              <span>200%</span>
+                            </div>
+                          </div>
+
+                          {/* Opacidad */}
+                          <div className="space-y-2">
+                            <Label htmlFor="modal_opacidad">
+                              Opacidad: {ventanaFlotanteBrilloOpacidad.opacidad}%
+                            </Label>
+                            <input
+                              id="modal_opacidad"
+                              type="range"
+                              min="0"
+                              max="100"
+                              value={ventanaFlotanteBrilloOpacidad.opacidad}
+                              onChange={(e) => handleVentanaFlotanteBrilloOpacidadChange('opacidad', parseInt(e.target.value))}
+                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                            />
+                            <div className="flex justify-between text-xs text-gray-500">
+                              <span>0%</span>
+                              <span>50%</span>
+                              <span>100%</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -1584,7 +1763,11 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                       <div className="border rounded-lg p-4 bg-white shadow-sm max-w-md" style={{
                         background: formData.modal_fondo_tipo === 'imagen' && formData.modal_fondo_imagen
                           ? `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("${formData.modal_fondo_imagen}") center/cover no-repeat`
-                          : formData.modal_fondo_color || '#ffffff'
+                          : aplicarBrilloOpacidad(
+                              formData.modal_fondo_color || '#ffffff',
+                              ventanaFlotanteBrilloOpacidad.brillo,
+                              ventanaFlotanteBrilloOpacidad.opacidad
+                            )
                       }}>
                         {formData.modal_titulo && (
                           <h3 className="text-lg font-bold text-gray-800 mb-2">
@@ -1825,31 +2008,97 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                         </div>
                         
                         {categoria.fondo_tipo === 'color' ? (
-                          <div>
-                            <Label htmlFor={`cat-fondo-color-${catIndex}`}>Color de Fondo</Label>
-                            <div className="flex items-center gap-2">
-                              <input
-                                type="color"
-                                id={`cat-fondo-color-${catIndex}`}
-                                value={categoria.fondo_color || '#ffffff'}
-                                onChange={(e) => {
-                                  console.log(`Cambiando color de categoría ${categoria.nombre} a:`, e.target.value);
-                                  handleCategoriaColorChange(catIndex, e.target.value);
-                                }}
-                                className="w-12 h-10 border border-gray-300 rounded-md cursor-pointer"
-                              />
-                              <Input
-                                value={categoria.fondo_color || '#ffffff'}
-                                onChange={(e) => {
-                                  console.log(`Cambiando color de categoría ${categoria.nombre} (texto) a:`, e.target.value);
-                                  handleCategoriaColorChange(catIndex, e.target.value);
-                                }}
-                                placeholder="#ffffff"
-                                className="flex-1"
-                              />
-                              <div className="text-xs text-gray-500">
-                                Actual: {categoria.fondo_color || 'No definido'}
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor={`cat-fondo-color-${catIndex}`}>Color de Fondo</Label>
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="color"
+                                  id={`cat-fondo-color-${catIndex}`}
+                                  value={categoria.fondo_color || '#ffffff'}
+                                  onChange={(e) => {
+                                    console.log(`Cambiando color de categoría ${categoria.nombre} a:`, e.target.value);
+                                    handleCategoriaColorChange(catIndex, e.target.value);
+                                  }}
+                                  className="w-12 h-10 border border-gray-300 rounded-md cursor-pointer"
+                                />
+                                <Input
+                                  value={categoria.fondo_color || '#ffffff'}
+                                  onChange={(e) => {
+                                    console.log(`Cambiando color de categoría ${categoria.nombre} (texto) a:`, e.target.value);
+                                    handleCategoriaColorChange(catIndex, e.target.value);
+                                  }}
+                                  placeholder="#ffffff"
+                                  className="flex-1"
+                                />
+                                <div className="text-xs text-gray-500">
+                                  Color final: {aplicarBrilloOpacidad(
+                                    categoria.fondo_color || '#ffffff',
+                                    categoria.id ? (categoriasBrilloOpacidad[categoria.id]?.brillo || 100) : 100,
+                                    categoria.id ? (categoriasBrilloOpacidad[categoria.id]?.opacidad || 100) : 100
+                                  )}
+                                </div>
                               </div>
+                            </div>
+
+                            {/* Controles de Brillo y Opacidad */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {/* Brillo */}
+                              <div className="space-y-2">
+                                <Label htmlFor={`cat-brillo-${catIndex}`}>
+                                  Brillo: {categoria.id ? (categoriasBrilloOpacidad[categoria.id]?.brillo || 100) : 100}%
+                                </Label>
+                                <input
+                                  id={`cat-brillo-${catIndex}`}
+                                  type="range"
+                                  min="0"
+                                  max="200"
+                                  value={categoria.id ? (categoriasBrilloOpacidad[categoria.id]?.brillo || 100) : 100}
+                                  onChange={(e) => handleCategoriaBrilloOpacidadChange(catIndex, 'brillo', parseInt(e.target.value))}
+                                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                />
+                                <div className="flex justify-between text-xs text-gray-500">
+                                  <span>0%</span>
+                                  <span>100%</span>
+                                  <span>200%</span>
+                                </div>
+                              </div>
+
+                              {/* Opacidad */}
+                              <div className="space-y-2">
+                                <Label htmlFor={`cat-opacidad-${catIndex}`}>
+                                  Opacidad: {categoria.id ? (categoriasBrilloOpacidad[categoria.id]?.opacidad || 100) : 100}%
+                                </Label>
+                                <input
+                                  id={`cat-opacidad-${catIndex}`}
+                                  type="range"
+                                  min="0"
+                                  max="100"
+                                  value={categoria.id ? (categoriasBrilloOpacidad[categoria.id]?.opacidad || 100) : 100}
+                                  onChange={(e) => handleCategoriaBrilloOpacidadChange(catIndex, 'opacidad', parseInt(e.target.value))}
+                                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                />
+                                <div className="flex justify-between text-xs text-gray-500">
+                                  <span>0%</span>
+                                  <span>50%</span>
+                                  <span>100%</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Vista previa del color aplicado */}
+                            <div className="mt-3">
+                              <Label className="text-xs text-gray-600 mb-1 block">Vista previa:</Label>
+                              <div 
+                                className="w-full h-8 rounded border border-gray-300"
+                                style={{
+                                  backgroundColor: aplicarBrilloOpacidad(
+                                    categoria.fondo_color || '#ffffff',
+                                    categoria.id ? (categoriasBrilloOpacidad[categoria.id]?.brillo || 100) : 100,
+                                    categoria.id ? (categoriasBrilloOpacidad[categoria.id]?.opacidad || 100) : 100
+                                  )
+                                }}
+                              ></div>
                             </div>
                           </div>
                         ) : (

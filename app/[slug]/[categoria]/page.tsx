@@ -9,6 +9,7 @@ import { generateSlug } from '@/lib/utils';
 import UbicacionesPage from '@/components/ubicaciones-page';
 import { processImageUrl } from '@/lib/utils/image-url';
 import ProductosGrid from '@/components/ProductosGrid';
+import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
 
 interface PageProps {
   params: Promise<{ slug: string; categoria: string }>;
@@ -44,8 +45,10 @@ export default async function CategoriaPage({ params }: PageProps) {
     notFound();
   }
 
-  // Obtener color de fondo de la categoría desde colorimetría o fallback
+  // Obtener color, brillo y opacidad de fondo de la categoría desde colorimetría o fallback
   const colorFondoCategoria = categoriaEncontrada.colores?.fondo?.color || categoriaEncontrada.fondo_color || '#ffffff';
+  const brilloCategoria = categoriaEncontrada.colores?.fondo?.brillo || 100;
+  const opacidadCategoria = categoriaEncontrada.colores?.fondo?.opacidad || 100;
 
   // Verificar si es la categoría especial de ubicaciones
   const esUbicaciones = categoriaEncontrada.nombre.toLowerCase() === 'ubicaciones';
@@ -76,7 +79,7 @@ export default async function CategoriaPage({ params }: PageProps) {
         className="py-12 min-h-screen"
         style={{
           backgroundColor: categoriaEncontrada.fondo_tipo === 'color' 
-            ? colorFondoCategoria
+            ? aplicarBrilloOpacidad(colorFondoCategoria, brilloCategoria, opacidadCategoria)
             : 'transparent',
           backgroundImage: categoriaEncontrada.fondo_tipo === 'imagen' && categoriaEncontrada.fondo_imagen
             ? `url(${processImageUrl(categoriaEncontrada.fondo_imagen)})`
