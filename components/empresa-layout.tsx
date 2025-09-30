@@ -17,9 +17,13 @@ interface EmpresaLayoutProps {
     logo_url?: string | null;
     logo_tamano?: string | null;
     logo_posicion?: 'izquierda' | 'centro' | 'derecha' | null;
-    color_primario?: string | null;
-    color_secundario?: string | null;
     tipografia?: string | null;
+    colores?: {
+      primario?: { color: string };
+      secundario?: { color: string };
+      terciario?: { color: string };
+      fondo?: { color: string };
+    };
     categorias?: Array<{
       id: number;
       nombre: string;
@@ -40,7 +44,7 @@ export function EmpresaLayout({ children, empresa, categoriaActiva }: EmpresaLay
         <NavigationBar
           categorias={empresa.categorias}
           empresaSlug={empresa.slug_empresa}
-          colorPrimario={empresa.color_primario}
+          colorPrimario={empresa.colores?.primario?.color || '#2563eb'}
           tipografia={empresa.tipografia}
           categoriaActiva={categoriaActiva}
         />

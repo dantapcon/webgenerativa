@@ -7,6 +7,7 @@ import {
   EmpresaCompleta, 
   EmpresaFormData 
 } from '../types/webgenerator';
+import { ColorimetriaService } from './colorimetria';
 
 // Interfaces específicas para el servicio
 interface CategoriaServicio {
@@ -63,7 +64,7 @@ export class WebGeneratorService {
         slug = `${slug}-${Date.now()}`;
       }
 
-      // Datos básicos de la empresa
+      // Datos básicos de la empresa (sin campos de color)
       const empresaData = {
         nombre_empresa: data.nombre_empresa,
         slug_empresa: slug,
@@ -75,8 +76,7 @@ export class WebGeneratorService {
         dominio_deseado: data.dominio_deseado || null,
         logo_url: data.logo_url || null,
         video_promocional_url: data.video_promocional_url || null,
-        color_primario: data.color_primario || '#2563eb',
-        color_secundario: data.color_secundario || '#1e40af',
+        // REMOVIDO: color_primario y color_secundario (ahora en tabla colorimetria)
         tipografia: data.tipografia || 'Inter',
         estado_sitio: 'publicado',
         ssl_activo: true
@@ -96,7 +96,7 @@ export class WebGeneratorService {
       // Procesar categorías si existen
       if (data.categorias && data.categorias.length > 0) {
         for (const categoria of data.categorias) {
-          // Insertar categoría
+          // Insertar categoría (sin campo fondo_color)
           const { data: categoriaCreada, error: categoriaError } = await supabase
             .from('categorias')
             .insert([{
@@ -107,7 +107,7 @@ export class WebGeneratorService {
               orden: categoria.orden || 0,
               visible: true,
               fondo_tipo: categoria.fondo_tipo || 'color',
-              fondo_color: categoria.fondo_color || '#ffffff',
+              // REMOVIDO: fondo_color (ahora en tabla colorimetria)
               fondo_imagen: categoria.fondo_imagen || null
             }])
             .select()
@@ -116,6 +116,14 @@ export class WebGeneratorService {
           if (categoriaError) {
             console.error(`Error creando categoría ${categoria.nombre}:`, categoriaError);
             continue;
+          }
+
+          // 🎨 NUEVO: Crear color de fondo por defecto para la categoría
+          if (categoria.fondo_tipo === 'color' && categoria.fondo_color) {
+            await ColorimetriaService.crearColorCategoriaPorDefecto(
+              categoriaCreada.id,
+              categoria.fondo_color
+            );
           }
 
           // Procesar subcategorías si existen
@@ -200,6 +208,17 @@ export class WebGeneratorService {
             console.log(`✅ Producto creado: ${producto.nombre}`);
           }
         }
+      }
+
+      // 🎨 NUEVO: Crear colores por defecto en tabla colorimetria
+      // Solo si se proporcionan colores en el form data
+      if (data.color_primario || data.color_secundario) {
+        await ColorimetriaService.crearColoresEmpresaPorDefecto(
+          empresa.id,
+          data.color_primario || '#3b82f6',
+          data.color_secundario || '#64748b',
+          '#f97316' // Color terciario por defecto (naranja)
+        );
       }
 
       return { 
@@ -358,12 +377,53 @@ export class WebGeneratorService {
         });
       }
 
+      // 🎨 NUEVO: Cargar colores de la empresa
+      const coloresEmpresa = await ColorimetriaService.getColoresElemento(empresa.id, 'empresa');
+
+      // 🎨 NUEVO: Cargar colores para categorías
+      const categoriasConColores = await Promise.all(
+        categoriasOrdenadas.map(async (categoria) => {
+          if (categoria.id !== -1) { // No cargar colores para la categoría especial de ubicaciones
+            const coloresCategoria = await ColorimetriaService.getColoresElemento(categoria.id, 'categoria');
+            
+            // Cargar colores para subcategorías
+            const subcategoriasConColores = await Promise.all(
+              categoria.subcategorias?.map(async (subcategoria: any) => {
+                const coloresSubcategoria = await ColorimetriaService.getColoresElemento(subcategoria.id, 'subcategoria');
+                return {
+                  ...subcategoria,
+                  colores: coloresSubcategoria
+                };
+              }) || []
+            );
+
+            return {
+              ...categoria,
+              colores: coloresCategoria,
+              subcategorias: subcategoriasConColores
+            };
+          }
+          return categoria;
+        })
+      );
+
+      // 🎨 NUEVO: Cargar colores para ventana flotante
+      let ventanaFlotanteConColores = ventanaFlotante;
+      if (ventanaFlotante) {
+        const coloresVentana = await ColorimetriaService.getColoresElemento(ventanaFlotante.id, 'ventana_flotante');
+        ventanaFlotanteConColores = {
+          ...ventanaFlotante,
+          colores: coloresVentana
+        };
+      }
+
       return {
         ...empresa,
-        categorias: categoriasOrdenadas,
+        colores: coloresEmpresa,
+        categorias: categoriasConColores,
         productos: productos || [],
         sucursales,
-        ventana_flotante: ventanaFlotante || undefined
+        ventana_flotante: ventanaFlotanteConColores
       };
     } catch (error) {
       console.error('Error en getEmpresaBySlug:', error);
@@ -478,16 +538,36 @@ export class WebGeneratorService {
       console.log('🔍 Categorías extraídas del data.categorias:', JSON.stringify(categorias, null, 2));
       console.log('🔍 Ventana flotante extraída:', JSON.stringify(ventana_flotante, null, 2));
 
-      // Actualizar empresa
+      // 🎨 NUEVO: Extraer y manejar colores por separado
+      const { color_primario, color_secundario, color_terciario, ...empresaDataLimpia } = empresaData;
+      
+      console.log('🎨 Colores extraídos - Primario:', color_primario, 'Secundario:', color_secundario, 'Terciario:', color_terciario);
+
+      // Actualizar empresa (sin campos de color)
       const { data: empresa, error: empresaError } = await supabase
         .from('empresas')
-        .update(empresaData)
+        .update(empresaDataLimpia)
         .eq('id', id)
         .select()
         .single();
 
       if (empresaError) {
         throw new Error(`Error actualizando empresa: ${empresaError.message}`);
+      }
+
+      // 🎨 NUEVO: Actualizar colores en tabla colorimetria si se proporcionaron
+      if (color_primario || color_secundario || color_terciario) {
+        console.log('🎨 Actualizando colores de empresa...');
+        
+        if (color_primario) {
+          await ColorimetriaService.guardarColor(id, 'empresa', 'primario', color_primario);
+        }
+        if (color_secundario) {
+          await ColorimetriaService.guardarColor(id, 'empresa', 'secundario', color_secundario);
+        }
+        if (color_terciario) {
+          await ColorimetriaService.guardarColor(id, 'empresa', 'terciario', color_terciario);
+        }
       }
 
       // Actualizar ventana flotante si se proporcionaron datos
@@ -524,24 +604,49 @@ export class WebGeneratorService {
         
         // 2. Procesar cada categoría
         for (const categoria of categoriasData) {
+          console.log('🔍 Procesando categoría:', JSON.stringify(categoria, null, 2));
+          
           if (categoria.id) {
-            // Actualizar categoría existente
+            // 🎨 NUEVO: Extraer color por separado
+            const { fondo_color, ...categoriaDataLimpia } = categoria;
+            
+            console.log('🎨 Color extraído:', fondo_color);
+            console.log('🎨 Datos limpios:', JSON.stringify(categoriaDataLimpia, null, 2));
+
+            // Actualizar categoría existente (sin campo fondo_color)
+            const updateData = {
+              ...(categoriaDataLimpia.nombre && { nombre: categoriaDataLimpia.nombre }),
+              ...(categoriaDataLimpia.descripcion !== undefined && { descripcion: categoriaDataLimpia.descripcion }),
+              ...(categoriaDataLimpia.tipo_display && { tipo_display: categoriaDataLimpia.tipo_display }),
+              ...(categoriaDataLimpia.orden !== undefined && { orden: categoriaDataLimpia.orden }),
+              ...(categoriaDataLimpia.fondo_tipo && { fondo_tipo: categoriaDataLimpia.fondo_tipo }),
+              ...(categoriaDataLimpia.fondo_imagen !== undefined && { fondo_imagen: categoriaDataLimpia.fondo_imagen || '' }),
+              visible: true // ¡IMPORTANTE! Asegurar que la categoría siga siendo visible
+            };
+
+            console.log('🔧 Datos de actualización preparados:', JSON.stringify(updateData, null, 2));
+
             const { error: updateCatError } = await supabase
               .from('categorias')
-              .update({
-                nombre: categoria.nombre,
-                descripcion: categoria.descripcion,
-                tipo_display: categoria.tipo_display || 'horizontal',
-                orden: categoria.orden,
-                fondo_tipo: categoria.fondo_tipo || 'color',
-                fondo_color: categoria.fondo_color || '#ffffff',
-                fondo_imagen: categoria.fondo_imagen || '',
-                visible: true // ¡IMPORTANTE! Asegurar que la categoría siga siendo visible
-              })
+              .update(updateData)
               .eq('id', categoria.id);
 
             if (updateCatError) {
-              console.error(`Error actualizando categoría ${categoria.id}:`, updateCatError);
+              console.error(`Error actualizando categoría ${categoria.id}:`, JSON.stringify(updateCatError, null, 2));
+              console.error('Datos que se intentaron actualizar:', {
+                nombre: categoriaDataLimpia.nombre,
+                descripcion: categoriaDataLimpia.descripcion,
+                tipo_display: categoriaDataLimpia.tipo_display || 'horizontal',
+                orden: categoriaDataLimpia.orden,
+                fondo_tipo: categoriaDataLimpia.fondo_tipo || 'color',
+                fondo_imagen: categoriaDataLimpia.fondo_imagen || '',
+                visible: true
+              });
+            } else {
+              // 🎨 NUEVO: Actualizar color en tabla colorimetria si se proporcionó
+              if (fondo_color && categoriaDataLimpia.fondo_tipo === 'color') {
+                await ColorimetriaService.guardarColor(categoria.id, 'categoria', 'fondo', fondo_color);
+              }
             }
             
             // Remover de la lista de IDs para no eliminarla después
@@ -550,18 +655,21 @@ export class WebGeneratorService {
               idsCategoriasActuales.splice(index, 1);
             }
           } else if (categoria.nombre.trim()) {
-            // Crear nueva categoría
+            // 🎨 NUEVO: Extraer color por separado
+            const { fondo_color, ...categoriaDataLimpia } = categoria;
+
+            // Crear nueva categoría (sin campo fondo_color)
             const { data: nuevaCategoria, error: createCatError } = await supabase
               .from('categorias')
               .insert({
                 empresa_id: id,
-                nombre: categoria.nombre,
-                descripcion: categoria.descripcion || '',
-                tipo_display: categoria.tipo_display || 'horizontal',
-                orden: categoria.orden,
-                fondo_tipo: categoria.fondo_tipo || 'color',
-                fondo_color: categoria.fondo_color || '#ffffff',
-                fondo_imagen: categoria.fondo_imagen || '',
+                nombre: categoriaDataLimpia.nombre,
+                descripcion: categoriaDataLimpia.descripcion || '',
+                tipo_display: categoriaDataLimpia.tipo_display || 'horizontal',
+                orden: categoriaDataLimpia.orden,
+                fondo_tipo: categoriaDataLimpia.fondo_tipo || 'color',
+                // REMOVIDO: fondo_color (ahora en tabla colorimetria)
+                fondo_imagen: categoriaDataLimpia.fondo_imagen || '',
                 visible: true
               })
               .select()
@@ -573,6 +681,11 @@ export class WebGeneratorService {
             }
             
             categoria.id = nuevaCategoria.id;
+
+            // 🎨 NUEVO: Crear color por defecto para la nueva categoría
+            if (fondo_color && categoriaDataLimpia.fondo_tipo === 'color') {
+              await ColorimetriaService.guardarColor(nuevaCategoria.id, 'categoria', 'fondo', fondo_color);
+            }
           }
 
           // Procesar subcategorías si la categoría tiene ID
@@ -1050,6 +1163,9 @@ export class WebGeneratorService {
   // Actualizar ventana flotante de una empresa
   static async updateVentanaFlotante(empresaId: number, data: any): Promise<void> {
     try {
+      // 🎨 NUEVO: Extraer color por separado
+      const { fondo_color, ...ventanaDataLimpia } = data;
+
       // Verificar si ya existe una ventana flotante para esta empresa
       const { data: existing, error: selectError } = await supabase
         .from('ventana_flotante')
@@ -1061,19 +1177,20 @@ export class WebGeneratorService {
         console.warn('Error verificando ventana flotante existente:', selectError.message);
       }
 
+      let ventanaId: number;
+
       if (existing) {
-        // Actualizar existente
+        // Actualizar existente (sin campo fondo_color)
         const { error: updateError } = await supabase
           .from('ventana_flotante')
           .update({
-            activo: data.activo,
-            titulo: data.titulo,
-            mensaje: data.mensaje,
-            imagen_url: data.imagen_url,
-            video_url: data.video_url,
-            fondo_tipo: data.fondo_tipo,
-            fondo_color: data.fondo_color,
-            fondo_imagen: data.fondo_imagen,
+            activo: ventanaDataLimpia.activo,
+            titulo: ventanaDataLimpia.titulo,
+            mensaje: ventanaDataLimpia.mensaje,
+            imagen_url: ventanaDataLimpia.imagen_url,
+            video_url: ventanaDataLimpia.video_url,
+            fondo_tipo: ventanaDataLimpia.fondo_tipo,
+            fondo_imagen: ventanaDataLimpia.fondo_imagen,
             updated_at: new Date().toISOString()
           })
           .eq('empresa_id', empresaId);
@@ -1081,25 +1198,35 @@ export class WebGeneratorService {
         if (updateError) {
           throw new Error(`Error actualizando ventana flotante: ${updateError.message}`);
         }
+        
+        ventanaId = existing.id;
       } else {
-        // Crear nueva
-        const { error: insertError } = await supabase
+        // Crear nueva (sin campo fondo_color)
+        const { data: newVentana, error: insertError } = await supabase
           .from('ventana_flotante')
           .insert([{
             empresa_id: empresaId,
-            activo: data.activo || false,
-            titulo: data.titulo,
-            mensaje: data.mensaje,
-            imagen_url: data.imagen_url,
-            video_url: data.video_url,
-            fondo_tipo: data.fondo_tipo || 'color',
-            fondo_color: data.fondo_color || '#ffffff',
-            fondo_imagen: data.fondo_imagen
-          }]);
+            activo: ventanaDataLimpia.activo || false,
+            titulo: ventanaDataLimpia.titulo,
+            mensaje: ventanaDataLimpia.mensaje,
+            imagen_url: ventanaDataLimpia.imagen_url,
+            video_url: ventanaDataLimpia.video_url,
+            fondo_tipo: ventanaDataLimpia.fondo_tipo || 'color',
+            fondo_imagen: ventanaDataLimpia.fondo_imagen
+          }])
+          .select('id')
+          .single();
 
         if (insertError) {
           throw new Error(`Error creando ventana flotante: ${insertError.message}`);
         }
+        
+        ventanaId = newVentana.id;
+      }
+
+      // 🎨 NUEVO: Actualizar color en tabla colorimetria si se proporcionó
+      if (fondo_color && ventanaDataLimpia.fondo_tipo === 'color') {
+        await ColorimetriaService.guardarColor(ventanaId, 'ventana_flotante', 'fondo', fondo_color);
       }
     } catch (error) {
       console.error('Error en updateVentanaFlotante:', error);

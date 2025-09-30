@@ -1,5 +1,26 @@
 // Tipos TypeScript para WebGenerator Pro
 
+// Nuevos tipos para colorimetría
+export interface Colorimetria {
+  id: number;
+  referencia_id: number;
+  tipo_elemento: 'empresa' | 'categoria' | 'subcategoria' | 'ventana_flotante';
+  subtipo: 'primario' | 'secundario' | 'terciario' | 'fondo';
+  color: string;
+  brillo: number; // 0-200%
+  opacidad: number; // 0-100%
+  activo: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ColoresElemento {
+  primario?: Colorimetria;
+  secundario?: Colorimetria;
+  terciario?: Colorimetria;
+  fondo?: Colorimetria;
+}
+
 export interface Empresa {
   id: number;
   nombre_empresa: string;
@@ -24,8 +45,11 @@ export interface Empresa {
   logo_posicion?: 'izquierda' | 'centro' | 'derecha' | null;
   titulo_tamano?: number | null;
   video_promocional_url?: string | null;
+  // DEPRECATED: Usar tabla colorimetria
   color_primario?: string | null;
   color_secundario?: string | null;
+  // Nuevos campos para colorimetría
+  colores?: ColoresElemento;
   tipografia?: string | null;
   plantilla_id?: number | null;
   estado_sitio: 'creando' | 'publicado' | 'error' | 'mantenimiento';
@@ -45,8 +69,11 @@ export interface Categoria {
   visible: boolean;
   fecha_creacion: string;
   fondo_tipo?: 'color' | 'imagen';
+  // DEPRECATED: Usar tabla colorimetria
   fondo_color?: string;
   fondo_imagen?: string | null;
+  // Nuevo campo para colorimetría
+  colores?: ColoresElemento;
   subcategorias?: Subcategoria[];
 }
 
@@ -60,6 +87,11 @@ export interface Subcategoria {
   orden: number;
   visible: boolean;
   fecha_creacion: string;
+  // Nuevos campos de fondo
+  fondo_tipo?: 'color' | 'imagen';
+  fondo_imagen?: string | null;
+  // Nuevo campo para colorimetría
+  colores?: ColoresElemento;
 }
 
 export interface Sucursal {
@@ -94,8 +126,11 @@ export interface VentanaFlotante {
   imagen_url?: string | null;
   video_url?: string | null;
   fondo_tipo?: 'color' | 'imagen' | null;
+  // DEPRECATED: Usar tabla colorimetria
   fondo_color?: string | null;
   fondo_imagen?: string | null;
+  // Nuevo campo para colorimetría
+  colores?: ColoresElemento;
   created_at: string;
   updated_at: string;
 }
@@ -121,6 +156,7 @@ export interface Producto {
 }
 
 export interface EmpresaCompleta extends Empresa {
+  colores?: ColoresElemento;
   categorias?: Categoria[];
   subcategorias?: Subcategoria[];
   sucursales?: Sucursal[];
@@ -155,9 +191,10 @@ export interface EmpresaFormData {
   titulo_tamano?: number;
   video_promocional_url?: string;
   
-  // Estilos y personalización
+  // Estilos y personalización (DEPRECATED: usar tabla colorimetria)
   color_primario?: string;
   color_secundario?: string;
+  color_terciario?: string; // NUEVO: para regla 60-30-10
   tipografia?: string;
   
   // Categorías y subcategorías

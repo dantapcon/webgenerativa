@@ -26,6 +26,8 @@ interface EmpresaFormDataExtended extends EmpresaFormData {
   modal_fondo_tipo?: 'color' | 'imagen';
   modal_fondo_color?: string;
   modal_fondo_imagen?: string;
+  // NUEVO: Campo para color terciario
+  color_terciario?: string;
 }
 
 // Funciones auxiliares para formatear URLs de video
@@ -154,6 +156,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     video_promocional_url: '',
     color_primario: '#2563eb',
     color_secundario: '#1e40af',
+    color_terciario: '#f97316', // NUEVO: Color terciario para regla 60-30-10
     tipografia: 'Inter'
   });
   const [empresa, setEmpresa] = useState<EmpresaCompleta | null>(null);
@@ -212,6 +215,32 @@ export default function EditarEmpresaPage({ params }: PageProps) {
         }
         
         setEmpresa(data);
+
+        // Cargar colores desde la API de colorimetría
+        const colores = {
+          primario: '#2563eb',
+          secundario: '#1e40af', 
+          terciario: '#f97316'
+        };
+
+        try {
+          const colorResponse = await fetch(`/api/colorimetria?referencia_id=${empresaId}&tipo_elemento=empresa`);
+          if (colorResponse.ok) {
+            const colorData = await colorResponse.json();
+            console.log('Colores cargados desde API:', colorData);
+            
+            if (colorData.success && colorData.data) {
+              // La API devuelve los colores organizados por subtipo
+              const coloresRecibidos = colorData.data;
+              if (coloresRecibidos.primario) colores.primario = coloresRecibidos.primario.color;
+              if (coloresRecibidos.secundario) colores.secundario = coloresRecibidos.secundario.color;
+              if (coloresRecibidos.terciario) colores.terciario = coloresRecibidos.terciario.color;
+            }
+          }
+        } catch (error) {
+          console.error('Error cargando colores:', error);
+          // Usar colores por defecto si hay error
+        }
         
         // Poblar formulario con datos existentes
         setFormData({
@@ -244,8 +273,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           logo_posicion: data.logo_posicion || 'izquierda',
           titulo_tamano: data.titulo_tamano || 32,
           video_promocional_url: data.video_promocional_url || '',
-          color_primario: data.color_primario || '#2563eb',
-          color_secundario: data.color_secundario || '#1e40af',
+          // Colores desde la API de colorimetría
+          color_primario: colores.primario,
+          color_secundario: colores.secundario,
+          color_terciario: colores.terciario,
           tipografia: data.tipografia || 'Inter'
         });
         
@@ -436,7 +467,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       // Log para debug
       console.log('Categorías a enviar:', JSON.stringify(categoriasValidadas, null, 2));
       
-      // Separar datos de empresa y ventana flotante
+      // Separar datos de empresa, ventana flotante y colores
       const {
         modal_activo,
         modal_titulo,
@@ -446,6 +477,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
         modal_fondo_tipo,
         modal_fondo_color,
         modal_fondo_imagen,
+        color_primario,
+        color_secundario,
+        color_terciario,
         ...datosEmpresa
       } = formData;
 
@@ -471,14 +505,58 @@ export default function EditarEmpresaPage({ params }: PageProps) {
         fondo_color: modal_fondo_color,
         fondo_imagen: modal_fondo_imagen
       };
+
+      // Preparar datos de colores para la API de colorimetría
+      const coloresData = {
+        referencia_id: empresaId,
+        tipo_elemento: 'empresa',
+        colores: {
+          primario: color_primario || '#2563eb',
+          secundario: color_secundario || '#1e40af',
+          terciario: color_terciario || '#f97316'
+        }
+      };
       
       // Actualizar empresa con las categorías y ventana flotante
       console.log('Datos de categorías a enviar:', JSON.stringify(categoriasValidadas, null, 2));
       console.log('Datos de empresa a enviar:', JSON.stringify(datosEmpresa, null, 2));
       console.log('Datos de ventana flotante a enviar:', JSON.stringify(datosVentanaFlotante, null, 2));
+      console.log('Datos de colores a enviar:', JSON.stringify(coloresData, null, 2));
       
+      // Actualizar empresa
       await WebGeneratorService.updateEmpresa(empresaId, datosEmpresa, categoriasValidadas, datosVentanaFlotante);
-      showAlert('success', 'Empresa actualizada exitosamente');
+      
+      // Actualizar colores usando la API de colorimetría (enviar cada color por separado)
+      const coloresActualizar = [
+        { subtipo: 'primario', color: color_primario || '#2563eb' },
+        { subtipo: 'secundario', color: color_secundario || '#1e40af' },
+        { subtipo: 'terciario', color: color_terciario || '#f97316' }
+      ];
+
+      for (const colorInfo of coloresActualizar) {
+        const colorResponse = await fetch('/api/colorimetria', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            referencia_id: empresaId,
+            tipo_elemento: 'empresa',
+            subtipo: colorInfo.subtipo,
+            color: colorInfo.color,
+            brillo: 100,
+            opacidad: 100
+          }),
+        });
+
+        if (!colorResponse.ok) {
+          const errorText = await colorResponse.text();
+          console.error(`Error actualizando color ${colorInfo.subtipo}:`, errorText);
+          throw new Error(`Error al actualizar color ${colorInfo.subtipo}`);
+        }
+      }
+
+      showAlert('success', 'Empresa y colores actualizados exitosamente');
       
       // Recargar datos para mostrar los cambios guardados
       if (empresaId) {
@@ -784,10 +862,17 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                 {/* Columna 1: Colores y Tipografía */}
                 <div className="space-y-4">
                   <div className="p-4 bg-gray-50 rounded-lg border">
-                    <h4 className="font-medium text-sm text-gray-700 mb-3">Colores de la Marca</h4>
-                    <div className="space-y-3">
+                    <div className="mb-3 space-y-1">
+                      <h4 className="font-medium text-sm text-gray-700">Colores de la Marca</h4>
+                      <p className="text-xs text-gray-500">Regla 60-30-10: Color dominante, secundario y de acento</p>
+                    </div>
+                    <div className="space-y-4">
+                      {/* Color Primario - 60% */}
                       <div className="space-y-2">
-                        <Label htmlFor="color_primario" className="text-sm">Color Primario</Label>
+                        <Label htmlFor="color_primario" className="text-sm flex items-center gap-2">
+                          Color Primario (60%)
+                          <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">Dominante</span>
+                        </Label>
                         <div className="flex gap-2">
                           <Input
                             id="color_primario"
@@ -806,8 +891,12 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                         </div>
                       </div>
 
+                      {/* Color Secundario - 30% */}
                       <div className="space-y-2">
-                        <Label htmlFor="color_secundario" className="text-sm">Color Secundario</Label>
+                        <Label htmlFor="color_secundario" className="text-sm flex items-center gap-2">
+                          Color Secundario (30%)
+                          <span className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">Complemento</span>
+                        </Label>
                         <div className="flex gap-2">
                           <Input
                             id="color_secundario"
@@ -823,6 +912,55 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                             placeholder="#1e40af"
                             className="flex-1 text-sm"
                           />
+                        </div>
+                      </div>
+
+                      {/* Color Terciario - 10% */}
+                      <div className="space-y-2">
+                        <Label htmlFor="color_terciario" className="text-sm flex items-center gap-2">
+                          Color Terciario (10%)
+                          <span className="text-xs bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded">Acento</span>
+                        </Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="color_terciario"
+                            name="color_terciario"
+                            type="color"
+                            value={formData.color_terciario}
+                            onChange={handleInputChange}
+                            className="w-12 h-10 p-1"
+                          />
+                          <Input
+                            value={formData.color_terciario}
+                            onChange={(e) => setFormData(prev => ({ ...prev, color_terciario: e.target.value }))}
+                            placeholder="#f97316"
+                            className="flex-1 text-sm"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Vista previa de colores */}
+                      <div className="mt-3 p-3 border rounded-lg bg-white">
+                        <p className="text-xs text-gray-500 mb-2">Vista previa:</p>
+                        <div className="flex h-8 rounded overflow-hidden">
+                          <div 
+                            className="flex-[60] flex items-center justify-center text-white text-xs font-medium"
+                            style={{ backgroundColor: formData.color_primario }}
+                          >
+                            60%
+                          </div>
+                          <div 
+                            className="flex-[30] flex items-center justify-center text-white text-xs font-medium"
+                            style={{ backgroundColor: formData.color_secundario }}
+                          >
+                            30%
+                          </div>
+                          <div 
+                            className="flex-[10] flex items-center justify-center text-white text-xs font-medium"
+                            style={{ backgroundColor: formData.color_terciario }}
+                          >
+                            10%
+                          </div>
                         </div>
                       </div>
                     </div>

@@ -120,7 +120,7 @@ export default async function EmpresaPage({ params }: PageProps) {
         style={{
           background: empresa.hero_fondo_tipo === 'imagen' && empresa.hero_imagen_fondo
             ? `url("${empresa.hero_imagen_fondo}") center/cover no-repeat`
-            : `linear-gradient(135deg, ${empresa.color_primario || '#2563eb'}, ${empresa.color_secundario || '#7c3aed'})`
+            : `linear-gradient(135deg, ${empresa.colores?.primario?.color || '#2563eb'}, ${empresa.colores?.secundario?.color || '#7c3aed'})`
         }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
@@ -176,7 +176,7 @@ export default async function EmpresaPage({ params }: PageProps) {
             style={{
               background: (empresa.descripcion_fondo_tipo === 'imagen' && empresa.descripcion_imagen_fondo) 
                 ? `url("${empresa.descripcion_imagen_fondo}") center/cover no-repeat` 
-                : `linear-gradient(135deg, ${empresa.color_primario || '#2563eb'}, ${empresa.color_secundario || '#7c3aed'})`,
+                : `linear-gradient(135deg, ${empresa.colores?.primario?.color || '#2563eb'}, ${empresa.colores?.secundario?.color || '#7c3aed'})`,
               boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
             }}
           >
@@ -258,7 +258,7 @@ export default async function EmpresaPage({ params }: PageProps) {
                 asChild
                 size="lg"
                 className="text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
+                style={{ backgroundColor: empresa.colores?.primario?.color || '#2563eb' }}
               >
                 <a href={`tel:${empresa.telefono_empresa}`} className="flex items-center gap-2">
                   <Phone className="h-5 w-5" />

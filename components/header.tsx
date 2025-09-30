@@ -18,7 +18,12 @@ interface HeaderProps {
     direccion_empresa?: string | null;
     telefono_empresa?: string | null;
     correo_empresa?: string | null;
-    color_primario?: string | null;
+    colores?: {
+      primario?: { color: string };
+      secundario?: { color: string };
+      terciario?: { color: string };
+      fondo?: { color: string };
+    };
     tipografia?: string | null;
   };
 }
@@ -35,11 +40,16 @@ export function Header({ empresa }: HeaderProps) {
     direccion_empresa: null,
     telefono_empresa: null,
     correo_empresa: null,
-    color_primario: '#2563eb',
+    colores: {
+      primario: { color: '#2563eb' },
+      secundario: { color: '#1e40af' },
+      terciario: { color: '#f97316' }
+    },
     tipografia: 'Inter'
   };
 
   const empresaData = empresa || defaultEmpresa;
+  const colorPrimario = empresaData.colores?.primario?.color || '#2563eb';
   return (
     <header className="bg-white shadow-sm border-b">
       <div className="container mx-auto px-4 py-4">
@@ -69,7 +79,7 @@ export function Header({ empresa }: HeaderProps) {
             )}
             <div>
               <h1 className="font-bold" style={{ 
-                color: empresaData.color_primario || '#2563eb',
+                color: colorPrimario,
                 fontFamily: `'${empresaData.tipografia}', sans-serif`,
                 fontSize: `${empresaData.titulo_tamano || 32}px`
               }}>
@@ -77,7 +87,7 @@ export function Header({ empresa }: HeaderProps) {
               </h1>
               {empresaData.direccion_empresa && (
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <MapPin className="h-4 w-4" style={{ color: empresaData.color_primario || '#2563eb' }} />
+                  <MapPin className="h-4 w-4" style={{ color: colorPrimario }} />
                   <span>{empresaData.direccion_empresa}</span>
                 </div>
               )}
@@ -89,7 +99,7 @@ export function Header({ empresa }: HeaderProps) {
             {empresaData.telefono_empresa && (
               <div className="text-right">
                 <div className="flex items-center gap-2 justify-end">
-                  <Phone className="h-4 w-4" style={{ color: empresaData.color_primario || '#2563eb' }} />
+                  <Phone className="h-4 w-4" style={{ color: colorPrimario }} />
                   <span className="text-sm text-gray-500">Citas</span>
                 </div>
               </div>
@@ -100,8 +110,8 @@ export function Header({ empresa }: HeaderProps) {
               variant="outline"
               className="border-2 hover:bg-gray-50"
               style={{ 
-                borderColor: empresaData.color_primario || '#2563eb',
-                color: empresaData.color_primario || '#2563eb'
+                borderColor: colorPrimario,
+                color: colorPrimario
               }}
             >
               <Link href="/auth/login">
@@ -115,7 +125,7 @@ export function Header({ empresa }: HeaderProps) {
         <div className="md:hidden mt-4 flex flex-col gap-3">
           {empresaData.telefono_empresa && (
             <div className="flex items-center gap-2">
-              <Phone className="h-4 w-4" style={{ color: empresaData.color_primario || '#2563eb' }} />
+              <Phone className="h-4 w-4" style={{ color: colorPrimario }} />
               <span className="text-sm text-gray-500">Citas</span>
             </div>
           )}
@@ -126,8 +136,8 @@ export function Header({ empresa }: HeaderProps) {
               variant="outline"
               className="border-2 hover:bg-gray-50"
               style={{ 
-                borderColor: empresaData.color_primario || '#2563eb',
-                color: empresaData.color_primario || '#2563eb'
+                borderColor: colorPrimario,
+                color: colorPrimario
               }}
             >
               <Link href="/auth/login">
