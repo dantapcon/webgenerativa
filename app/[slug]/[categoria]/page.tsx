@@ -30,6 +30,11 @@ export default async function CategoriaPage({ params }: PageProps) {
     notFound();
   }
 
+  // Obtener colores desde la tabla de colorimetría o usar fallbacks
+  const colorPrimario = empresa.colores?.primario?.color || empresa.color_primario || '#2563eb';
+  const colorSecundario = empresa.colores?.secundario?.color || empresa.color_secundario || '#7c3aed';
+  const colorTerciario = empresa.colores?.terciario?.color || '#f97316';
+
   // Buscar la categoría específica usando la función generateSlug consistente
   const categoriaEncontrada = empresa.categorias?.find(
     cat => generateSlug(cat.nombre) === categoria
@@ -38,6 +43,9 @@ export default async function CategoriaPage({ params }: PageProps) {
   if (!categoriaEncontrada) {
     notFound();
   }
+
+  // Obtener color de fondo de la categoría desde colorimetría o fallback
+  const colorFondoCategoria = categoriaEncontrada.colores?.fondo?.color || categoriaEncontrada.fondo_color || '#ffffff';
 
   // Verificar si es la categoría especial de ubicaciones
   const esUbicaciones = categoriaEncontrada.nombre.toLowerCase() === 'ubicaciones';
@@ -68,7 +76,7 @@ export default async function CategoriaPage({ params }: PageProps) {
         className="py-12 min-h-screen"
         style={{
           backgroundColor: categoriaEncontrada.fondo_tipo === 'color' 
-            ? (categoriaEncontrada.fondo_color || '#ffffff')
+            ? colorFondoCategoria
             : 'transparent',
           backgroundImage: categoriaEncontrada.fondo_tipo === 'imagen' && categoriaEncontrada.fondo_imagen
             ? `url(${processImageUrl(categoriaEncontrada.fondo_imagen)})`
@@ -89,7 +97,7 @@ export default async function CategoriaPage({ params }: PageProps) {
             // Mostrar página especial de ubicaciones
             <UbicacionesPage 
               empresaId={empresa.id} 
-              colorPrimario={empresa.color_primario || '#2563eb'} 
+              colorPrimario={colorPrimario} 
               empresaNombre={empresa.nombre_empresa}
             />
           ) : (

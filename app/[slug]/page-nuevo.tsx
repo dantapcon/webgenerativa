@@ -17,11 +17,16 @@ export default async function EmpresaPage({ params }: PageProps) {
     notFound();
   }
 
+  // Obtener colores desde la tabla de colorimetría o usar fallbacks
+  const colorPrimario = empresa.colores?.primario?.color || empresa.color_primario || '#2563eb';
+  const colorSecundario = empresa.colores?.secundario?.color || empresa.color_secundario || '#7c3aed';
+  const colorTerciario = empresa.colores?.terciario?.color || '#f97316';
+
   return (
     <EmpresaLayout empresa={empresa}>
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r text-white py-20 overflow-hidden" style={{
-        background: `linear-gradient(135deg, ${empresa.color_primario || '#2563eb'}, ${empresa.color_secundario || '#7c3aed'})`
+        background: `linear-gradient(135deg, ${colorPrimario}, ${colorSecundario})`
       }}>
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
@@ -97,7 +102,7 @@ export default async function EmpresaPage({ params }: PageProps) {
                 asChild
                 size="lg"
                 className="text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
+                style={{ backgroundColor: colorPrimario }}
               >
                 <a href={`tel:${empresa.telefono_empresa}`} className="flex items-center gap-2">
                   <Phone className="h-5 w-5" />

@@ -241,8 +241,25 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           console.error('Error cargando colores:', error);
           // Usar colores por defecto si hay error
         }
+
+        // Cargar color de ventana flotante desde colorimetría API ANTES de poblar formulario
+        let colorVentanaFlotante = data.ventana_flotante?.fondo_color || '#ffffff';
+        if (data.ventana_flotante?.id) {
+          try {
+            const colorResponse = await fetch(`/api/colorimetria?referencia_id=${data.ventana_flotante.id}&tipo_elemento=ventana_flotante`);
+            if (colorResponse.ok) {
+              const colorData = await colorResponse.json();
+              if (colorData.success && colorData.data && colorData.data.fondo) {
+                colorVentanaFlotante = colorData.data.fondo.color;
+                console.log('Color ventana flotante cargado desde API:', colorVentanaFlotante);
+              }
+            }
+          } catch (error) {
+            console.error('Error cargando color de ventana flotante:', error);
+          }
+        }
         
-        // Poblar formulario con datos existentes
+        // Poblar formulario con datos existentes (incluyendo color de API)
         setFormData({
           nombre_empresa: data.nombre_empresa,
           descripcion_empresa: data.descripcion_empresa || '',
@@ -251,14 +268,14 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           descripcion_fondo_tipo: data.descripcion_fondo_tipo || 'color',
           descripcion_imagen_fondo: data.descripcion_imagen_fondo || '',
           video_descripcion: data.video_descripcion || '',
-          // Campos para el modal de ventana flotante (ahora desde ventana_flotante)
+          // Campos para el modal de ventana flotante (color desde API)
           modal_activo: data.ventana_flotante?.activo || false,
           modal_titulo: data.ventana_flotante?.titulo || '',
           modal_mensaje: data.ventana_flotante?.mensaje || '',
           modal_imagen_url: data.ventana_flotante?.imagen_url || '',
           modal_video_url: data.ventana_flotante?.video_url || '',
           modal_fondo_tipo: data.ventana_flotante?.fondo_tipo || 'color',
-          modal_fondo_color: data.ventana_flotante?.fondo_color || '#ffffff',
+          modal_fondo_color: colorVentanaFlotante, // Usar color desde API
           modal_fondo_imagen: data.ventana_flotante?.fondo_imagen || '',
           // Campo para sucursales/ubicaciones
           sucursales_activo: data.sucursales_activo || false,
@@ -280,26 +297,62 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           tipografia: data.tipografia || 'Inter'
         });
         
-        // Cargar categorías y subcategorías
+        // Cargar categorías y subcategorías con colores desde colorimetría API
         if (data.categorias && data.categorias.length > 0) {
-          setCategorias(data.categorias.map(cat => ({
-            id: cat.id,
+          const categoriasConColores = await Promise.all(
+            data.categorias.map(async (cat) => {
+              let colorCategoria = cat.fondo_color || '#ffffff';
+              
+              // Cargar color desde colorimetría API si la categoría tiene ID
+              if (cat.id) {
+                try {
+                  console.log(`🎨 Cargando color para categoría "${cat.nombre}" (ID: ${cat.id})`);
+                  const colorResponse = await fetch(`/api/colorimetria?referencia_id=${cat.id}&tipo_elemento=categoria`);
+                  if (colorResponse.ok) {
+                    const colorData = await colorResponse.json();
+                    console.log(`🎨 Respuesta API para categoría "${cat.nombre}":`, colorData);
+                    if (colorData.success && colorData.data && colorData.data.fondo) {
+                      colorCategoria = colorData.data.fondo.color;
+                      console.log(`✅ Color cargado para categoría ${cat.nombre}:`, colorCategoria);
+                    } else {
+                      console.log(`⚠️ No hay color en API para categoría ${cat.nombre}, usando fallback:`, colorCategoria);
+                    }
+                  } else {
+                    console.log(`❌ Error API response para categoría ${cat.nombre}:`, colorResponse.status);
+                  }
+                } catch (error) {
+                  console.error(`❌ Error cargando color de categoría ${cat.nombre}:`, error);
+                }
+              } else {
+                console.log(`⚠️ Categoría "${cat.nombre}" sin ID, usando color fallback:`, colorCategoria);
+              }
+
+              return {
+                id: cat.id,
+                nombre: cat.nombre,
+                descripcion: cat.descripcion || '',
+                tipo_display: cat.tipo_display || 'horizontal',
+                orden: cat.orden,
+                fondo_tipo: cat.fondo_tipo || 'color',
+                fondo_color: colorCategoria,
+                fondo_imagen: cat.fondo_imagen || '',
+                subcategorias: cat.subcategorias ? cat.subcategorias.map(sub => ({
+                  id: sub.id,
+                  nombre: sub.nombre,
+                  descripcion: sub.descripcion || '',
+                  imagen_url: sub.imagen_url || '',
+                  enlace_externo: sub.enlace_externo || '',
+                  orden: sub.orden
+                })) : []
+              };
+            })
+          );
+          console.log('🎨 Categorías finales con colores:', categoriasConColores.map(cat => ({
             nombre: cat.nombre,
-            descripcion: cat.descripcion || '',
-            tipo_display: cat.tipo_display || 'horizontal',
-            orden: cat.orden,
-            fondo_tipo: cat.fondo_tipo || 'color',
-            fondo_color: cat.fondo_color || '#ffffff',
-            fondo_imagen: cat.fondo_imagen || '',
-            subcategorias: cat.subcategorias ? cat.subcategorias.map(sub => ({
-              id: sub.id,
-              nombre: sub.nombre,
-              descripcion: sub.descripcion || '',
-              imagen_url: sub.imagen_url || '',
-              enlace_externo: sub.enlace_externo || '',
-              orden: sub.orden
-            })) : []
+            id: cat.id,
+            fondo_color: cat.fondo_color
           })));
+          setCategorias(categoriasConColores);
         } else {
           setCategorias([]);
         }
@@ -327,6 +380,91 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       ...prev,
       [name]: value
     }));
+  };
+
+  // Función para manejar cambios de color en categorías y guardar en API
+  const handleCategoriaColorChange = async (catIndex: number, newColor: string) => {
+    const categoria = categorias[catIndex];
+    
+    // Actualizar estado local inmediatamente
+    const newCategorias = [...categorias];
+    newCategorias[catIndex].fondo_color = newColor;
+    setCategorias(newCategorias);
+
+    // Guardar en API si la categoría tiene ID
+    if (categoria.id && empresaId) {
+      try {
+        const colorData = {
+          referencia_id: categoria.id,
+          tipo_elemento: 'categoria',
+          subtipo: 'fondo',
+          color: newColor,
+          brillo: 100,
+          opacidad: 100
+        };
+
+        const response = await fetch('/api/colorimetria', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(colorData),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Error API response:', errorData);
+          throw new Error(`Error al guardar color de categoría: ${errorData.error || 'Unknown error'}`);
+        }
+
+        console.log(`Color de categoría ${categoria.nombre} guardado:`, newColor);
+      } catch (error) {
+        console.error('Error guardando color de categoría:', error);
+        showAlert('error', 'Error al guardar el color de la categoría');
+      }
+    }
+  };
+
+  // Función para manejar cambios de color en ventana flotante y guardar en API
+  const handleVentanaFlotanteColorChange = async (newColor: string) => {
+    // Actualizar estado local inmediatamente
+    setFormData(prev => ({
+      ...prev,
+      modal_fondo_color: newColor
+    }));
+
+    // Guardar en API si la ventana flotante tiene ID
+    if (empresa?.ventana_flotante?.id) {
+      try {
+        const colorData = {
+          referencia_id: empresa.ventana_flotante.id,
+          tipo_elemento: 'ventana_flotante',
+          subtipo: 'fondo',
+          color: newColor,
+          brillo: 100,
+          opacidad: 100
+        };
+
+        const response = await fetch('/api/colorimetria', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(colorData),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Error API response:', errorData);
+          throw new Error(`Error al guardar color de ventana flotante: ${errorData.error || 'Unknown error'}`);
+        }
+
+        console.log('Color de ventana flotante guardado:', newColor);
+      } catch (error) {
+        console.error('Error guardando color de ventana flotante:', error);
+        showAlert('error', 'Error al guardar el color de la ventana flotante');
+      }
+    }
   };
 
   // Función auxiliar para validar categorías antes de enviar
@@ -505,23 +643,11 @@ export default function EditarEmpresaPage({ params }: PageProps) {
         fondo_color: modal_fondo_color,
         fondo_imagen: modal_fondo_imagen
       };
-
-      // Preparar datos de colores para la API de colorimetría
-      const coloresData = {
-        referencia_id: empresaId,
-        tipo_elemento: 'empresa',
-        colores: {
-          primario: color_primario || '#2563eb',
-          secundario: color_secundario || '#1e40af',
-          terciario: color_terciario || '#f97316'
-        }
-      };
       
       // Actualizar empresa con las categorías y ventana flotante
       console.log('Datos de categorías a enviar:', JSON.stringify(categoriasValidadas, null, 2));
       console.log('Datos de empresa a enviar:', JSON.stringify(datosEmpresa, null, 2));
       console.log('Datos de ventana flotante a enviar:', JSON.stringify(datosVentanaFlotante, null, 2));
-      console.log('Datos de colores a enviar:', JSON.stringify(coloresData, null, 2));
       
       // Actualizar empresa
       await WebGeneratorService.updateEmpresa(empresaId, datosEmpresa, categoriasValidadas, datosVentanaFlotante);
@@ -1419,13 +1545,13 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                             name="modal_fondo_color"
                             type="color"
                             value={formData.modal_fondo_color || '#ffffff'}
-                            onChange={handleInputChange}
+                            onChange={(e) => handleVentanaFlotanteColorChange(e.target.value)}
                             className="w-16 h-10 p-1"
                           />
                           <Input
                             type="text"
                             value={formData.modal_fondo_color || '#ffffff'}
-                            onChange={(e) => setFormData(prev => ({ ...prev, modal_fondo_color: e.target.value }))}
+                            onChange={(e) => handleVentanaFlotanteColorChange(e.target.value)}
                             className="flex-1 h-10"
                             placeholder="#ffffff"
                           />
@@ -1707,22 +1833,23 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                                 id={`cat-fondo-color-${catIndex}`}
                                 value={categoria.fondo_color || '#ffffff'}
                                 onChange={(e) => {
-                                  const newCategorias = [...categorias];
-                                  newCategorias[catIndex].fondo_color = e.target.value;
-                                  setCategorias(newCategorias);
+                                  console.log(`Cambiando color de categoría ${categoria.nombre} a:`, e.target.value);
+                                  handleCategoriaColorChange(catIndex, e.target.value);
                                 }}
                                 className="w-12 h-10 border border-gray-300 rounded-md cursor-pointer"
                               />
                               <Input
                                 value={categoria.fondo_color || '#ffffff'}
                                 onChange={(e) => {
-                                  const newCategorias = [...categorias];
-                                  newCategorias[catIndex].fondo_color = e.target.value;
-                                  setCategorias(newCategorias);
+                                  console.log(`Cambiando color de categoría ${categoria.nombre} (texto) a:`, e.target.value);
+                                  handleCategoriaColorChange(catIndex, e.target.value);
                                 }}
                                 placeholder="#ffffff"
                                 className="flex-1"
                               />
+                              <div className="text-xs text-gray-500">
+                                Actual: {categoria.fondo_color || 'No definido'}
+                              </div>
                             </div>
                           </div>
                         ) : (

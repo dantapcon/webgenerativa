@@ -28,6 +28,11 @@ export default async function SubcategoriaPage({ params }: PageProps) {
     notFound();
   }
 
+  // Obtener colores desde la tabla de colorimetría o usar fallbacks
+  const colorPrimario = empresa.colores?.primario?.color || empresa.color_primario || '#2563eb';
+  const colorSecundario = empresa.colores?.secundario?.color || empresa.color_secundario || '#7c3aed';
+  const colorTerciario = empresa.colores?.terciario?.color || '#f97316';
+
   // Buscar la categoría específica
   const categoriaEncontrada = empresa.categorias?.find(
     cat => generateSlug(cat.nombre) === categoria
@@ -90,7 +95,7 @@ export default async function SubcategoriaPage({ params }: PageProps) {
           <div className="text-center mb-12">
             <div 
               className="inline-block px-8 py-4 rounded-2xl shadow-lg"
-              style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
+              style={{ backgroundColor: colorPrimario }}
             >
               <h1 className="text-3xl font-bold text-white">
                 {subcategoriaEncontrada.nombre}

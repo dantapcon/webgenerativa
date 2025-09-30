@@ -93,6 +93,17 @@ export default async function EmpresaPage({ params }: PageProps) {
     notFound();
   }
 
+  // Obtener color de fondo de ventana flotante desde colorimetría o fallback
+  const colorFondoVentana = empresa.ventana_flotante?.colores?.fondo?.color || empresa.ventana_flotante?.fondo_color || '#ffffff';
+
+  // Log para debugging del color de ventana flotante
+  console.log(`[${new Date().toISOString()}] Color ventana flotante:`, {
+    desde_colorimetria: empresa.ventana_flotante?.colores?.fondo?.color,
+    desde_campo_legacy: empresa.ventana_flotante?.fondo_color,
+    color_final: colorFondoVentana,
+    activo: empresa.ventana_flotante?.activo
+  });
+
   // Log adicional para debugging de categorías/subcategorías
   console.log(`[${new Date().toISOString()}] Empresa cargada: ${empresa.nombre_empresa}`);
   console.log(`[${new Date().toISOString()}] Categorías encontradas: ${empresa.categorias?.length || 0}`);
@@ -110,7 +121,7 @@ export default async function EmpresaPage({ params }: PageProps) {
         imagenUrl={empresa.ventana_flotante?.imagen_url || undefined}
         videoUrl={empresa.ventana_flotante?.video_url || undefined}
         fondoTipo={empresa.ventana_flotante?.fondo_tipo || undefined}
-        fondoColor={empresa.ventana_flotante?.fondo_color || undefined}
+        fondoColor={colorFondoVentana}
         fondoImagen={empresa.ventana_flotante?.fondo_imagen || undefined}
       />
 
