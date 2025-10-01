@@ -5,6 +5,7 @@ import { Phone } from 'lucide-react';
 import { EmpresaLayout } from '@/components/empresa-layout';
 import { ConsejoModal } from '@/components/consejo-modal';
 import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
+import RichTextDisplay from '@/components/ui/rich-text-display';
 
 // Función para convertir URLs de Google Drive en enlaces directos
 function formatGoogleDriveUrl(url: string): string {
@@ -148,9 +149,10 @@ export default async function EmpresaPage({ params }: PageProps) {
           }}>
             {empresa.nombre_empresa}
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
-            {empresa.descripcion_empresa || `Bienvenido a ${empresa.nombre_empresa}`}
-          </p>
+          <RichTextDisplay 
+            content={empresa.descripcion_empresa || `Bienvenido a ${empresa.nombre_empresa}`}
+            className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90"
+          />
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             {empresa.telefono_empresa && (
               <Button

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { EmpresaFormData, EmpresaCompleta } from '@/lib/types/webgenerator';
 import { WebGeneratorService } from '@/lib/services/webgenerator';
 import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
+import RichTextEditor from '@/components/ui/rich-text-editor';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -1241,13 +1242,11 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               <div className="space-y-4 mt-4">
                 <div className="space-y-2">
                   <Label htmlFor="descripcion_empresa">Descripción de la empresa</Label>
-                  <textarea
-                    id="descripcion_empresa"
-                    name="descripcion_empresa"
-                    value={formData.descripcion_empresa}
-                    onChange={handleInputChange}
-                    rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  <RichTextEditor
+                    value={formData.descripcion_empresa || ''}
+                    onChange={(value) => setFormData(prev => ({ ...prev, descripcion_empresa: value }))}
+                    placeholder="Describe tu empresa..."
+                    className="w-full"
                   />
                 </div>
                 
