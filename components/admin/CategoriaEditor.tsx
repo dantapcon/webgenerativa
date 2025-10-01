@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
+import RichTextEditor from '@/components/ui/rich-text-editor';
+import RichTextDisplay from '@/components/ui/rich-text-display';
 import { Categoria } from '@/lib/types/webgenerator';
 import { 
   Palette, 
@@ -249,13 +251,13 @@ export default function CategoriaEditor({ empresaId, onCambiosGuardados }: Categ
               </div>
               <div>
                 <Label>Descripción</Label>
-                <Input
+                <RichTextEditor
                   value={editandoCategoria.descripcion}
-                  onChange={(e) => setEditandoCategoria({
+                  onChange={(content) => setEditandoCategoria({
                     ...editandoCategoria,
-                    descripcion: e.target.value
+                    descripcion: content
                   })}
-                  placeholder="Descripción breve"
+                  placeholder="Descripción de la categoría..."
                 />
               </div>
             </div>
@@ -384,7 +386,9 @@ export default function CategoriaEditor({ empresaId, onCambiosGuardados }: Categ
                       </Badge>
                     </div>
                     {categoria.descripcion && (
-                      <p className="text-sm text-gray-600 mb-2">{categoria.descripcion}</p>
+                      <div className="text-sm text-gray-600 mb-2">
+                        <RichTextDisplay content={categoria.descripcion} />
+                      </div>
                     )}
                     <div className="flex items-center gap-4 text-xs text-gray-500">
                       <span>Orden: {categoria.orden}</span>

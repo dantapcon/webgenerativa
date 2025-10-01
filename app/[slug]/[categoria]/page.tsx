@@ -11,6 +11,7 @@ import { processImageUrl } from '@/lib/utils/image-url';
 import ProductosGrid from '@/components/ProductosGrid';
 import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
 import { headers } from 'next/headers';
+import RichTextDisplay from '@/components/ui/rich-text-display';
 
 interface PageProps {
   params: Promise<{ slug: string; categoria: string }>;
@@ -214,13 +215,13 @@ export default async function CategoriaPage({ params }: PageProps) {
                         {/* Contenido a la derecha en modo vertical */}
                         <div className="md:flex-1">
                           <h3 className="text-xl font-bold text-gray-900 mb-4">
-                            {subcategoria.nombre}
+                            <RichTextDisplay content={subcategoria.nombre} />
                           </h3>
                           
                           {subcategoria.descripcion && (
-                            <p className="text-gray-600 mb-6 leading-relaxed">
-                              {subcategoria.descripcion}
-                            </p>
+                            <div className="text-gray-600 mb-6 leading-relaxed">
+                              <RichTextDisplay content={subcategoria.descripcion} />
+                            </div>
                           )}
                           
                           {/* Botón para navegar a la subcategoría - solo si tiene productos */}
@@ -269,7 +270,7 @@ export default async function CategoriaPage({ params }: PageProps) {
                       <>
                         {/* Título arriba en modo horizontal */}
                         <h3 className="text-xl font-bold text-gray-900 mb-4">
-                          {subcategoria.nombre}
+                          <RichTextDisplay content={subcategoria.nombre} />
                         </h3>
                         
                         {/* Imagen debajo del título */}
@@ -285,9 +286,9 @@ export default async function CategoriaPage({ params }: PageProps) {
                         
                         {/* Descripción */}
                         {subcategoria.descripcion && (
-                          <p className="text-gray-600 mb-6 leading-relaxed">
-                            {subcategoria.descripcion}
-                          </p>
+                          <div className="text-gray-600 mb-6 leading-relaxed">
+                            <RichTextDisplay content={subcategoria.descripcion} />
+                          </div>
                         )}
                         
                         {/* Botón para navegar a la subcategoría - solo si tiene productos */}

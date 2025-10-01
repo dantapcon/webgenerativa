@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import RichTextDisplay from '@/components/ui/rich-text-display';
 import { 
   X, 
   Package, 
@@ -226,11 +227,7 @@ export default function ProductoModal({
                     Descripción
                   </h3>
                   <div className="prose prose-sm text-gray-700 max-w-none">
-                    {producto.descripcion.split('\n').map((paragraph, index) => (
-                      <p key={index} className="mb-3 last:mb-0">
-                        {paragraph}
-                      </p>
-                    ))}
+                    <RichTextDisplay content={producto.descripcion} />
                   </div>
                 </div>
               )}

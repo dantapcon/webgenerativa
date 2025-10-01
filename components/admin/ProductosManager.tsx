@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
+import RichTextEditor from '@/components/ui/rich-text-editor';
+import RichTextDisplay from '@/components/ui/rich-text-display';
 import { 
   Package, 
   Plus,
@@ -572,12 +574,9 @@ export default function ProductosManager({ empresaId, categorias = [] }: Product
 
               <div>
                 <Label htmlFor="descripcion">Descripción</Label>
-                <textarea
-                  id="descripcion"
-                  value={formData.descripcion}
-                  onChange={(e) => setFormData(prev => ({ ...prev, descripcion: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  rows={3}
+                <RichTextEditor
+                  value={formData.descripcion || ''}
+                  onChange={(content) => setFormData(prev => ({ ...prev, descripcion: content }))}
                   placeholder="Descripción del producto..."
                 />
               </div>
@@ -701,7 +700,9 @@ export default function ProductosManager({ empresaId, categorias = [] }: Product
                       </div>
 
                       {producto.descripcion && (
-                        <p className="text-gray-600 mb-3 line-clamp-2">{producto.descripcion}</p>
+                        <div className="text-gray-600 mb-3 line-clamp-2">
+                          <RichTextDisplay content={producto.descripcion} />
+                        </div>
                       )}
 
                       <div className="flex items-center gap-4 text-sm">

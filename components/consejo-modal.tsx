@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { processImageUrl } from '@/lib/utils/image-url';
 import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
+import RichTextDisplay from '@/components/ui/rich-text-display';
 
 // Funciones auxiliares para formatear URLs de video
 function formatYoutubeUrl(url: string): string {
@@ -107,9 +108,9 @@ export function ConsejoModal({
         <div className="p-6 space-y-4">
           {/* Título */}
           {titulo && (
-            <h2 className="text-2xl font-bold text-gray-800 pr-8">
-              {titulo}
-            </h2>
+            <div className="text-2xl font-bold text-gray-800 pr-8">
+              <RichTextDisplay content={titulo} />
+            </div>
           )}
 
           {/* Imagen */}
@@ -170,8 +171,8 @@ export function ConsejoModal({
 
           {/* Mensaje */}
           {mensaje && (
-            <div className="text-gray-700 leading-relaxed whitespace-pre-line">
-              {mensaje}
+            <div className="text-gray-700 leading-relaxed">
+              <RichTextDisplay content={mensaje} />
             </div>
           )}
 

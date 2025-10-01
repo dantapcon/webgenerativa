@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import RichTextEditor from '@/components/ui/rich-text-editor';
 import { Globe, Palette, Building, Users, Phone, Mail, MapPin, Image, Plus, Trash2, ArrowUp, ArrowDown, Package } from 'lucide-react';
 import Link from 'next/link';
 import { GeneratorHeader } from '@/components/generator-header';
@@ -496,14 +497,10 @@ export default function WebGeneratorPage() {
                       <Label htmlFor="descripcion_empresa" className="text-sm font-medium text-gray-700">
                         Descripción de la Empresa
                       </Label>
-                      <textarea
-                        id="descripcion_empresa"
-                        name="descripcion_empresa"
-                        value={formData.descripcion_empresa}
-                        onChange={handleInputChange}
+                      <RichTextEditor
+                        value={formData.descripcion_empresa || ''}
+                        onChange={(content) => setFormData(prev => ({ ...prev, descripcion_empresa: content }))}
                         placeholder="Describe brevemente tu empresa, sus servicios o productos..."
-                        rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
 
@@ -969,14 +966,10 @@ export default function WebGeneratorPage() {
                                 <Label htmlFor="video_descripcion" className="text-sm font-medium text-gray-700">
                                   Descripción del Video
                                 </Label>
-                                <textarea
-                                  id="video_descripcion"
-                                  name="video_descripcion"
+                                <RichTextEditor
                                   value={formData.video_descripcion || ''}
-                                  onChange={handleInputChange}
+                                  onChange={(content) => setFormData(prev => ({ ...prev, video_descripcion: content }))}
                                   placeholder="Describe brevemente el contenido del video"
-                                  rows={2}
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 <p className="text-xs text-gray-500">
                                   Este texto se mostrará junto al video en lugar de la descripción general
@@ -1273,11 +1266,10 @@ export default function WebGeneratorPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                   <div className="space-y-1">
                                     <Label className="text-xs font-medium text-gray-600">Nombre</Label>
-                                    <Input
+                                    <RichTextEditor
                                       value={subcategoria.nombre}
-                                      onChange={(e) => actualizarSubcategoria(categoriaIndex, subcategoriaIndex, 'nombre', e.target.value)}
+                                      onChange={(content) => actualizarSubcategoria(categoriaIndex, subcategoriaIndex, 'nombre', content)}
                                       placeholder="Ej: Consultoría"
-                                      className="h-9 text-sm"
                                     />
                                   </div>
                                   <div className="space-y-1">
@@ -1416,13 +1408,10 @@ export default function WebGeneratorPage() {
                               
                               <div className="md:col-span-2">
                                 <Label htmlFor={`producto-descripcion-${index}`}>Descripción</Label>
-                                <textarea
-                                  id={`producto-descripcion-${index}`}
+                                <RichTextEditor
                                   value={producto.descripcion}
-                                  onChange={(e) => actualizarProducto(index, 'descripcion', e.target.value)}
+                                  onChange={(content) => actualizarProducto(index, 'descripcion', content)}
                                   placeholder="Describe tu producto..."
-                                  rows={2}
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                               </div>
                               

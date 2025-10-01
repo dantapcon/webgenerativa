@@ -6,6 +6,7 @@ import { EmpresaFormData, EmpresaCompleta } from '@/lib/types/webgenerator';
 import { WebGeneratorService } from '@/lib/services/webgenerator';
 import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
 import RichTextEditor from '@/components/ui/rich-text-editor';
+import RichTextDisplay from '@/components/ui/rich-text-display';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -1657,13 +1658,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                       
                       <div className="space-y-2">
                         <Label htmlFor="video_descripcion" className="text-sm">Descripción del Video</Label>
-                        <textarea
-                          id="video_descripcion"
-                          name="video_descripcion"
+                        <RichTextEditor
                           value={formData.video_descripcion || ''}
-                          onChange={handleInputChange}
-                          rows={3}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                          onChange={(content) => setFormData(prev => ({ ...prev, video_descripcion: content }))}
                           placeholder="Describe brevemente el contenido del video"
                         />
                         <p className="text-xs text-gray-500">
@@ -1778,11 +1775,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                   {/* Título */}
                   <div className="space-y-2">
                     <Label htmlFor="modal_titulo">Título de la ventana</Label>
-                    <Input
-                      id="modal_titulo"
-                      name="modal_titulo"
+                    <RichTextEditor
                       value={formData.modal_titulo || ''}
-                      onChange={handleInputChange}
+                      onChange={(value) => setFormData(prev => ({ ...prev, modal_titulo: value }))}
                       placeholder="Ej: ¡Bienvenido! o Información importante"
                     />
                   </div>
@@ -1790,14 +1785,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                   {/* Mensaje */}
                   <div className="space-y-2">
                     <Label htmlFor="modal_mensaje">Mensaje de la ventana</Label>
-                    <textarea
-                      id="modal_mensaje"
-                      name="modal_mensaje"
+                    <RichTextEditor
                       value={formData.modal_mensaje || ''}
-                      onChange={handleInputChange}
+                      onChange={(value) => setFormData(prev => ({ ...prev, modal_mensaje: value }))}
                       placeholder="Escribe tu mensaje de bienvenida, información importante o promoción..."
-                      rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
@@ -1993,9 +1984,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                             )
                       }}>
                         {formData.modal_titulo && (
-                          <h3 className="text-lg font-bold text-gray-800 mb-2">
-                            {formData.modal_titulo}
-                          </h3>
+                          <div className="text-lg font-bold text-gray-800 mb-2">
+                            <RichTextDisplay content={formData.modal_titulo} />
+                          </div>
                         )}
                         
                         {/* Mostrar imagen si está presente */}
@@ -2055,9 +2046,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                         )}
                         
                         {formData.modal_mensaje && (
-                          <p className="text-gray-700 text-sm whitespace-pre-line">
-                            {formData.modal_mensaje}
-                          </p>
+                          <div className="text-gray-700 text-sm">
+                            <RichTextDisplay content={formData.modal_mensaje} />
+                          </div>
                         )}
                       </div>
                     </div>
@@ -2161,16 +2152,14 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                     
                     <div>
                       <Label htmlFor={`cat-descripcion-${catIndex}`}>Descripción</Label>
-                      <textarea
-                        id={`cat-descripcion-${catIndex}`}
+                      <RichTextEditor
                         value={categoria.descripcion}
-                        onChange={(e) => {
+                        onChange={(content) => {
                           const newCategorias = [...categorias];
-                          newCategorias[catIndex].descripcion = e.target.value;
+                          newCategorias[catIndex].descripcion = content;
                           setCategorias(newCategorias);
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        rows={2}
+                        placeholder="Descripción de la categoría..."
                       />
                     </div>
                     
@@ -2471,35 +2460,33 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                         <div className="grid gap-2">
                           <div>
                             <Label htmlFor={`sub-nombre-${catIndex}-${subIndex}`} className="text-xs">Nombre</Label>
-                            <Input
-                              id={`sub-nombre-${catIndex}-${subIndex}`}
+                            <RichTextEditor
                               value={subcategoria.nombre || ''}
-                              onChange={(e) => {
+                              onChange={(content) => {
                                 const newCategorias = JSON.parse(JSON.stringify(categorias));
                                 if (!newCategorias[catIndex].subcategorias[subIndex]) {
                                   newCategorias[catIndex].subcategorias[subIndex] = {};
                                 }
-                                newCategorias[catIndex].subcategorias[subIndex].nombre = e.target.value;
+                                newCategorias[catIndex].subcategorias[subIndex].nombre = content;
                                 setCategorias(newCategorias);
                               }}
+                              placeholder="Nombre de la subcategoría..."
                             />
                           </div>
                           
                           <div>
                             <Label htmlFor={`sub-desc-${catIndex}-${subIndex}`} className="text-xs">Descripción</Label>
-                            <textarea
-                              id={`sub-desc-${catIndex}-${subIndex}`}
+                            <RichTextEditor
                               value={subcategoria.descripcion || ''}
-                              onChange={(e) => {
+                              onChange={(content) => {
                                 const newCategorias = JSON.parse(JSON.stringify(categorias));
                                 if (!newCategorias[catIndex].subcategorias[subIndex]) {
                                   newCategorias[catIndex].subcategorias[subIndex] = {};
                                 }
-                                newCategorias[catIndex].subcategorias[subIndex].descripcion = e.target.value;
+                                newCategorias[catIndex].subcategorias[subIndex].descripcion = content;
                                 setCategorias(newCategorias);
                               }}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              rows={2}
+                              placeholder="Descripción de la subcategoría..."
                             />
                           </div>
                           

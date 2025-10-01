@@ -4,6 +4,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import RichTextDisplay from '@/components/ui/rich-text-display';
 import { 
   Package, 
   Tag,
@@ -119,9 +120,9 @@ export default function ProductosGrid({
 
             {/* Descripción */}
             {producto.descripcion && (
-              <p className="text-gray-600 text-sm mb-3 line-clamp-2 min-h-[2.5rem]">
-                {producto.descripcion}
-              </p>
+              <div className="text-gray-600 text-sm mb-3 line-clamp-2 min-h-[2.5rem]">
+                <RichTextDisplay content={producto.descripcion} />
+              </div>
             )}
 
             {/* Precio */}
@@ -218,7 +219,9 @@ export function ProductosPorCategoria({
               {categoria.nombre}
             </h2>
             {categoria.descripcion && (
-              <p className="text-gray-600 mt-2">{categoria.descripcion}</p>
+              <div className="text-gray-600 mt-2">
+                <RichTextDisplay content={categoria.descripcion} />
+              </div>
             )}
             <div className="border-b border-gray-200 mt-4"></div>
           </div>
@@ -303,9 +306,9 @@ export function ProductosLista({
                   {producto.nombre}
                 </h3>
                 {producto.descripcion && (
-                  <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                    {producto.descripcion}
-                  </p>
+                  <div className="text-sm text-gray-600 mt-1 line-clamp-2">
+                    <RichTextDisplay content={producto.descripcion} />
+                  </div>
                 )}
                 <div className="flex items-center gap-2 mt-2">
                   {producto.categoria && (
