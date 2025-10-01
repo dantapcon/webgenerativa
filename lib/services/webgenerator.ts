@@ -26,6 +26,9 @@ interface CategoriaServicio {
     imagen_url: string;
     enlace_externo: string;
     orden: number;
+    fondo_tipo?: 'color' | 'imagen';
+    fondo_color?: string;
+    fondo_imagen?: string;
   }[];
 }
 
@@ -796,7 +799,10 @@ export class WebGeneratorService {
                   descripcion: subcategoria.descripcion || '',
                   imagen_url: subcategoria.imagen_url || '',
                   enlace_externo: subcategoria.enlace_externo || '',
-                  orden: subcategoria.orden
+                  orden: subcategoria.orden,
+                  fondo_tipo: subcategoria.fondo_tipo || 'color',
+                  fondo_color: subcategoria.fondo_color || '#ffffff',
+                  fondo_imagen: subcategoria.fondo_imagen || ''
                   // visible se manejará en la lógica de cleanData
                 };
                 
@@ -859,6 +865,12 @@ export class WebGeneratorService {
                   
                   if (datosActualizados.orden !== undefined) cleanData.orden = datosActualizados.orden || 0;
                   
+                  // Agregar campos de fondo solo si existen en la tabla
+                  // Por ahora, omitimos estos campos hasta que se agreguen a la tabla subcategorias
+                  // if (datosActualizados.fondo_tipo !== undefined) cleanData.fondo_tipo = datosActualizados.fondo_tipo || 'color';
+                  // if (datosActualizados.fondo_color !== undefined) cleanData.fondo_color = datosActualizados.fondo_color || '#ffffff';
+                  // if (datosActualizados.fondo_imagen !== undefined) cleanData.fondo_imagen = datosActualizados.fondo_imagen || '';
+                  
                   // Mantener las subcategorías como visibles cuando se actualizan
                   // (La eliminación se maneja por separado mediante splice en el frontend)
                   cleanData.visible = true;
@@ -884,6 +896,7 @@ export class WebGeneratorService {
                   }
                   
                   // Realizar la actualización
+                  console.log(`[DEBUG] Intentando actualizar subcategoría ${subcategoria.id} con datos:`, cleanData);
                   const { data, error: updateSubError } = await supabase
                     .from('subcategorias')
                     .update(cleanData)
@@ -892,6 +905,8 @@ export class WebGeneratorService {
 
                   if (updateSubError) {
                     console.error(`Error actualizando subcategoría ${subcategoria.id}:`, updateSubError);
+                    console.error(`Código de error:`, updateSubError.code);
+                    console.error(`Mensaje de error:`, updateSubError.message);
                     console.error(`Datos que causaron el error: ${JSON.stringify(cleanData)}`);
                     
                     // Intento de depuración adicional
@@ -932,6 +947,10 @@ export class WebGeneratorService {
                   imagen_url: subcategoria.imagen_url || '',
                   orden: subcategoria.orden || 0,
                   visible: true
+                  // Por ahora, omitimos los campos de fondo hasta que se agreguen a la tabla subcategorias
+                  // fondo_tipo: subcategoria.fondo_tipo || 'color',
+                  // fondo_color: subcategoria.fondo_color || '#ffffff',
+                  // fondo_imagen: subcategoria.fondo_imagen || ''
                 };
                 
                 // Manejo especial para enlace_externo

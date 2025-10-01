@@ -1,6 +1,6 @@
 import { WebGeneratorService } from '@/lib/services/webgenerator';
 import { notFound } from 'next/navigation';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
@@ -10,6 +10,7 @@ import UbicacionesPage from '@/components/ubicaciones-page';
 import { processImageUrl } from '@/lib/utils/image-url';
 import ProductosGrid from '@/components/ProductosGrid';
 import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
+import { headers } from 'next/headers';
 
 interface PageProps {
   params: Promise<{ slug: string; categoria: string }>;
@@ -18,9 +19,14 @@ interface PageProps {
 // Configuración para forzar revalidación en producción
 export const revalidate = 0; // Desactiva el cache estático
 export const dynamic = 'force-dynamic'; // Fuerza rendering dinámico
+export const fetchCache = 'force-no-store'; // Evita cache de fetch
+export const runtime = 'nodejs'; // Asegura runtime correcto
 
 export default async function CategoriaPage({ params }: PageProps) {
   const { slug, categoria } = await params;
+  
+  // Agregar headers para evitar cache
+  const headersList = headers();
   
   // Log para debugging en producción
   console.log(`[${new Date().toISOString()}] Cargando categoría "${categoria}" para empresa "${slug}"`);
@@ -114,7 +120,7 @@ export default async function CategoriaPage({ params }: PageProps) {
                     style={{ 
                       backgroundColor: categoriaEncontrada.fondo_tipo === 'imagen' && categoriaEncontrada.fondo_imagen
                         ? 'rgba(0, 0, 0, 0.7)'
-                        : (empresa.color_primario || '#2563eb')
+                        : colorPrimario
                     }}
                   >
                     {categoriaEncontrada.nombre}
@@ -147,9 +153,50 @@ export default async function CategoriaPage({ params }: PageProps) {
                 ? 'max-w-3xl mx-auto' 
                 : 'md:grid-cols-2 lg:grid-cols-3'
             }`}>
-              {categoriaEncontrada.subcategorias.map((subcategoria: any) => (
-                <Card key={subcategoria.id} className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden">
-                  <CardContent className="p-6">
+              {categoriaEncontrada.subcategorias.map((subcategoria: any) => {
+                // Obtener color, brillo y opacidad de fondo de la subcategoría desde colorimetría o fallback
+                const colorFondoSubcategoria = subcategoria.colores?.fondo?.color || subcategoria.fondo_color || '#ffffff';
+                const brilloSubcategoria = subcategoria.colores?.fondo?.brillo || 100;
+                const opacidadSubcategoria = subcategoria.colores?.fondo?.opacidad || 100;
+                
+                // Contar productos de esta subcategoría
+                const productosSubcategoria = empresa.productos?.filter(
+                  producto => producto.subcategoria_id === subcategoria.id
+                ) || [];
+                const tieneProductos = productosSubcategoria.length > 0;
+                
+                // Debug: Log para verificar qué colores se están obteniendo
+                console.log(`[DEBUG] Subcategoría ${subcategoria.nombre}:`, {
+                  subcategoria_id: subcategoria.id,
+                  subcategoria_completa: subcategoria,
+                  colores_objeto: subcategoria.colores,
+                  fondo_directo: subcategoria.fondo_color,
+                  color_colorimetria: subcategoria.colores?.fondo?.color,
+                  brillo_colorimetria: subcategoria.colores?.fondo?.brillo,
+                  opacidad_colorimetria: subcategoria.colores?.fondo?.opacidad,
+                  colorFondoSubcategoria,
+                  brilloSubcategoria,
+                  opacidadSubcategoria,
+                  colorFinal: aplicarBrilloOpacidad(colorFondoSubcategoria, brilloSubcategoria, opacidadSubcategoria),
+                  productosCount: productosSubcategoria.length
+                });
+                
+                // Si no hay color definido, usar el color base con efectos aplicados
+                const colorFinal = aplicarBrilloOpacidad(colorFondoSubcategoria, brilloSubcategoria, opacidadSubcategoria);
+                
+                // Log adicional para debugging
+                console.log(`🔥 TARJETA ${subcategoria.nombre} - Color aplicado:`, colorFinal);
+                
+                return (
+                <div
+                  key={subcategoria.id}
+                  className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden rounded-xl border shadow"
+                  style={{
+                    backgroundColor: colorFinal + ' !important',
+                    background: 'none'
+                  }}
+                >
+                  <div className="p-6">
                     {/* Layout vertical */}
                     {categoriaEncontrada.tipo_display === 'vertical' ? (
                       <div className="md:flex md:gap-6">
@@ -176,30 +223,32 @@ export default async function CategoriaPage({ params }: PageProps) {
                             </p>
                           )}
                           
-                          {/* Botón para navegar a la subcategoría */}
-                          <Button
-                            asChild
-                            className="w-full group/btn text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                            style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
-                          >
-                            <Link
-                              href={`/${slug}/${categoria}/${generateSlug(subcategoria.nombre)}`}
-                              className="flex items-center justify-center gap-2"
+                          {/* Botón para navegar a la subcategoría - solo si tiene productos */}
+                          {tieneProductos && (
+                            <Button
+                              asChild
+                              className="w-full group/btn text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                              style={{ backgroundColor: colorPrimario }}
                             >
-                              Ver productos
-                              <ExternalLink className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                            </Link>
-                          </Button>
+                              <Link
+                                href={`/${slug}/${categoria}/${generateSlug(subcategoria.nombre)}`}
+                                className="flex items-center justify-center gap-2"
+                              >
+                                Ver productos ({productosSubcategoria.length})
+                                <ExternalLink className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                              </Link>
+                            </Button>
+                          )}
                           
                           {/* Enlace externo adicional si existe */}
                           {subcategoria.enlace_externo && (
                             <Button
                               asChild
                               variant="outline"
-                              className="w-full mt-2 group/btn font-semibold py-3 rounded-lg border-2 hover:shadow-lg transition-all duration-300"
+                              className={`w-full ${tieneProductos ? 'mt-2' : ''} group/btn font-semibold py-3 rounded-lg border-2 hover:shadow-lg transition-all duration-300`}
                               style={{ 
-                                borderColor: empresa.color_primario || '#2563eb',
-                                color: empresa.color_primario || '#2563eb'
+                                borderColor: colorPrimario,
+                                color: colorPrimario
                               }}
                             >
                               <a
@@ -241,30 +290,32 @@ export default async function CategoriaPage({ params }: PageProps) {
                           </p>
                         )}
                         
-                        {/* Botón para navegar a la subcategoría */}
-                        <Button
-                          asChild
-                          className="w-full group/btn text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                          style={{ backgroundColor: empresa.color_primario || '#2563eb' }}
-                        >
-                          <Link
-                            href={`/${slug}/${categoria}/${generateSlug(subcategoria.nombre)}`}
-                            className="flex items-center justify-center gap-2"
+                        {/* Botón para navegar a la subcategoría - solo si tiene productos */}
+                        {tieneProductos && (
+                          <Button
+                            asChild
+                            className="w-full group/btn text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                            style={{ backgroundColor: colorPrimario }}
                           >
-                            Ver productos
-                            <ExternalLink className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                          </Link>
-                        </Button>
+                            <Link
+                              href={`/${slug}/${categoria}/${generateSlug(subcategoria.nombre)}`}
+                              className="flex items-center justify-center gap-2"
+                            >
+                              Ver productos ({productosSubcategoria.length})
+                              <ExternalLink className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                            </Link>
+                          </Button>
+                        )}
                         
                         {/* Enlace externo adicional si existe */}
                         {subcategoria.enlace_externo && (
                           <Button
                             asChild
                             variant="outline"
-                            className="w-full mt-2 group/btn font-semibold py-3 rounded-lg border-2 hover:shadow-lg transition-all duration-300"
+                            className={`w-full ${tieneProductos ? 'mt-2' : ''} group/btn font-semibold py-3 rounded-lg border-2 hover:shadow-lg transition-all duration-300`}
                             style={{ 
-                              borderColor: empresa.color_primario || '#2563eb',
-                              color: empresa.color_primario || '#2563eb'
+                              borderColor: colorPrimario,
+                              color: colorPrimario
                             }}
                           >
                             <a
@@ -280,9 +331,10 @@ export default async function CategoriaPage({ params }: PageProps) {
                         )}
                       </>
                     )}
-                  </CardContent>
-                </Card>
-              ))}
+                  </div>
+                </div>
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-16">
@@ -307,7 +359,7 @@ export default async function CategoriaPage({ params }: PageProps) {
                   style={{
                     backgroundColor: categoriaEncontrada.fondo_tipo === 'imagen' && categoriaEncontrada.fondo_imagen
                       ? 'rgba(0, 0, 0, 0.7)'
-                      : (empresa.color_primario || '#2563eb')
+                      : colorPrimario
                   }}
                 >
                   <h2 className="text-2xl font-bold text-white">

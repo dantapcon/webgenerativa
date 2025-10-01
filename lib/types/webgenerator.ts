@@ -89,6 +89,7 @@ export interface Subcategoria {
   fecha_creacion: string;
   // Nuevos campos de fondo
   fondo_tipo?: 'color' | 'imagen';
+  fondo_color?: string;
   fondo_imagen?: string | null;
   // Nuevo campo para colorimetría
   colores?: ColoresElemento;

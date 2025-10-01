@@ -7,6 +7,7 @@ import { EmpresaLayout } from '@/components/empresa-layout';
 import { generateSlug } from '@/lib/utils';
 import { processImageUrl } from '@/lib/utils/image-url';
 import ProductosGrid from '@/components/ProductosGrid';
+import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
 
 interface PageProps {
   params: Promise<{ slug: string; categoria: string; subcategoria: string }>;
@@ -51,6 +52,33 @@ export default async function SubcategoriaPage({ params }: PageProps) {
     notFound();
   }
 
+  // Obtener color, brillo y opacidad de fondo de la subcategoría desde colorimetría o fallback
+  const colorFondoSubcategoria = subcategoriaEncontrada.colores?.fondo?.color || subcategoriaEncontrada.fondo_color || '#ffffff';
+  const brilloSubcategoria = subcategoriaEncontrada.colores?.fondo?.brillo || 100;
+  const opacidadSubcategoria = subcategoriaEncontrada.colores?.fondo?.opacidad || 100;
+
+  // Debug: Log para verificar qué colores se están obteniendo
+  console.log(`[DEBUG] Subcategoría individual ${subcategoriaEncontrada.nombre}:`, {
+    subcategoria: subcategoriaEncontrada,
+    colores: subcategoriaEncontrada.colores,
+    colorFondoSubcategoria,
+    brilloSubcategoria,
+    opacidadSubcategoria
+  });
+
+  // Aplicar color final con efectos
+  const colorFinal = aplicarBrilloOpacidad(colorFondoSubcategoria, brilloSubcategoria, opacidadSubcategoria);
+
+  // Debug: Log para verificar qué colores se están obteniendo
+  console.log(`[DEBUG] Página Subcategoría ${subcategoriaEncontrada.nombre}:`, {
+    subcategoriaEncontrada,
+    colores: subcategoriaEncontrada.colores,
+    colorFondoSubcategoria,
+    brilloSubcategoria,
+    opacidadSubcategoria,
+    colorFinal: aplicarBrilloOpacidad(colorFondoSubcategoria, brilloSubcategoria, opacidadSubcategoria)
+  });
+
   // Filtrar productos de esta subcategoría específica
   const productosDeSubcategoria = empresa.productos?.filter(
     producto => producto.subcategoria_id === subcategoriaEncontrada.id
@@ -88,8 +116,13 @@ export default async function SubcategoriaPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Contenido de la subcategoría */}
-      <div className="py-12 min-h-screen bg-gray-50">
+      {/* Contenido de la subcategoría con fondo personalizado */}
+      <div 
+        className="py-12 min-h-screen"
+        style={{
+          backgroundColor: colorFinal
+        }}
+      >
         <div className="container mx-auto px-4">
           {/* Header de la subcategoría - Simplificado */}
           <div className="text-center mb-12">

@@ -75,8 +75,8 @@ html, body, .dark, [data-theme="dark"] {
   color: #1f2937 !important;
 }
 
-/* Forzar tarjetas claras */
-.card, [data-ui="card"] {
+/* Forzar tarjetas claras - EXCEPTO subcategorías */
+.card:not(.subcategoria-card), [data-ui="card"]:not(.subcategoria-card) {
   background-color: white !important;
   color: #1f2937 !important;
   border: 1px solid #e5e7eb !important;

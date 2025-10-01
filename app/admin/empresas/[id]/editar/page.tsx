@@ -183,12 +183,16 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       imagen_url: string;
       enlace_externo: string;
       orden: number;
+      fondo_color?: string;
+      fondo_tipo?: 'color' | 'imagen';
+      fondo_imagen?: string;
     }>;
   }>>([]);
 
   // Estado para controles de brillo y opacidad
   const [categoriasBrilloOpacidad, setCategoriasBrilloOpacidad] = useState<Record<number, {brillo: number, opacidad: number}>>({});
   const [ventanaFlotanteBrilloOpacidad, setVentanaFlotanteBrilloOpacidad] = useState<{brillo: number, opacidad: number}>({brillo: 100, opacidad: 100});
+  const [subcategoriasBrilloOpacidad, setSubcategoriasBrilloOpacidad] = useState<Record<number, {brillo: number, opacidad: number}>>({});
 
   const showAlert = (type: 'success' | 'error', message: string) => {
     setAlert({ type, message });
@@ -358,20 +362,53 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                 fondo_imagen: cat.fondo_imagen || '',
                 brilloCategoria,
                 opacidadCategoria,
-                subcategorias: cat.subcategorias ? cat.subcategorias.map(sub => ({
-                  id: sub.id,
-                  nombre: sub.nombre,
-                  descripcion: sub.descripcion || '',
-                  imagen_url: sub.imagen_url || '',
-                  enlace_externo: sub.enlace_externo || '',
-                  orden: sub.orden
-                })) : []
+                subcategorias: cat.subcategorias ? await Promise.all(
+                  cat.subcategorias.map(async (sub) => {
+                    let colorSubcategoria = (sub as any).fondo_color || '#ffffff';
+                    let brilloSubcategoria = 100;
+                    let opacidadSubcategoria = 100;
+                    
+                    // Cargar color desde colorimetría API si la subcategoría tiene ID
+                    if (sub.id) {
+                      try {
+                        console.log(`🎨 Cargando color para subcategoría "${sub.nombre}" (ID: ${sub.id})`);
+                        const colorResponse = await fetch(`/api/colorimetria?referencia_id=${sub.id}&tipo_elemento=subcategoria`);
+                        if (colorResponse.ok) {
+                          const colorData = await colorResponse.json();
+                          console.log(`🎨 Respuesta API para subcategoría "${sub.nombre}":`, colorData);
+                          if (colorData.success && colorData.data && colorData.data.fondo) {
+                            colorSubcategoria = colorData.data.fondo.color;
+                            brilloSubcategoria = colorData.data.fondo.brillo || 100;
+                            opacidadSubcategoria = colorData.data.fondo.opacidad || 100;
+                            console.log(`✅ Color cargado para subcategoría ${sub.nombre}:`, colorSubcategoria, `Brillo: ${brilloSubcategoria}%, Opacidad: ${opacidadSubcategoria}%`);
+                          }
+                        }
+                      } catch (error) {
+                        console.error(`❌ Error cargando color de subcategoría ${sub.nombre}:`, error);
+                      }
+                    }
+                    
+                    return {
+                      id: sub.id,
+                      nombre: sub.nombre,
+                      descripcion: sub.descripcion || '',
+                      imagen_url: sub.imagen_url || '',
+                      enlace_externo: sub.enlace_externo || '',
+                      orden: sub.orden,
+                      fondo_color: colorSubcategoria,
+                      brilloSubcategoria,
+                      opacidadSubcategoria
+                    };
+                  })
+                ) : []
               };
             })
           );
           
           // Actualizar estado de brillo y opacidad para todas las categorías de una vez
           const brilloOpacidadMap: Record<number, {brillo: number, opacidad: number}> = {};
+          const subcategoriasBrilloOpacidadMap: Record<number, {brillo: number, opacidad: number}> = {};
+          
           categoriasConColores.forEach(cat => {
             if (cat.id) {
               brilloOpacidadMap[cat.id] = {
@@ -379,8 +416,20 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                 opacidad: cat.opacidadCategoria
               };
             }
+            
+            // También actualizar subcategorías
+            cat.subcategorias?.forEach((sub: any) => {
+              if (sub.id) {
+                subcategoriasBrilloOpacidadMap[sub.id] = {
+                  brillo: sub.brilloSubcategoria,
+                  opacidad: sub.opacidadSubcategoria
+                };
+              }
+            });
           });
+          
           setCategoriasBrilloOpacidad(brilloOpacidadMap);
+          setSubcategoriasBrilloOpacidad(subcategoriasBrilloOpacidadMap);
           
           console.log('🎨 Categorías finales con colores:', categoriasConColores.map(cat => ({
             nombre: cat.nombre,
@@ -400,6 +449,13 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     };
 
     cargarEmpresa();
+    
+    // Cleanup timeouts al desmontar
+    return () => {
+      Object.values(subcategoriaTimeouts).forEach(timeout => {
+        clearTimeout(timeout);
+      });
+    };
   }, [empresaId, router]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -599,6 +655,165 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     }
   };
 
+  // Función helper para obtener el color actual de una subcategoría
+  const getSubcategoriaColor = (subcategoria: any) => {
+    // Primero intentar obtener de los datos de empresa actualizados
+    if (empresa?.categorias) {
+      for (const cat of empresa.categorias) {
+        const sub = cat.subcategorias?.find(s => s.id === subcategoria.id);
+        if (sub?.colores?.fondo?.color) {
+          console.log(`🎨 Color encontrado en empresa.categorias para ${subcategoria.nombre}:`, sub.colores.fondo.color);
+          return sub.colores.fondo.color;
+        }
+      }
+    }
+    
+    // Fallback al color local o blanco
+    const fallbackColor = subcategoria.fondo_color || '#ffffff';
+    console.log(`🎨 Usando color fallback para ${subcategoria.nombre}:`, fallbackColor);
+    return fallbackColor;
+  };
+
+  // Función para manejar cambios de color en subcategorías y guardar en API con debounce
+  const handleSubcategoriaColorChange = async (catIndex: number, subIndex: number, newColor: string) => {
+    const subcategoria = categorias[catIndex].subcategorias?.[subIndex];
+    
+    // Actualizar inmediatamente el estado local del color para feedback visual
+    const newCategorias = [...categorias];
+    if (newCategorias[catIndex].subcategorias?.[subIndex]) {
+      newCategorias[catIndex].subcategorias[subIndex].fondo_color = newColor;
+    }
+    setCategorias(newCategorias);
+    
+    // Guardar en API si la subcategoría tiene ID
+    if (subcategoria?.id && empresaId) {
+      // Debounce para color también
+      const timeoutKey = `${subcategoria.id}-color`;
+      if (subcategoriaTimeouts[timeoutKey]) {
+        clearTimeout(subcategoriaTimeouts[timeoutKey]);
+      }
+
+      const newTimeout = setTimeout(async () => {
+        try {
+          // Obtener valores actuales de brillo y opacidad o usar valores por defecto
+          const valoresActuales = subcategoriasBrilloOpacidad[subcategoria.id!] || {brillo: 100, opacidad: 100};
+          
+          const colorData = {
+            referencia_id: subcategoria.id,
+            tipo_elemento: 'subcategoria',
+            subtipo: 'fondo',
+            color: newColor,
+            brillo: valoresActuales.brillo,
+            opacidad: valoresActuales.opacidad
+          };
+
+          const response = await fetch('/api/colorimetria', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(colorData),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error API response:', errorData);
+            throw new Error(`Error al guardar color de subcategoría: ${errorData.error || 'Unknown error'}`);
+          }
+
+          const responseData = await response.json();
+          console.log(`✅ Color de subcategoría ${subcategoria.nombre} guardado:`, newColor, responseData);
+          
+          // NO recargar datos para evitar loop infinito
+          // Los colores se actualizarán en el próximo refresh manual
+          
+          // Mostrar notificación de éxito
+          showAlert('success', `Color de subcategoría "${subcategoria.nombre}" guardado correctamente`);
+          
+        } catch (error) {
+          console.error('Error guardando color de subcategoría:', error);
+          showAlert('error', 'Error al guardar el color de la subcategoría');
+        }
+      }, 300); // Debounce más corto para color
+
+      setSubcategoriaTimeouts(prev => ({
+        ...prev,
+        [timeoutKey]: newTimeout
+      }));
+    }
+  };
+
+  // Estado para debounce de subcategorías
+  const [subcategoriaTimeouts, setSubcategoriaTimeouts] = useState<Record<string, NodeJS.Timeout>>({});
+
+  // Función para manejar cambios de brillo/opacidad en subcategorías con debounce
+  const handleSubcategoriaBrilloOpacidadChange = async (catIndex: number, subIndex: number, tipo: 'brillo' | 'opacidad', valor: number) => {
+    const subcategoria = categorias[catIndex].subcategorias?.[subIndex];
+    
+    if (subcategoria?.id) {
+      // Actualizar estado local inmediatamente para feedback visual
+      setSubcategoriasBrilloOpacidad(prev => ({
+        ...prev,
+        [subcategoria.id!]: {
+          ...prev[subcategoria.id!] || {brillo: 100, opacidad: 100},
+          [tipo]: valor
+        }
+      }));
+
+      // Debounce: cancelar timeout anterior y crear uno nuevo
+      const timeoutKey = `${subcategoria.id}-${tipo}`;
+      if (subcategoriaTimeouts[timeoutKey]) {
+        clearTimeout(subcategoriaTimeouts[timeoutKey]);
+      }
+
+      const newTimeout = setTimeout(async () => {
+        // Guardar en API después del debounce
+        try {
+          const valoresActuales = subcategoriasBrilloOpacidad[subcategoria.id!] || {brillo: 100, opacidad: 100};
+          const nuevosValores = {...valoresActuales, [tipo]: valor};
+          
+          const colorData = {
+            referencia_id: subcategoria.id,
+            tipo_elemento: 'subcategoria',
+            subtipo: 'fondo',
+            color: getSubcategoriaColor(subcategoria),
+            brillo: nuevosValores.brillo,
+            opacidad: nuevosValores.opacidad
+          };
+
+          const response = await fetch('/api/colorimetria', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(colorData),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error API response:', errorData);
+            throw new Error(`Error al guardar ${tipo} de subcategoría: ${errorData.error || 'Unknown error'}`);
+          }
+
+          const responseData = await response.json();
+          console.log(`✅ ${tipo} de subcategoría ${subcategoria.nombre} guardado:`, valor, responseData);
+          
+          // NO recargar datos para evitar loop infinito
+          // Los cambios se reflejarán en el próximo refresh manual
+          
+        } catch (error) {
+          console.error(`Error guardando ${tipo} de subcategoría:`, error);
+          showAlert('error', `Error al guardar el ${tipo} de la subcategoría`);
+        }
+      }, 500); // Esperar 500ms antes de guardar
+
+      setSubcategoriaTimeouts(prev => ({
+        ...prev,
+        [timeoutKey]: newTimeout
+      }));
+    }
+  };
+
   // Función auxiliar para validar categorías antes de enviar
   const procesarCategorias = () => {
     // Definir el tipo correcto para las categorías (según los requisitos de WebGeneratorService.updateEmpresa)
@@ -609,6 +824,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       imagen_url: string;
       enlace_externo: string;
       orden: number;
+      fondo_tipo?: 'color' | 'imagen';
+      fondo_color?: string;
+      fondo_imagen?: string;
     };
     
     type CategoriaType = {
@@ -661,7 +879,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                 nombre: sub.nombre.trim(),
                 descripcion: sub.descripcion?.trim() || '',
                 imagen_url: imagenUrl,
-                orden: sub.orden || 0
+                orden: sub.orden || 0,
+                fondo_tipo: sub.fondo_tipo || 'color',
+                fondo_color: sub.fondo_color || '#ffffff',
+                fondo_imagen: sub.fondo_imagen || ''
               };
               
               // Solo incluir enlace_externo si tiene contenido válido
@@ -839,7 +1060,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                 descripcion: sub.descripcion || '',
                 imagen_url: sub.imagen_url || '',
                 enlace_externo: sub.enlace_externo || '',
-                orden: sub.orden
+                orden: sub.orden,
+                fondo_tipo: sub.fondo_tipo || 'color',
+                fondo_color: sub.fondo_color || '#ffffff',
+                fondo_imagen: sub.fondo_imagen || ''
               })) : []
             })));
           }
@@ -2388,6 +2612,94 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                                 }
                                 newCategorias[catIndex].subcategorias[subIndex].orden = parseInt(e.target.value);
                                 setCategorias(newCategorias);
+                              }}
+                            />
+                          </div>
+                          
+                          {/* Controles de Color de Fondo */}
+                          <div className="space-y-2">
+                            <Label className="text-xs font-medium">Color de Fondo</Label>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="color"
+                                value={getSubcategoriaColor(subcategoria)}
+                                onChange={(e) => handleSubcategoriaColorChange(catIndex, subIndex, e.target.value)}
+                                className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
+                              />
+                              <Input
+                                type="text"
+                                value={getSubcategoriaColor(subcategoria)}
+                                onChange={(e) => handleSubcategoriaColorChange(catIndex, subIndex, e.target.value)}
+                                className="flex-1 text-sm"
+                                placeholder="#ffffff"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Controles de Brillo y Opacidad */}
+                          <div className="space-y-3">
+                            <div>
+                              <Label className="text-xs font-medium">
+                                Brillo: {subcategoria.id ? (subcategoriasBrilloOpacidad[subcategoria.id]?.brillo || 100) : 100}%
+                              </Label>
+                              <input
+                                type="range"
+                                min="0"
+                                max="200"
+                                step="1"
+                                value={subcategoria.id ? (subcategoriasBrilloOpacidad[subcategoria.id]?.brillo || 100) : 100}
+                                onChange={(e) => handleSubcategoriaBrilloOpacidadChange(
+                                  catIndex,
+                                  subIndex,
+                                  'brillo',
+                                  parseInt(e.target.value)
+                                )}
+                                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                              />
+                              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>0%</span>
+                                <span>100%</span>
+                                <span>200%</span>
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <Label className="text-xs font-medium">
+                                Opacidad: {subcategoria.id ? (subcategoriasBrilloOpacidad[subcategoria.id]?.opacidad || 100) : 100}%
+                              </Label>
+                              <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                step="1"
+                                value={subcategoria.id ? (subcategoriasBrilloOpacidad[subcategoria.id]?.opacidad || 100) : 100}
+                                onChange={(e) => handleSubcategoriaBrilloOpacidadChange(
+                                  catIndex,
+                                  subIndex,
+                                  'opacidad',
+                                  parseInt(e.target.value)
+                                )}
+                                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                              />
+                              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>0%</span>
+                                <span>50%</span>
+                                <span>100%</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Vista previa del color con efectos */}
+                          <div className="space-y-2">
+                            <Label className="text-xs font-medium">Vista Previa</Label>
+                            <div 
+                              className="w-full h-12 border border-gray-300 rounded"
+                              style={{ 
+                                backgroundColor: aplicarBrilloOpacidad(
+                                  getSubcategoriaColor(subcategoria),
+                                  subcategoria.id ? (subcategoriasBrilloOpacidad[subcategoria.id]?.brillo || 100) : 100,
+                                  subcategoria.id ? (subcategoriasBrilloOpacidad[subcategoria.id]?.opacidad || 100) : 100
+                                )
                               }}
                             />
                           </div>
