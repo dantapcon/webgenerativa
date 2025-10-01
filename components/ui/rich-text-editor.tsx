@@ -143,17 +143,14 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         <div className="w-px h-6 bg-gray-300 mx-1" />
 
         {/* Selector de color */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <Palette className="h-4 w-4 text-gray-500" />
-          {colores.map((color) => (
-            <button
-              key={color}
-              type="button"
-              className="w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-              style={{ backgroundColor: color }}
-              onClick={() => editor.chain().focus().setColor(color).run()}
-            />
-          ))}
+          <input
+            type="color"
+            onChange={(e) => editor.chain().focus().setColor(e.target.value).run()}
+            className="w-8 h-8 border border-gray-300 rounded cursor-pointer"
+            title="Seleccionar color de texto"
+          />
         </div>
 
         <div className="w-px h-6 bg-gray-300 mx-1" />
