@@ -13,6 +13,13 @@ import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
 import { headers } from 'next/headers';
 import RichTextDisplay from '@/components/ui/rich-text-display';
 
+// Función helper para extraer texto plano del HTML
+function extractPlainText(html: string): string {
+  if (!html) return '';
+  // Eliminar todas las etiquetas HTML y retornar solo el texto
+  return html.replace(/<[^>]*>/g, '').trim();
+}
+
 interface PageProps {
   params: Promise<{ slug: string; categoria: string }>;
 }
@@ -167,7 +174,7 @@ export default async function CategoriaPage({ params }: PageProps) {
                 const tieneProductos = productosSubcategoria.length > 0;
                 
                 // Debug: Log para verificar qué colores se están obteniendo
-                console.log(`[DEBUG] Subcategoría ${subcategoria.nombre}:`, {
+                console.log(`[DEBUG] Subcategoría ${extractPlainText(subcategoria.nombre)}:`, {
                   subcategoria_id: subcategoria.id,
                   subcategoria_completa: subcategoria,
                   colores_objeto: subcategoria.colores,
@@ -186,7 +193,7 @@ export default async function CategoriaPage({ params }: PageProps) {
                 const colorFinal = aplicarBrilloOpacidad(colorFondoSubcategoria, brilloSubcategoria, opacidadSubcategoria);
                 
                 // Log adicional para debugging
-                console.log(`🔥 TARJETA ${subcategoria.nombre} - Color aplicado:`, colorFinal);
+                console.log(`🔥 TARJETA ${extractPlainText(subcategoria.nombre)} - Color aplicado:`, colorFinal);
                 
                 return (
                 <div
