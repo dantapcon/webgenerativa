@@ -10,6 +10,7 @@ import { BulletList } from '@tiptap/extension-bullet-list';
 import { OrderedList } from '@tiptap/extension-ordered-list';
 import { ListItem } from '@tiptap/extension-list-item';
 import { FontSize } from './font-size-extension';
+import { FontFamily } from './font-family-extension';
 import { Button } from '@/components/ui/button';
 import { 
   Bold, 
@@ -35,12 +36,14 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   className = ''
 }) => {
   const [currentFontSize, setCurrentFontSize] = useState('16');
+  const [currentFontFamily, setCurrentFontFamily] = useState('Inter');
 
   const editor = useEditor({
     extensions: [
       StarterKit,
       TextStyle,
       FontSize,
+      FontFamily,
       Color.configure({
         types: ['textStyle']
       }),
@@ -64,13 +67,21 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     },
     onSelectionUpdate: ({ editor }) => {
       // Detectar el tamaño de fuente actual
-      const fontSize = editor.getAttributes('textStyle').fontSize;
-      if (fontSize) {
+      const attributes = editor.getAttributes('textStyle');
+      
+      if (attributes.fontSize) {
         // Extraer solo el número del tamaño (ej: "16px" -> "16")
-        const size = fontSize.replace('px', '');
+        const size = attributes.fontSize.replace('px', '');
         setCurrentFontSize(size);
       } else {
         setCurrentFontSize('16'); // Tamaño por defecto
+      }
+
+      // Detectar la familia de fuente actual
+      if (attributes.fontFamily) {
+        setCurrentFontFamily(attributes.fontFamily);
+      } else {
+        setCurrentFontFamily('Inter'); // Fuente por defecto
       }
     },
     editorProps: {
@@ -94,6 +105,30 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const colores = [
     '#000000', '#374151', '#6b7280', '#ef4444', '#f97316', 
     '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899'
+  ];
+
+  const fuentes = [
+    { label: 'Inter', value: 'Inter, sans-serif' },
+    { label: 'Roboto', value: 'Roboto, sans-serif' },
+    { label: 'Open Sans', value: 'Open Sans, sans-serif' },
+    { label: 'Lato', value: 'Lato, sans-serif' },
+    { label: 'Montserrat', value: 'Montserrat, sans-serif' },
+    { label: 'Poppins', value: 'Poppins, sans-serif' },
+    { label: 'Nunito', value: 'Nunito, sans-serif' },
+    { label: 'Source Sans Pro', value: 'Source Sans Pro, sans-serif' },
+    { label: 'Ubuntu', value: 'Ubuntu, sans-serif' },
+    { label: 'Raleway', value: 'Raleway, sans-serif' },
+    { label: 'Work Sans', value: 'Work Sans, sans-serif' },
+    { label: 'Fira Sans', value: 'Fira Sans, sans-serif' },
+    { label: 'Space Grotesk', value: 'Space Grotesk, sans-serif' },
+    { label: 'Merriweather', value: 'Merriweather, serif' },
+    { label: 'Playfair Display', value: 'Playfair Display, serif' },
+    { label: 'Crimson Text', value: 'Crimson Text, serif' },
+    { label: 'Arial', value: 'Arial, sans-serif' },
+    { label: 'Times New Roman', value: 'Times New Roman, serif' },
+    { label: 'Helvetica', value: 'Helvetica, sans-serif' },
+    { label: 'Georgia', value: 'Georgia, serif' },
+    { label: 'Courier New', value: 'Courier New, monospace' }
   ];
 
   const tamanos = [
@@ -163,6 +198,31 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
+
+        <div className="w-px h-6 bg-gray-300 mx-1" />
+
+        {/* Selector de tipografía */}
+        <div className="flex items-center gap-1">
+          <select
+            className="text-xs border rounded px-2 py-1 min-w-[140px]"
+            value={currentFontFamily}
+            onChange={(e) => {
+              const fontFamily = e.target.value;
+              setCurrentFontFamily(fontFamily);
+              editor.chain().focus().setFontFamily(fontFamily).run();
+            }}
+          >
+            {fuentes.map((fuente) => (
+              <option 
+                key={fuente.value} 
+                value={fuente.value}
+                style={{ fontFamily: fuente.value }}
+              >
+                {fuente.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <div className="w-px h-6 bg-gray-300 mx-1" />
 
