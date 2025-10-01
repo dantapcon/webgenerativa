@@ -215,13 +215,13 @@ export default async function EmpresaPage({ params }: PageProps) {
               {empresa.video_promocional_url && (
                 <div className="mt-10 max-w-3xl mx-auto">
                   {empresa.video_descripcion && (
-                    <p className="text-lg leading-relaxed mb-6" style={{
+                    <div className="text-lg leading-relaxed mb-6" style={{
                       color: '#333',
                     padding: '12px',
                     borderRadius: '8px'
                   }}>
-                    {empresa.video_descripcion}
-                  </p>
+                    <RichTextDisplay content={empresa.video_descripcion} />
+                  </div>
                 )}
                 <div className="aspect-video w-full shadow-lg rounded-xl overflow-hidden">
                   {empresa.video_promocional_url.includes('youtube.com') || empresa.video_promocional_url.includes('youtu.be') ? (
