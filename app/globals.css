@@ -243,3 +243,19 @@ form [role="textbox"], form [role="combobox"] {
   border: 2px solid #e5e7eb !important;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
 }
+
+/* Estilos para Rich Text Editor */
+.ProseMirror {
+  outline: none !important;
+  padding: 12px !important;
+  min-height: 120px !important;
+}
+
+.ProseMirror [style*="font-size"] {
+  font-size: var(--font-size) !important;
+}
+
+/* Asegurar que los tamaños de fuente se apliquen correctamente */
+.ProseMirror span[style*="font-size"] {
+  font-size: inherit !important;
+}

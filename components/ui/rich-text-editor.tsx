@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Color } from '@tiptap/extension-color';
@@ -9,6 +9,7 @@ import { Underline } from '@tiptap/extension-underline';
 import { BulletList } from '@tiptap/extension-bullet-list';
 import { OrderedList } from '@tiptap/extension-ordered-list';
 import { ListItem } from '@tiptap/extension-list-item';
+import { FontSize } from './font-size-extension';
 import { Button } from '@/components/ui/button';
 import { 
   Bold, 
@@ -33,11 +34,16 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   placeholder = 'Escribe aquí...',
   className = ''
 }) => {
+  const [currentFontSize, setCurrentFontSize] = useState('16');
+
   const editor = useEditor({
     extensions: [
       StarterKit,
       TextStyle,
-      Color,
+      FontSize,
+      Color.configure({
+        types: ['textStyle']
+      }),
       Underline,
       BulletList.configure({
         HTMLAttributes: {
@@ -56,12 +62,30 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
+    onSelectionUpdate: ({ editor }) => {
+      // Detectar el tamaño de fuente actual
+      const fontSize = editor.getAttributes('textStyle').fontSize;
+      if (fontSize) {
+        // Extraer solo el número del tamaño (ej: "16px" -> "16")
+        const size = fontSize.replace('px', '');
+        setCurrentFontSize(size);
+      } else {
+        setCurrentFontSize('16'); // Tamaño por defecto
+      }
+    },
     editorProps: {
       attributes: {
         class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[120px] p-4 border rounded-md',
       },
     },
   });
+
+  // Efecto para sincronizar el estado cuando cambia el editor
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value);
+    }
+  }, [editor, value]);
 
   if (!editor) {
     return null;
@@ -160,23 +184,28 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           <Type className="h-4 w-4 text-gray-500" />
           <select
             className="text-xs border rounded px-2 py-1"
+            value={currentFontSize}
             onChange={(e) => {
               const fontSize = e.target.value;
-              if (fontSize === 'small') {
-                editor.chain().focus().setFontSize('14px').run();
-              } else if (fontSize === 'large') {
-                editor.chain().focus().setFontSize('18px').run();
-              } else if (fontSize === 'xlarge') {
-                editor.chain().focus().setFontSize('20px').run();
-              } else {
-                editor.chain().focus().setFontSize('16px').run();
-              }
+              setCurrentFontSize(fontSize);
+              editor.chain().focus().setFontSize(fontSize + 'px').run();
             }}
           >
-            <option value="normal">Normal</option>
-            <option value="small">Pequeño</option>
-            <option value="large">Grande</option>
-            <option value="xlarge">Muy Grande</option>
+            <option value="8">8pt</option>
+            <option value="9">9pt</option>
+            <option value="10">10pt</option>
+            <option value="11">11pt</option>
+            <option value="12">12pt</option>
+            <option value="14">14pt</option>
+            <option value="16">16pt</option>
+            <option value="18">18pt</option>
+            <option value="20">20pt</option>
+            <option value="24">24pt</option>
+            <option value="28">28pt</option>
+            <option value="32">32pt</option>
+            <option value="36">36pt</option>
+            <option value="48">48pt</option>
+            <option value="72">72pt</option>
           </select>
         </div>
       </div>
