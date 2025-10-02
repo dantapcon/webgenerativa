@@ -2076,7 +2076,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                       <span className="inline-block bg-blue-100 text-blue-800 rounded-full px-3 py-1 mr-2">
                         {catIndex + 1}
                       </span>
-                      Categoría: {categoria.nombre || 'Sin nombre'}
+                      <span className="inline-flex items-center">
+                        Categoría: <RichTextDisplay content={categoria.nombre || 'Sin nombre'} className="inline ml-1" />
+                      </span>
                     </h4>
                     <div className="flex items-center gap-2">
                       {/* Botones de reordenamiento para categorías */}
@@ -2389,7 +2391,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                             <span className="inline-block bg-cyan-100 text-cyan-800 rounded-full px-2 py-0.5 text-xs mr-2">
                               {subIndex + 1}
                             </span>
-                            Subcategoría: {subcategoria.nombre || 'Sin nombre'}
+                            <span className="inline-flex items-center">
+                              Subcategoría: <RichTextDisplay content={subcategoria.nombre || 'Sin nombre'} className="inline ml-1" />
+                            </span>
                           </h6>
                           <div className="flex items-center gap-2">
                             {/* Botones de reordenamiento */}

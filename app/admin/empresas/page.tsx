@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import RichTextDisplay from '@/components/ui/rich-text-display';
 import AdminEmpresasManager from '@/components/admin/AdminEmpresasManager';
 import { 
   Building, 
@@ -409,9 +410,9 @@ export default function AdminEmpresasPage() {
                           </div>
                           
                           {empresa.descripcion_empresa && (
-                            <p className="text-gray-600 mb-3 line-clamp-2">
-                              {empresa.descripcion_empresa}
-                            </p>
+                            <div className="text-gray-600 mb-3 line-clamp-2">
+                              <RichTextDisplay content={empresa.descripcion_empresa} />
+                            </div>
                           )}
                           
                           <div className="flex flex-wrap gap-4 text-sm text-gray-500">
