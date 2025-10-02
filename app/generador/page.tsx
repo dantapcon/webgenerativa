@@ -86,8 +86,8 @@ export default function WebGeneratorPage() {
     logo_url: '',
     video_promocional_url: '',
     color_primario: '#2563eb',
-    color_secundario: '#1e40af',
-    tipografia: 'Inter'
+    color_secundario: '#1e40af'
+    // REMOVIDO: tipografia (ya no existe en BD)
   });
 
   const [categorias, setCategorias] = useState<CategoriaForm[]>([]);
@@ -357,8 +357,8 @@ export default function WebGeneratorPage() {
         logo_url: '',
         video_promocional_url: '',
         color_primario: '#2563eb',
-        color_secundario: '#1e40af',
-        tipografia: 'Inter'
+        color_secundario: '#1e40af'
+        // REMOVIDO: tipografia (ya no existe en BD)
       });
       setCategorias([]);
       setActiveStep(1);
@@ -385,10 +385,8 @@ export default function WebGeneratorPage() {
       previewBtn.style.backgroundColor = formData.color_primario || '#2563eb';
     }
 
-    if (previewText) {
-      previewText.style.fontFamily = `'${formData.tipografia}', sans-serif`;
-    }
-  }, [formData.color_primario, formData.color_secundario, formData.tipografia]);
+    // REMOVIDO: aplicación de tipografía (ya no existe en BD)
+  }, [formData.color_primario, formData.color_secundario]);
 
   return (
     <>
@@ -879,25 +877,7 @@ export default function WebGeneratorPage() {
                           </div>
                         </div>
 
-                        <div className="space-y-2">
-                          <Label htmlFor="tipografia" className="text-sm font-medium text-gray-700">
-                            Tipografía
-                          </Label>
-                          <select
-                            id="tipografia"
-                            name="tipografia"
-                            value={formData.tipografia}
-                            onChange={handleInputChange}
-                            className="w-full h-11 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          >
-                            <option value="Inter">Inter (Moderno)</option>
-                            <option value="Roboto">Roboto (Universal)</option>
-                            <option value="Poppins">Poppins (Amigable)</option>
-                            <option value="Open Sans">Open Sans (Legible)</option>
-                            <option value="Montserrat">Montserrat (Elegante)</option>
-                            <option value="Lato">Lato (Profesional)</option>
-                          </select>
-                        </div>
+                        {/* REMOVIDO: Campo tipografía (ya no existe en BD) */}
 
                         <div className="space-y-4">
                           <h5 className="font-medium text-gray-800 flex items-center gap-2">
@@ -991,8 +971,8 @@ export default function WebGeneratorPage() {
                           style={{ 
                             background: formData.hero_fondo_tipo === 'imagen' && formData.hero_imagen_fondo
                               ? `url("${formData.hero_imagen_fondo}") center/cover no-repeat`
-                              : `linear-gradient(135deg, ${formData.color_primario} 0%, ${formData.color_secundario} 100%)`,
-                            fontFamily: `'${formData.tipografia}', sans-serif`
+                              : `linear-gradient(135deg, ${formData.color_primario} 0%, ${formData.color_secundario} 100%)`
+                            // REMOVIDO: fontFamily (ya no existe en BD)
                           }}
                         >
                           {formData.hero_fondo_tipo === 'imagen' && formData.hero_imagen_fondo && (
@@ -1006,7 +986,6 @@ export default function WebGeneratorPage() {
                           <div 
                             id="preview-text"
                             className="text-gray-700"
-                            style={{ fontFamily: `'${formData.tipografia}', sans-serif` }}
                           >
                             {formData.descripcion_empresa || 'Descripción de la empresa aparecerá aquí...'}
                           </div>
@@ -1589,9 +1568,7 @@ export default function WebGeneratorPage() {
                               ></div>
                             </div>
                           </div>
-                          <div>
-                            <strong>Tipografía:</strong> {formData.tipografia}
-                          </div>
+                          {/* REMOVIDO: Tipografía (ya no existe en BD) */}
                         </CardContent>
                       </Card>
 
@@ -1626,8 +1603,8 @@ export default function WebGeneratorPage() {
                         <div 
                           className="h-16 flex items-center justify-between px-6 text-white font-semibold"
                           style={{ 
-                            background: `linear-gradient(135deg, ${formData.color_primario} 0%, ${formData.color_secundario} 100%)`,
-                            fontFamily: `'${formData.tipografia}', sans-serif`
+                            background: `linear-gradient(135deg, ${formData.color_primario} 0%, ${formData.color_secundario} 100%)`
+                            // REMOVIDO: fontFamily (ya no existe en BD)
                           }}
                         >
                           <div>{formData.nombre_empresa}</div>
@@ -1638,14 +1615,12 @@ export default function WebGeneratorPage() {
                         <div className="p-6 space-y-4">
                           <div 
                             className="text-lg font-semibold"
-                            style={{ fontFamily: `'${formData.tipografia}', sans-serif` }}
                           >
                             Bienvenido a {formData.nombre_empresa}
                           </div>
                           <div 
                             className="text-gray-700 p-3 rounded-md"
                             style={{ 
-                              fontFamily: `'${formData.tipografia}', sans-serif`,
                               background: formData.descripcion_fondo_tipo === 'imagen' && formData.descripcion_imagen_fondo 
                                 ? `url("${formData.descripcion_imagen_fondo}") center/cover no-repeat` 
                                 : `linear-gradient(135deg, ${formData.color_primario || '#2563eb'}, ${formData.color_secundario || '#7c3aed'})`,

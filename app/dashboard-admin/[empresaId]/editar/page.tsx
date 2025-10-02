@@ -347,15 +347,7 @@ export default function EditarEmpresaAdmin() {
               </div>
             </div>
             
-            <div>
-              <Label htmlFor="tipografia">Tipografía</Label>
-              <Input
-                id="tipografia"
-                value={formData.tipografia || ''}
-                onChange={(e) => handleInputChange('tipografia', e.target.value)}
-                placeholder="Ej: Arial, Helvetica, sans-serif"
-              />
-            </div>
+            {/* REMOVIDO: Campo tipografía (ya no existe en BD) */}
             
             <div>
               <Label htmlFor="logo_url">URL del Logo</Label>

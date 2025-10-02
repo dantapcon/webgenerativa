@@ -43,14 +43,13 @@ export interface Empresa {
   logo_tamano?: string | null;
   logo_tamano_px?: number | null;
   logo_posicion?: 'izquierda' | 'centro' | 'derecha' | null;
-  titulo_tamano?: number | null;
   video_promocional_url?: string | null;
   // DEPRECATED: Usar tabla colorimetria
   color_primario?: string | null;
   color_secundario?: string | null;
   // Nuevos campos para colorimetría
   colores?: ColoresElemento;
-  tipografia?: string | null;
+  // REMOVIDO: tipografia y titulo_tamano (ya no existen en BD)
   plantilla_id?: number | null;
   estado_sitio: 'creando' | 'publicado' | 'error' | 'mantenimiento';
   ssl_activo: boolean;
@@ -189,14 +188,13 @@ export interface EmpresaFormData {
   logo_tamano?: string;
   logo_tamano_px?: number;
   logo_posicion?: 'izquierda' | 'centro' | 'derecha';
-  titulo_tamano?: number;
   video_promocional_url?: string;
   
   // Estilos y personalización (DEPRECATED: usar tabla colorimetria)
   color_primario?: string;
   color_secundario?: string;
   color_terciario?: string; // NUEVO: para regla 60-30-10
-  tipografia?: string;
+  // REMOVIDO: tipografia y titulo_tamano (ya no existen en BD)
   
   // Categorías y subcategorías
   categorias?: Array<{

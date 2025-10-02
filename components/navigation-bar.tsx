@@ -11,15 +11,14 @@ interface NavigationBarProps {
   }>;
   empresaSlug: string;
   colorPrimario?: string | null;
-  tipografia?: string | null;
   categoriaActiva?: string; // Slug de la categoría activa
+  // REMOVIDO: tipografia (ya no existe en BD)
 }
 
 export function NavigationBar({ 
   categorias, 
   empresaSlug, 
-  colorPrimario, 
-  tipografia,
+  colorPrimario,
   categoriaActiva 
 }: NavigationBarProps) {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
@@ -40,7 +39,6 @@ export function NavigationBar({
                   href={`/${empresaSlug}/${categorySlug}`}
                   className="group relative px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:text-white hover:shadow-xl hover:-translate-y-1 transform"
                   style={{ 
-                    fontFamily: `'${tipografia}', sans-serif`,
                     backgroundColor: (isActive || isHovered) ? colorPrimario || '#2563eb' : '#f8fafc',
                     color: (isActive || isHovered) ? 'white' : '#374151',
                     transform: (isActive || isHovered) ? 'translateY(-4px)' : 'translateY(0)',

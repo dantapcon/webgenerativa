@@ -11,15 +11,13 @@ interface CategoryNavigationProps {
   empresaSlug: string;
   categoriaActual: number;
   colorPrimario?: string | null;
-  tipografia?: string | null;
 }
 
 export function CategoryNavigation({ 
   categorias, 
   empresaSlug, 
   categoriaActual, 
-  colorPrimario, 
-  tipografia 
+  colorPrimario
 }: CategoryNavigationProps) {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
 
@@ -43,7 +41,6 @@ export function CategoryNavigation({
                 }`}
                 style={{ 
                   backgroundColor: isActive ? colorPrimario || '#2563eb' : (isHovered && !isActive ? colorPrimario || '#2563eb' : undefined),
-                  fontFamily: `'${tipografia}', sans-serif`,
                   color: (isActive || isHovered) ? 'white' : '#4B5563'
                 }}
                 onMouseEnter={() => !isActive && setHoveredItem(cat.id)}

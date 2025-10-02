@@ -24,9 +24,10 @@ export const SECCIONES_EDITABLES = {
   'personalizacion_visual': {
     id: 'personalizacion_visual',
     nombre: 'Personalización Visual', 
-    descripcion: 'Editar colores, tipografía, logo y elementos visuales',
+    descripcion: 'Editar colores, logo y elementos visuales',
     icono: '🎨',
-    campos: ['color_primario', 'color_secundario', 'tipografia', 'logo_url', 'logo_tamano', 'logo_posicion']
+    campos: ['color_primario', 'color_secundario', 'color_terciario', 'logo_url', 'logo_tamano', 'logo_posicion']
+    // REMOVIDO: tipografia (ya no existe en BD)
   },
   
   // Configuración adicional (hero, fondos)

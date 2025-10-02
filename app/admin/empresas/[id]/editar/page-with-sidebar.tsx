@@ -102,11 +102,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     dominio_deseado: '',
     logo_url: '',
     logo_tamano_px: 48,
-    titulo_tamano: 32,
     video_promocional_url: '',
     color_primario: '#2563eb',
-    color_secundario: '#1e40af',
-    tipografia: 'Inter'
+    color_secundario: '#1e40af'
+    // REMOVIDO: titulo_tamano y tipografia (ya no existen en BD)
   });
   const [empresa, setEmpresa] = useState<EmpresaCompleta | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -201,11 +200,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           logo_tamano: data.logo_tamano || 'mediano',
           logo_tamano_px: data.logo_tamano_px || 48,
           logo_posicion: data.logo_posicion || 'izquierda',
-          titulo_tamano: data.titulo_tamano || 32,
           video_promocional_url: data.video_promocional_url || '',
           color_primario: data.color_primario || '#2563eb',
-          color_secundario: data.color_secundario || '#1e40af',
-          tipografia: data.tipografia || 'Inter'
+          color_secundario: data.color_secundario || '#1e40af'
+          // REMOVIDO: titulo_tamano y tipografia (ya no existen en BD)
         });
         
         // Cargar categorías y subcategorías
@@ -593,23 +591,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                           </div>
                         </div>
 
-                        <div className="space-y-2">
-                          <Label htmlFor="tipografia" className="text-sm font-medium">Tipografía</Label>
-                          <select
-                            id="tipografia"
-                            name="tipografia"
-                            value={formData.tipografia}
-                            onChange={handleInputChange}
-                            className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                          >
-                            <option value="Inter">Inter (Moderno)</option>
-                            <option value="Roboto">Roboto (Universal)</option>
-                            <option value="Poppins">Poppins (Amigable)</option>
-                            <option value="Open Sans">Open Sans (Legible)</option>
-                            <option value="Montserrat">Montserrat (Elegante)</option>
-                            <option value="Lato">Lato (Profesional)</option>
-                          </select>
-                        </div>
+                        {/* REMOVIDO: Campo tipografía (ya no existe en BD) */}
                       </div>
 
                       <div className="space-y-4">
@@ -660,18 +642,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                           </div>
                         </div>
 
-                        <div className="space-y-2">
-                          <Label htmlFor="titulo_tamano" className="text-sm">Tamaño del Título</Label>
-                          <input
-                            type="number"
-                            min="16"
-                            max="64"
-                            value={formData.titulo_tamano || 32}
-                            onChange={handleInputChange}
-                            name="titulo_tamano"
-                            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          />
-                        </div>
+                        {/* REMOVIDO: Campo titulo_tamano (ya no existe en BD) */}
                       </div>
                     </div>
                   </CardContent>

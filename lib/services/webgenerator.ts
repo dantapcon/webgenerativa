@@ -79,8 +79,7 @@ export class WebGeneratorService {
         dominio_deseado: data.dominio_deseado || null,
         logo_url: data.logo_url || null,
         video_promocional_url: data.video_promocional_url || null,
-        // REMOVIDO: color_primario y color_secundario (ahora en tabla colorimetria)
-        tipografia: data.tipografia || 'Inter',
+        // REMOVIDO: color_primario, color_secundario, tipografia y titulo_tamano (ahora en tabla colorimetria)
         estado_sitio: 'publicado',
         ssl_activo: true
       };
@@ -542,9 +541,10 @@ export class WebGeneratorService {
       console.log('🔍 Ventana flotante extraída:', JSON.stringify(ventana_flotante, null, 2));
 
       // 🎨 NUEVO: Extraer y manejar colores por separado
-      const { color_primario, color_secundario, color_terciario, ...empresaDataLimpia } = empresaData;
+      const { color_primario, color_secundario, color_terciario, tipografia, titulo_tamano, ...empresaDataLimpia } = empresaData;
       
       console.log('🎨 Colores extraídos - Primario:', color_primario, 'Secundario:', color_secundario, 'Terciario:', color_terciario);
+      console.log('🗑️ Campos removidos - tipografia:', tipografia, 'titulo_tamano:', titulo_tamano);
 
       // Actualizar empresa (sin campos de color)
       const { data: empresa, error: empresaError } = await supabase
@@ -1257,8 +1257,8 @@ export class WebGeneratorService {
   static getDefaultStyles(): Partial<Empresa> {
     return {
       color_primario: '#2563eb',
-      color_secundario: '#1e40af',
-      tipografia: 'Inter'
+      color_secundario: '#1e40af'
+      // REMOVIDO: tipografia (ya no existe en BD)
     };
   }
 }

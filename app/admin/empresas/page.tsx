@@ -439,7 +439,7 @@ export default function AdminEmpresasPage() {
                           </div>
 
                           {/* Personalización */}
-                          {(empresa.color_primario || empresa.tipografia) && (
+                          {empresa.color_primario && (
                             <div className="flex items-center gap-4 mt-3">
                               {empresa.color_primario && (
                                 <div className="flex items-center gap-2">
@@ -460,11 +460,7 @@ export default function AdminEmpresasPage() {
                                   </div>
                                 </div>
                               )}
-                              {empresa.tipografia && (
-                                <span className="text-sm text-gray-500">
-                                  {empresa.tipografia}
-                                </span>
-                              )}
+                              {/* REMOVIDO: tipografia (ya no existe en BD) */}
                             </div>
                           )}
                         </div>

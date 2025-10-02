@@ -7,6 +7,12 @@ import { WebGeneratorService } from '@/lib/services/webgenerator';
 import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
 import RichTextEditor from '@/components/ui/rich-text-editor';
 import RichTextDisplay from '@/components/ui/rich-text-display';
+
+// Función para extraer texto plano de HTML
+function extractPlainText(html: string): string {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+}
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -155,12 +161,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     dominio_deseado: '',
     logo_url: '',
     logo_tamano_px: 48,
-    titulo_tamano: 32,
     video_promocional_url: '',
     color_primario: '#2563eb',
     color_secundario: '#1e40af',
-    color_terciario: '#f97316', // NUEVO: Color terciario para regla 60-30-10
-    tipografia: 'Inter'
+    color_terciario: '#f97316' // NUEVO: Color terciario para regla 60-30-10
   });
   const [empresa, setEmpresa] = useState<EmpresaCompleta | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -310,13 +314,12 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           logo_tamano: data.logo_tamano || 'mediano',
           logo_tamano_px: data.logo_tamano_px || 48,
           logo_posicion: data.logo_posicion || 'izquierda',
-          titulo_tamano: data.titulo_tamano || 32,
           video_promocional_url: data.video_promocional_url || '',
           // Colores desde la API de colorimetría
           color_primario: colores.primario,
           color_secundario: colores.secundario,
-          color_terciario: colores.terciario,
-          tipografia: data.tipografia || 'Inter'
+          color_terciario: colores.terciario
+          // REMOVIDO: tipografia y titulo_tamano (ya no existen en BD)
         });
         
         // Cargar categorías y subcategorías con colores desde colorimetría API
@@ -1121,7 +1124,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               </Button>
             </div>
             <h1 className="text-xl font-bold text-gray-900">Editar Empresa</h1>
-            <p className="text-sm text-gray-600">{empresa.nombre_empresa}</p>
+            <p className="text-sm text-gray-600">{extractPlainText(empresa.nombre_empresa)}</p>
             <Button variant="outline" size="sm" className="mt-3 w-full" asChild>
               <Link href={`/${empresa.slug_empresa}`} target="_blank">
                 <Eye className="h-4 w-4 mr-2" />
@@ -1201,13 +1204,12 @@ export default function EditarEmpresaPage({ params }: PageProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="nombre_empresa">Nombre de la Empresa *</Label>
-                  <Input
-                    id="nombre_empresa"
-                    name="nombre_empresa"
-                    value={formData.nombre_empresa}
-                    onChange={handleInputChange}
-                    required
+                  <RichTextEditor
+                    value={formData.nombre_empresa || ''}
+                    onChange={(content) => setFormData(prev => ({ ...prev, nombre_empresa: content }))}
+                    placeholder="Ingrese el nombre de la empresa con formato"
                   />
+                  <p className="text-xs text-gray-500">Puede aplicar formato, colores y estilos al nombre</p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="tipo_negocio">Tipo de Negocio</Label>
@@ -1447,25 +1449,6 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                       </div>
                     </div>
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="tipografia" className="text-sm font-medium">Tipografía</Label>
-                    <select
-                      id="tipografia"
-                      name="tipografia"
-                      value={formData.tipografia}
-                      onChange={handleInputChange}
-                      className="w-full h-10 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                    >
-                      <option value="Inter">Inter (Moderno)</option>
-                      <option value="Roboto">Roboto (Universal)</option>
-                      <option value="Poppins">Poppins (Amigable)</option>
-                      <option value="Open Sans">Open Sans (Legible)</option>
-                      <option value="Montserrat">Montserrat (Elegante)</option>
-                      <option value="Lato">Lato (Profesional)</option>
-                    </select>
-                    <p className="text-xs text-gray-500">Esta tipografía se aplicará a todo el contenido</p>
-                  </div>
                 </div>
 
                 {/* Columna 2: Logo y Configuración */}
@@ -1542,47 +1525,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                   </div>
                 </div>
 
-                {/* Columna 3: Tamaño del Título y Preview */}
+                {/* Columna 3: Preview del Título */}
                 <div className="space-y-4">
-                  <div className="p-4 bg-gray-50 rounded-lg border">
-                    <h4 className="font-medium text-sm text-gray-700 mb-3">Título del Header</h4>
-                    <div className="space-y-3">
-                      <div className="space-y-2">
-                        <Label htmlFor="titulo_tamano" className="text-sm">Tamaño del Título</Label>
-                        <div className="space-y-2">
-                          <input
-                            type="range"
-                            id="titulo_tamano"
-                            name="titulo_tamano"
-                            min="16"
-                            max="64"
-                            step="2"
-                            value={formData.titulo_tamano || 32}
-                            onChange={handleInputChange}
-                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                            style={{
-                              background: `linear-gradient(to right, ${formData.color_primario || '#2563eb'} 0%, ${formData.color_primario || '#2563eb'} ${((formData.titulo_tamano || 32) - 16) / (64 - 16) * 100}%, #e5e7eb ${((formData.titulo_tamano || 32) - 16) / (64 - 16) * 100}%, #e5e7eb 100%)`
-                            }}
-                          />
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="number"
-                              min="16"
-                              max="64"
-                              value={formData.titulo_tamano || 32}
-                              onChange={handleInputChange}
-                              name="titulo_tamano"
-                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            <span className="text-sm text-gray-600">px</span>
-                          </div>
-                        </div>
-                        <p className="text-xs text-gray-500">
-                          Rango recomendado: 16-64px
-                        </p>
-                      </div>
-                    </div>
-                  </div>
                   
                   {/* Vista previa compacta del header */}
                   <div className="p-3 bg-white rounded-lg border">
@@ -1619,17 +1563,11 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                           </div>
                         </div>
                       )}
-                      <h1 
-                        style={{ 
-                          fontSize: `${Math.min(formData.titulo_tamano || 32, 24)}px`,
-                          fontFamily: `'${formData.tipografia || 'Inter'}', sans-serif`,
-                          color: formData.color_primario || '#2563eb',
-                          lineHeight: '1.1'
-                        }}
-                        className="font-bold truncate"
-                      >
-                        {formData.nombre_empresa || 'Empresa'}
-                      </h1>
+                      <div className="flex-1 truncate">
+                        <div className="text-lg font-bold text-gray-900">
+                          {extractPlainText(formData.nombre_empresa || 'Empresa')}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

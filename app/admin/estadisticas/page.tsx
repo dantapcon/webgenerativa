@@ -5,6 +5,7 @@ import { Empresa } from '@/lib/types/webgenerator';
 import { WebGeneratorService } from '@/lib/services/webgenerator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import RichTextDisplay from '@/components/ui/rich-text-display';
 import { 
   Building, 
   Globe, 
@@ -254,7 +255,9 @@ export default function EstadisticasPage() {
                       />
                     )}
                     <div>
-                      <h4 className="font-medium text-gray-900">{empresa.nombre_empresa}</h4>
+                      <div className="font-medium text-gray-900">
+                        <RichTextDisplay content={empresa.nombre_empresa} />
+                      </div>
                       <p className="text-sm text-gray-600">
                         {empresa.tipo_negocio && (
                           <span className="capitalize">{empresa.tipo_negocio} • </span>

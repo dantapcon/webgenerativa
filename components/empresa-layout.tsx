@@ -3,6 +3,7 @@
 import { Header } from '@/components/header';
 import { NavigationBar } from '@/components/navigation-bar';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import RichTextDisplay from '@/components/ui/rich-text-display';
 
 interface EmpresaLayoutProps {
   children: React.ReactNode;
@@ -17,7 +18,6 @@ interface EmpresaLayoutProps {
     logo_url?: string | null;
     logo_tamano?: string | null;
     logo_posicion?: 'izquierda' | 'centro' | 'derecha' | null;
-    tipografia?: string | null;
     colores?: {
       primario?: { color: string };
       secundario?: { color: string };
@@ -45,7 +45,6 @@ export function EmpresaLayout({ children, empresa, categoriaActiva }: EmpresaLay
           categorias={empresa.categorias}
           empresaSlug={empresa.slug_empresa}
           colorPrimario={empresa.colores?.primario?.color || '#2563eb'}
-          tipografia={empresa.tipografia}
           categoriaActiva={categoriaActiva}
         />
       )}
@@ -59,11 +58,9 @@ export function EmpresaLayout({ children, empresa, categoriaActiva }: EmpresaLay
       <footer className="bg-gray-900 text-white py-12 mt-16">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <h3 className="text-2xl font-bold mb-4" style={{ 
-              fontFamily: `'${empresa.tipografia}', sans-serif`
-            }}>
-              {empresa.nombre_empresa}
-            </h3>
+            <div className="text-2xl font-bold mb-4">
+              <RichTextDisplay content={empresa.nombre_empresa} />
+            </div>
             <div className="flex flex-col md:flex-row items-center justify-center gap-6">
               {empresa.direccion_empresa && (
                 <div className="flex items-center gap-2">
@@ -85,9 +82,9 @@ export function EmpresaLayout({ children, empresa, categoriaActiva }: EmpresaLay
               )}
             </div>
             <div className="mt-6 pt-6 border-t border-gray-800">
-              <p className="text-gray-400 text-sm">
-                © {new Date().getFullYear()} {empresa.nombre_empresa}. Todos los derechos reservados.
-              </p>
+              <div className="text-gray-400 text-sm">
+                © {new Date().getFullYear()} <RichTextDisplay content={empresa.nombre_empresa} className="inline" />. Todos los derechos reservados.
+              </div>
             </div>
           </div>
         </div>

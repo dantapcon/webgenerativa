@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { processImageUrl } from '@/lib/utils/image-url';
+import RichTextDisplay from '@/components/ui/rich-text-display';
 
 interface HeaderProps {
   empresa?: {
@@ -14,7 +15,6 @@ interface HeaderProps {
     logo_tamano?: string | null;
     logo_tamano_px?: number | null;
     logo_posicion?: 'izquierda' | 'centro' | 'derecha' | null;
-    titulo_tamano?: number | null;
     direccion_empresa?: string | null;
     telefono_empresa?: string | null;
     correo_empresa?: string | null;
@@ -24,7 +24,7 @@ interface HeaderProps {
       terciario?: { color: string };
       fondo?: { color: string };
     };
-    tipografia?: string | null;
+    // REMOVIDO: tipografia y titulo_tamano (ya no existen en BD)
   };
 }
 
@@ -36,7 +36,6 @@ export function Header({ empresa }: HeaderProps) {
     logo_tamano: 'mediano',
     logo_tamano_px: 48,
     logo_posicion: 'izquierda',
-    titulo_tamano: 32,
     direccion_empresa: null,
     telefono_empresa: null,
     correo_empresa: null,
@@ -44,8 +43,8 @@ export function Header({ empresa }: HeaderProps) {
       primario: { color: '#2563eb' },
       secundario: { color: '#1e40af' },
       terciario: { color: '#f97316' }
-    },
-    tipografia: 'Inter'
+    }
+    // REMOVIDO: tipografia y titulo_tamano (ya no existen en BD)
   };
 
   const empresaData = empresa || defaultEmpresa;
@@ -78,13 +77,11 @@ export function Header({ empresa }: HeaderProps) {
               </div>
             )}
             <div>
-              <h1 className="font-bold" style={{ 
-                color: colorPrimario,
-                fontFamily: `'${empresaData.tipografia}', sans-serif`,
-                fontSize: `${empresaData.titulo_tamano || 32}px`
+              <div className="font-bold text-2xl" style={{ 
+                color: colorPrimario
               }}>
-                {empresaData.nombre_empresa}
-              </h1>
+                <RichTextDisplay content={empresaData.nombre_empresa} />
+              </div>
               {empresaData.direccion_empresa && (
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <MapPin className="h-4 w-4" style={{ color: colorPrimario }} />
