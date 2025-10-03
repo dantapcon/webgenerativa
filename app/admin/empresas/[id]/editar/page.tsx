@@ -229,60 +229,64 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           return;
         }
         
+        console.log('🔍 DEBUG datos completos desde servicio:', {
+          empresa_id: data.id,
+          nombre: data.nombre_empresa,
+          colores_empresa: data.colores,
+          categorias_count: data.categorias?.length || 0,
+          primera_categoria: data.categorias?.[0],
+          ventana_flotante: data.ventana_flotante,
+          estructura_colores: data.colores ? Object.keys(data.colores) : 'Sin colores'
+        });
+        
         setEmpresa(data);
 
-        // Cargar colores desde la API de colorimetría
+        // ✅ CORREGIDO: Usar colores que ya vienen del servicio
         const colores = {
-          primario: '#2563eb',
-          secundario: '#1e40af', 
+          primario: data.color_primario || '#2563eb',
+          secundario: data.color_secundario || '#1e40af', 
           terciario: '#f97316'
         };
 
-        try {
-          const colorResponse = await fetch(`/api/colorimetria?referencia_id=${empresaId}&tipo_elemento=empresa`);
-          if (colorResponse.ok) {
-            const colorData = await colorResponse.json();
-            console.log('Colores cargados desde API:', colorData);
-            
-            if (colorData.success && colorData.data) {
-              // La API devuelve los colores organizados por subtipo
-              const coloresRecibidos = colorData.data;
-              if (coloresRecibidos.primario) colores.primario = coloresRecibidos.primario.color;
-              if (coloresRecibidos.secundario) colores.secundario = coloresRecibidos.secundario.color;
-              if (coloresRecibidos.terciario) colores.terciario = coloresRecibidos.terciario.color;
-            }
-          }
-        } catch (error) {
-          console.error('Error cargando colores:', error);
-          // Usar colores por defecto si hay error
+        // Priorizar colores del servicio de colorimetría
+        if (data.colores) {
+          if (data.colores.primario) colores.primario = data.colores.primario.color;
+          if (data.colores.secundario) colores.secundario = data.colores.secundario.color;
+          if (data.colores.terciario) colores.terciario = data.colores.terciario.color;
+          console.log('✅ Colores de empresa desde servicio colorimetría:', colores);
+        } else {
+          console.log('⚠️ Empresa sin colores en servicio colorimetría, usando valores de BD directos:', {
+            color_primario: data.color_primario,
+            color_secundario: data.color_secundario
+          });
         }
 
-        // Cargar color de ventana flotante desde colorimetría API ANTES de poblar formulario
+        console.log('🎨 DEBUG antes de asignar a formData:', {
+          colores_cargados: colores,
+          color_primario_final: colores.primario,
+          color_secundario_final: colores.secundario,
+          color_terciario_final: colores.terciario
+        });
+
+        // ✅ CORREGIDO: Cargar color de ventana flotante desde el servicio primero
         let colorVentanaFlotante = data.ventana_flotante?.fondo_color || '#ffffff';
         let brilloVentanaFlotante = 100;
         let opacidadVentanaFlotante = 100;
         
-        if (data.ventana_flotante?.id) {
-          try {
-            const colorResponse = await fetch(`/api/colorimetria?referencia_id=${data.ventana_flotante.id}&tipo_elemento=ventana_flotante`);
-            if (colorResponse.ok) {
-              const colorData = await colorResponse.json();
-              if (colorData.success && colorData.data && colorData.data.fondo) {
-                colorVentanaFlotante = colorData.data.fondo.color;
-                brilloVentanaFlotante = colorData.data.fondo.brillo || 100;
-                opacidadVentanaFlotante = colorData.data.fondo.opacidad || 100;
-                console.log('Color ventana flotante cargado desde API:', colorVentanaFlotante, `Brillo: ${brilloVentanaFlotante}%, Opacidad: ${opacidadVentanaFlotante}%`);
-                
-                // Actualizar estado de brillo y opacidad
-                setVentanaFlotanteBrilloOpacidad({
-                  brillo: brilloVentanaFlotante,
-                  opacidad: opacidadVentanaFlotante
-                });
-              }
-            }
-          } catch (error) {
-            console.error('Error cargando color de ventana flotante:', error);
-          }
+        // Priorizar colores del servicio de colorimetría
+        if (data.ventana_flotante?.colores?.fondo) {
+          colorVentanaFlotante = data.ventana_flotante.colores.fondo.color;
+          brilloVentanaFlotante = data.ventana_flotante.colores.fondo.brillo || 100;
+          opacidadVentanaFlotante = data.ventana_flotante.colores.fondo.opacidad || 100;
+          console.log('✅ Color ventana flotante desde servicio colorimetría:', colorVentanaFlotante, `Brillo: ${brilloVentanaFlotante}%, Opacidad: ${opacidadVentanaFlotante}%`);
+          
+          // Actualizar estado de brillo y opacidad
+          setVentanaFlotanteBrilloOpacidad({
+            brillo: brilloVentanaFlotante,
+            opacidad: opacidadVentanaFlotante
+          });
+        } else {
+          console.log('⚠️ Ventana flotante sin colorimetría, usando valor directo de BD:', colorVentanaFlotante);
         }
         
         // Poblar formulario con datos existentes (incluyendo color de API)
@@ -294,6 +298,10 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           descripcion_fondo_tipo: data.descripcion_fondo_tipo || 'color',
           descripcion_imagen_fondo: data.descripcion_imagen_fondo || '',
           video_descripcion: data.video_descripcion || '',
+          // ✅ CORREGIDO: Asignar colores de empresa al formData
+          color_primario: colores.primario,
+          color_secundario: colores.secundario, 
+          color_terciario: colores.terciario,
           // Campos para el modal de ventana flotante (color desde API)
           modal_activo: data.ventana_flotante?.activo || false,
           modal_titulo: data.ventana_flotante?.titulo || '',
@@ -301,7 +309,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           modal_imagen_url: data.ventana_flotante?.imagen_url || '',
           modal_video_url: data.ventana_flotante?.video_url || '',
           modal_fondo_tipo: data.ventana_flotante?.fondo_tipo || 'color',
-          modal_fondo_color: colorVentanaFlotante, // Usar color desde API
+          modal_fondo_color: colorVentanaFlotante,
           modal_fondo_imagen: data.ventana_flotante?.fondo_imagen || '',
           // Campo para sucursales/ubicaciones
           sucursales_activo: data.sucursales_activo || false,
@@ -314,46 +322,38 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           logo_tamano: data.logo_tamano || 'mediano',
           logo_tamano_px: data.logo_tamano_px || 48,
           logo_posicion: data.logo_posicion || 'izquierda',
-          video_promocional_url: data.video_promocional_url || '',
-          // Colores desde la API de colorimetría
-          color_primario: colores.primario,
-          color_secundario: colores.secundario,
-          color_terciario: colores.terciario
-          // REMOVIDO: tipografia y titulo_tamano (ya no existen en BD)
+          video_promocional_url: data.video_promocional_url || ''
         });
         
-        // Cargar categorías y subcategorías con colores desde colorimetría API
+        // Cargar categorías y subcategorías con colores desde el servicio
         if (data.categorias && data.categorias.length > 0) {
           const categoriasConColores = await Promise.all(
             data.categorias.map(async (cat) => {
-              let colorCategoria = cat.fondo_color || '#ffffff';
+              console.log(`🔍 DEBUG categoria "${cat.nombre}":`, {
+                id: cat.id,
+                nombre: cat.nombre,
+                colores: cat.colores,
+                fondo_color: cat.fondo_color,
+                tiene_colores_fondo: !!cat.colores?.fondo
+              });
+              
+              // ✅ CORREGIDO: Usar colores que ya vienen del servicio primero
+              let colorCategoria = '#ffffff';
               let brilloCategoria = 100;
               let opacidadCategoria = 100;
               
-              // Cargar color desde colorimetría API si la categoría tiene ID
-              if (cat.id) {
-                try {
-                  console.log(`🎨 Cargando color para categoría "${cat.nombre}" (ID: ${cat.id})`);
-                  const colorResponse = await fetch(`/api/colorimetria?referencia_id=${cat.id}&tipo_elemento=categoria`);
-                  if (colorResponse.ok) {
-                    const colorData = await colorResponse.json();
-                    console.log(`🎨 Respuesta API para categoría "${cat.nombre}":`, colorData);
-                    if (colorData.success && colorData.data && colorData.data.fondo) {
-                      colorCategoria = colorData.data.fondo.color;
-                      brilloCategoria = colorData.data.fondo.brillo || 100;
-                      opacidadCategoria = colorData.data.fondo.opacidad || 100;
-                      console.log(`✅ Color cargado para categoría ${cat.nombre}:`, colorCategoria, `Brillo: ${brilloCategoria}%, Opacidad: ${opacidadCategoria}%`);
-                    } else {
-                      console.log(`⚠️ No hay color en API para categoría ${cat.nombre}, usando fallback:`, colorCategoria);
-                    }
-                  } else {
-                    console.log(`❌ Error API response para categoría ${cat.nombre}:`, colorResponse.status);
-                  }
-                } catch (error) {
-                  console.error(`❌ Error cargando color de categoría ${cat.nombre}:`, error);
-                }
+              // Priorizar colores del servicio
+              if (cat.colores && cat.colores.fondo) {
+                colorCategoria = cat.colores.fondo.color;
+                brilloCategoria = cat.colores.fondo.brillo || 100;
+                opacidadCategoria = cat.colores.fondo.opacidad || 100;
+                console.log(`✅ Color de categoría "${cat.nombre}" desde servicio:`, colorCategoria, `Brillo: ${brilloCategoria}%, Opacidad: ${opacidadCategoria}%`);
+              } else if (cat.fondo_color) {
+                // Fallback al campo directo si existe
+                colorCategoria = cat.fondo_color;
+                console.log(`⚠️ Color de categoría "${cat.nombre}" desde fallback:`, colorCategoria);
               } else {
-                console.log(`⚠️ Categoría "${cat.nombre}" sin ID, usando color fallback:`, colorCategoria);
+                console.log(`⚠️ Categoría "${cat.nombre}" sin color, usando blanco por defecto`);
               }
 
               return {
@@ -369,28 +369,23 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                 opacidadCategoria,
                 subcategorias: cat.subcategorias ? await Promise.all(
                   cat.subcategorias.map(async (sub) => {
-                    let colorSubcategoria = (sub as any).fondo_color || '#ffffff';
+                    // ✅ CORREGIDO: Usar colores que ya vienen del servicio primero
+                    let colorSubcategoria = '#ffffff';
                     let brilloSubcategoria = 100;
                     let opacidadSubcategoria = 100;
                     
-                    // Cargar color desde colorimetría API si la subcategoría tiene ID
-                    if (sub.id) {
-                      try {
-                        console.log(`🎨 Cargando color para subcategoría "${sub.nombre}" (ID: ${sub.id})`);
-                        const colorResponse = await fetch(`/api/colorimetria?referencia_id=${sub.id}&tipo_elemento=subcategoria`);
-                        if (colorResponse.ok) {
-                          const colorData = await colorResponse.json();
-                          console.log(`🎨 Respuesta API para subcategoría "${sub.nombre}":`, colorData);
-                          if (colorData.success && colorData.data && colorData.data.fondo) {
-                            colorSubcategoria = colorData.data.fondo.color;
-                            brilloSubcategoria = colorData.data.fondo.brillo || 100;
-                            opacidadSubcategoria = colorData.data.fondo.opacidad || 100;
-                            console.log(`✅ Color cargado para subcategoría ${sub.nombre}:`, colorSubcategoria, `Brillo: ${brilloSubcategoria}%, Opacidad: ${opacidadSubcategoria}%`);
-                          }
-                        }
-                      } catch (error) {
-                        console.error(`❌ Error cargando color de subcategoría ${sub.nombre}:`, error);
-                      }
+                    // Priorizar colores del servicio
+                    if (sub.colores && sub.colores.fondo) {
+                      colorSubcategoria = sub.colores.fondo.color;
+                      brilloSubcategoria = sub.colores.fondo.brillo || 100;
+                      opacidadSubcategoria = sub.colores.fondo.opacidad || 100;
+                      console.log(`✅ Color de subcategoría "${sub.nombre}" desde servicio:`, colorSubcategoria, `Brillo: ${brilloSubcategoria}%, Opacidad: ${opacidadSubcategoria}%`);
+                    } else if ((sub as any).fondo_color) {
+                      // Fallback al campo directo si existe
+                      colorSubcategoria = (sub as any).fondo_color;
+                      console.log(`⚠️ Color de subcategoría "${sub.nombre}" desde fallback:`, colorSubcategoria);
+                    } else {
+                      console.log(`⚠️ Subcategoría "${sub.nombre}" sin color, usando blanco por defecto`);
                     }
                     
                     return {
@@ -478,13 +473,52 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     }));
   };
 
+  // Función para validar y normalizar colores hexadecimales
+  const validateAndNormalizeColor = (color: string): string => {
+    if (!color) return '#ffffff';
+    
+    // Quitar espacios en blanco
+    color = color.trim();
+    
+    // Si no empieza con #, agregarlo
+    if (!color.startsWith('#')) {
+      color = '#' + color;
+    }
+    
+    // Validar formato hexadecimal
+    const hexRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+    if (!hexRegex.test(color)) {
+      console.warn('Color inválido:', color, 'usando #ffffff por defecto');
+      return '#ffffff';
+    }
+    
+    // Convertir de 3 a 6 dígitos si es necesario
+    if (color.length === 4) {
+      color = '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3];
+    }
+    
+    return color.toUpperCase();
+  };
+
   // Función para manejar cambios de color en categorías y guardar en API
   const handleCategoriaColorChange = async (catIndex: number, newColor: string) => {
     const categoria = categorias[catIndex];
     
-    // Actualizar estado local inmediatamente
+    // Validar y normalizar el color
+    const colorNormalizado = validateAndNormalizeColor(newColor);
+    
+    console.log('🔍 DEBUG handleCategoriaColorChange:', {
+      catIndex,
+      newColor_original: newColor,
+      newColor_normalizado: colorNormalizado,
+      categoria: categoria,
+      categoriaId: categoria.id,
+      empresaId
+    });
+    
+    // Actualizar estado local inmediatamente con el color normalizado
     const newCategorias = [...categorias];
-    newCategorias[catIndex].fondo_color = newColor;
+    newCategorias[catIndex].fondo_color = colorNormalizado;
     setCategorias(newCategorias);
 
     // Guardar en API si la categoría tiene ID
@@ -497,10 +531,12 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           referencia_id: categoria.id,
           tipo_elemento: 'categoria',
           subtipo: 'fondo',
-          color: newColor,
+          color: colorNormalizado,
           brillo: valoresActuales.brillo,
           opacidad: valoresActuales.opacidad
         };
+
+        console.log('🚀 Enviando a API colorimetría:', colorData);
 
         const response = await fetch('/api/colorimetria', {
           method: 'POST',
@@ -516,7 +552,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           throw new Error(`Error al guardar color de categoría: ${errorData.error || 'Unknown error'}`);
         }
 
-        console.log(`Color de categoría ${categoria.nombre} guardado:`, newColor);
+        console.log(`Color de categoría ${categoria.nombre} guardado:`, colorNormalizado);
       } catch (error) {
         console.error('Error guardando color de categoría:', error);
         showAlert('error', 'Error al guardar el color de la categoría');
@@ -576,10 +612,13 @@ export default function EditarEmpresaPage({ params }: PageProps) {
 
   // Función para manejar cambios de color en ventana flotante y guardar en API
   const handleVentanaFlotanteColorChange = async (newColor: string) => {
+    // Validar y normalizar el color
+    const colorNormalizado = validateAndNormalizeColor(newColor);
+    
     // Actualizar estado local inmediatamente
     setFormData(prev => ({
       ...prev,
-      modal_fondo_color: newColor
+      modal_fondo_color: colorNormalizado
     }));
 
     // Guardar en API si la ventana flotante tiene ID
@@ -589,7 +628,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           referencia_id: empresa.ventana_flotante.id,
           tipo_elemento: 'ventana_flotante',
           subtipo: 'fondo',
-          color: newColor,
+          color: colorNormalizado,
           brillo: ventanaFlotanteBrilloOpacidad.brillo,
           opacidad: ventanaFlotanteBrilloOpacidad.opacidad
         };
@@ -683,10 +722,13 @@ export default function EditarEmpresaPage({ params }: PageProps) {
   const handleSubcategoriaColorChange = async (catIndex: number, subIndex: number, newColor: string) => {
     const subcategoria = categorias[catIndex].subcategorias?.[subIndex];
     
+    // Validar y normalizar el color
+    const colorNormalizado = validateAndNormalizeColor(newColor);
+    
     // Actualizar inmediatamente el estado local del color para feedback visual
     const newCategorias = [...categorias];
     if (newCategorias[catIndex].subcategorias?.[subIndex]) {
-      newCategorias[catIndex].subcategorias[subIndex].fondo_color = newColor;
+      newCategorias[catIndex].subcategorias[subIndex].fondo_color = colorNormalizado;
     }
     setCategorias(newCategorias);
     
@@ -707,7 +749,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             referencia_id: subcategoria.id,
             tipo_elemento: 'subcategoria',
             subtipo: 'fondo',
-            color: newColor,
+            color: validateAndNormalizeColor(newColor),
             brillo: valoresActuales.brillo,
             opacidad: valoresActuales.opacidad
           };
@@ -1362,12 +1404,12 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                             id="color_primario"
                             name="color_primario"
                             type="color"
-                            value={formData.color_primario}
+                            value={formData.color_primario || '#2563eb'}
                             onChange={handleInputChange}
                             className="w-12 h-10 p-1"
                           />
                           <Input
-                            value={formData.color_primario}
+                            value={formData.color_primario || '#2563eb'}
                             onChange={(e) => setFormData(prev => ({ ...prev, color_primario: e.target.value }))}
                             placeholder="#2563eb"
                             className="flex-1 text-sm"
@@ -1386,12 +1428,12 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                             id="color_secundario"
                             name="color_secundario"
                             type="color"
-                            value={formData.color_secundario}
+                            value={formData.color_secundario || '#1e40af'}
                             onChange={handleInputChange}
                             className="w-12 h-10 p-1"
                           />
                           <Input
-                            value={formData.color_secundario}
+                            value={formData.color_secundario || '#1e40af'}
                             onChange={(e) => setFormData(prev => ({ ...prev, color_secundario: e.target.value }))}
                             placeholder="#1e40af"
                             className="flex-1 text-sm"
@@ -1410,12 +1452,12 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                             id="color_terciario"
                             name="color_terciario"
                             type="color"
-                            value={formData.color_terciario}
+                            value={formData.color_terciario || '#f97316'}
                             onChange={handleInputChange}
                             className="w-12 h-10 p-1"
                           />
                           <Input
-                            value={formData.color_terciario}
+                            value={formData.color_terciario || '#f97316'}
                             onChange={(e) => setFormData(prev => ({ ...prev, color_terciario: e.target.value }))}
                             placeholder="#f97316"
                             className="flex-1 text-sm"
@@ -1429,19 +1471,19 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                         <div className="flex h-8 rounded overflow-hidden">
                           <div 
                             className="flex-[60] flex items-center justify-center text-white text-xs font-medium"
-                            style={{ backgroundColor: formData.color_primario }}
+                            style={{ backgroundColor: formData.color_primario || '#2563eb' }}
                           >
                             60%
                           </div>
                           <div 
                             className="flex-[30] flex items-center justify-center text-white text-xs font-medium"
-                            style={{ backgroundColor: formData.color_secundario }}
+                            style={{ backgroundColor: formData.color_secundario || '#1e40af' }}
                           >
                             30%
                           </div>
                           <div 
                             className="flex-[10] flex items-center justify-center text-white text-xs font-medium"
-                            style={{ backgroundColor: formData.color_terciario }}
+                            style={{ backgroundColor: formData.color_terciario || '#f97316' }}
                           >
                             10%
                           </div>
@@ -2169,7 +2211,6 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                                   id={`cat-fondo-color-${catIndex}`}
                                   value={categoria.fondo_color || '#ffffff'}
                                   onChange={(e) => {
-                                    console.log(`Cambiando color de categoría ${categoria.nombre} a:`, e.target.value);
                                     handleCategoriaColorChange(catIndex, e.target.value);
                                   }}
                                   className="w-12 h-10 border border-gray-300 rounded-md cursor-pointer"
@@ -2177,7 +2218,6 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                                 <Input
                                   value={categoria.fondo_color || '#ffffff'}
                                   onChange={(e) => {
-                                    console.log(`Cambiando color de categoría ${categoria.nombre} (texto) a:`, e.target.value);
                                     handleCategoriaColorChange(catIndex, e.target.value);
                                   }}
                                   placeholder="#ffffff"
@@ -2550,13 +2590,13 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                             <div className="flex items-center gap-2">
                               <input
                                 type="color"
-                                value={getSubcategoriaColor(subcategoria)}
+                                value={subcategoria.fondo_color || '#ffffff'}
                                 onChange={(e) => handleSubcategoriaColorChange(catIndex, subIndex, e.target.value)}
                                 className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
                               />
                               <Input
                                 type="text"
-                                value={getSubcategoriaColor(subcategoria)}
+                                value={subcategoria.fondo_color || '#ffffff'}
                                 onChange={(e) => handleSubcategoriaColorChange(catIndex, subIndex, e.target.value)}
                                 className="flex-1 text-sm"
                                 placeholder="#ffffff"
@@ -2624,7 +2664,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                               className="w-full h-12 border border-gray-300 rounded"
                               style={{ 
                                 backgroundColor: aplicarBrilloOpacidad(
-                                  getSubcategoriaColor(subcategoria),
+                                  subcategoria.fondo_color || '#ffffff',
                                   subcategoria.id ? (subcategoriasBrilloOpacidad[subcategoria.id]?.brillo || 100) : 100,
                                   subcategoria.id ? (subcategoriasBrilloOpacidad[subcategoria.id]?.opacidad || 100) : 100
                                 )

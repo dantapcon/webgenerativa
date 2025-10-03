@@ -494,11 +494,52 @@ export class WebGeneratorService {
         console.warn('Error obteniendo productos:', productosError.message);
       }
 
+      // 🎨 NUEVO: Cargar colores de la empresa
+      const coloresEmpresa = await ColorimetriaService.getColoresElemento(empresa.id, 'empresa');
+
+      // 🎨 NUEVO: Cargar colores para categorías
+      const categoriasConColores = await Promise.all(
+        categoriasOrdenadas.map(async (categoria) => {
+          if (categoria.id !== -1) { // No cargar colores para la categoría especial de ubicaciones
+            const coloresCategoria = await ColorimetriaService.getColoresElemento(categoria.id, 'categoria');
+            
+            // Cargar colores para subcategorías
+            const subcategoriasConColores = await Promise.all(
+              categoria.subcategorias?.map(async (subcategoria: any) => {
+                const coloresSubcategoria = await ColorimetriaService.getColoresElemento(subcategoria.id, 'subcategoria');
+                return {
+                  ...subcategoria,
+                  colores: coloresSubcategoria
+                };
+              }) || []
+            );
+
+            return {
+              ...categoria,
+              colores: coloresCategoria,
+              subcategorias: subcategoriasConColores
+            };
+          }
+          return categoria;
+        })
+      );
+
+      // 🎨 NUEVO: Cargar colores para ventana flotante
+      let ventanaFlotanteConColores = ventanaFlotante;
+      if (ventanaFlotante) {
+        const coloresVentana = await ColorimetriaService.getColoresElemento(ventanaFlotante.id, 'ventana_flotante');
+        ventanaFlotanteConColores = {
+          ...ventanaFlotante,
+          colores: coloresVentana
+        };
+      }
+
       return {
         ...empresa,
-        categorias: categoriasOrdenadas,
+        colores: coloresEmpresa,
+        categorias: categoriasConColores,
         productos: productos || [],
-        ventana_flotante: ventanaFlotante || undefined
+        ventana_flotante: ventanaFlotanteConColores || undefined
       };
     } catch (error) {
       console.error('Error en getEmpresaById:', error);
