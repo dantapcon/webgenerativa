@@ -192,6 +192,8 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       fondo_color?: string;
       fondo_tipo?: 'color' | 'imagen';
       fondo_imagen?: string;
+      brilloSubcategoria?: number;
+      opacidadSubcategoria?: number;
     }>;
   }>>([]);
 
@@ -203,6 +205,37 @@ export default function EditarEmpresaPage({ params }: PageProps) {
   const showAlert = (type: 'success' | 'error', message: string) => {
     setAlert({ type, message });
     setTimeout(() => setAlert(null), 5000);
+  };
+
+  // Funciones auxiliares para aplicar efectos de color
+  const aplicarBrilloOpacidad = (color: string, brillo: number = 100, opacidad: number = 100) => {
+    if (!color || color === '#ffffff') return color;
+    
+    try {
+      // Convertir hex a RGB
+      const hex = color.replace('#', '');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      
+      // Aplicar brillo (ajustar luminosidad)
+      const adjustBrightness = (value: number, brightnessPercent: number) => {
+        const adjusted = value * (brightnessPercent / 100);
+        return Math.min(255, Math.max(0, Math.round(adjusted)));
+      };
+      
+      const rBright = adjustBrightness(r, brillo);
+      const gBright = adjustBrightness(g, brillo);
+      const bBright = adjustBrightness(b, brillo);
+      
+      // Aplicar opacidad
+      const alpha = opacidad / 100;
+      
+      return `rgba(${rBright}, ${gBright}, ${bBright}, ${alpha})`;
+    } catch (error) {
+      console.error('Error aplicando brillo/opacidad:', error);
+      return color;
+    }
   };
 
   // Obtener parámetros de forma asíncrona
@@ -379,13 +412,18 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                       colorSubcategoria = sub.colores.fondo.color;
                       brilloSubcategoria = sub.colores.fondo.brillo || 100;
                       opacidadSubcategoria = sub.colores.fondo.opacidad || 100;
-                      console.log(`✅ Color de subcategoría "${sub.nombre}" desde servicio:`, colorSubcategoria, `Brillo: ${brilloSubcategoria}%, Opacidad: ${opacidadSubcategoria}%`);
                     } else if ((sub as any).fondo_color) {
                       // Fallback al campo directo si existe
                       colorSubcategoria = (sub as any).fondo_color;
-                      console.log(`⚠️ Color de subcategoría "${sub.nombre}" desde fallback:`, colorSubcategoria);
-                    } else {
-                      console.log(`⚠️ Subcategoría "${sub.nombre}" sin color, usando blanco por defecto`);
+                    }
+                    
+                    // NUEVO: Recuperar color del localStorage si existe (para persistencia entre navegación)
+                    if (sub.id && empresaId) {
+                      const storageKey = `subcategoria_color_${empresaId}_${sub.id}`;
+                      const colorGuardado = localStorage.getItem(storageKey);
+                      if (colorGuardado) {
+                        colorSubcategoria = colorGuardado;
+                      }
                     }
                     
                     return {
@@ -395,7 +433,9 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                       imagen_url: sub.imagen_url || '',
                       enlace_externo: sub.enlace_externo || '',
                       orden: sub.orden,
+                      fondo_tipo: (sub as any).fondo_tipo || 'color',
                       fondo_color: colorSubcategoria,
+                      fondo_imagen: (sub as any).fondo_imagen || '',
                       brilloSubcategoria,
                       opacidadSubcategoria
                     };
@@ -408,6 +448,15 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           // Actualizar estado de brillo y opacidad para todas las categorías de una vez
           const brilloOpacidadMap: Record<number, {brillo: number, opacidad: number}> = {};
           const subcategoriasBrilloOpacidadMap: Record<number, {brillo: number, opacidad: number}> = {};
+          
+          // ✅ NUEVO: Poblar caché de colores de subcategorías
+          const subcategoriasColoresCacheMap: Record<number, {
+            fondo_color: string;
+            brillo: number;
+            opacidad: number;
+            fondo_tipo: string;
+            fondo_imagen: string;
+          }> = {};
           
           categoriasConColores.forEach(cat => {
             if (cat.id) {
@@ -434,7 +483,12 @@ export default function EditarEmpresaPage({ params }: PageProps) {
           console.log('🎨 Categorías finales con colores:', categoriasConColores.map(cat => ({
             nombre: cat.nombre,
             id: cat.id,
-            fondo_color: cat.fondo_color
+            fondo_color: cat.fondo_color,
+            subcategorias: cat.subcategorias?.map(sub => ({
+              nombre: sub.nombre,
+              id: sub.id,
+              fondo_color: sub.fondo_color
+            }))
           })));
           setCategorias(categoriasConColores);
         } else {
@@ -457,6 +511,31 @@ export default function EditarEmpresaPage({ params }: PageProps) {
       });
     };
   }, [empresaId, router]);
+
+  // Efecto para asegurar que los colores de subcategorías se mantengan actualizados
+  useEffect(() => {
+    if (categorias.length > 0) {
+      const subcategoriasBrilloOpacidadMap: Record<number, {brillo: number, opacidad: number}> = {};
+      
+      categorias.forEach(cat => {
+        cat.subcategorias?.forEach((sub: any) => {
+          if (sub.id && (sub.brilloSubcategoria !== undefined || sub.opacidadSubcategoria !== undefined)) {
+            subcategoriasBrilloOpacidadMap[sub.id] = {
+              brillo: sub.brilloSubcategoria || 100,
+              opacidad: sub.opacidadSubcategoria || 100
+            };
+          }
+        });
+      });
+      
+      if (Object.keys(subcategoriasBrilloOpacidadMap).length > 0) {
+        setSubcategoriasBrilloOpacidad(prev => ({
+          ...prev,
+          ...subcategoriasBrilloOpacidadMap
+        }));
+      }
+    }
+  }, [categorias]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -725,12 +804,18 @@ export default function EditarEmpresaPage({ params }: PageProps) {
     // Validar y normalizar el color
     const colorNormalizado = validateAndNormalizeColor(newColor);
     
-    // Actualizar inmediatamente el estado local del color para feedback visual
+    // Actualizar estado local inmediatamente con el color normalizado
     const newCategorias = [...categorias];
     if (newCategorias[catIndex].subcategorias?.[subIndex]) {
       newCategorias[catIndex].subcategorias[subIndex].fondo_color = colorNormalizado;
     }
     setCategorias(newCategorias);
+    
+    // PERSISTIR en localStorage para evitar pérdida al navegar
+    if (subcategoria?.id) {
+      const storageKey = `subcategoria_color_${empresaId}_${subcategoria.id}`;
+      localStorage.setItem(storageKey, colorNormalizado);
+    }
     
     // Guardar en API si la subcategoría tiene ID
     if (subcategoria?.id && empresaId) {
@@ -749,7 +834,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             referencia_id: subcategoria.id,
             tipo_elemento: 'subcategoria',
             subtipo: 'fondo',
-            color: validateAndNormalizeColor(newColor),
+            color: colorNormalizado,
             brillo: valoresActuales.brillo,
             opacidad: valoresActuales.opacidad
           };
@@ -764,21 +849,14 @@ export default function EditarEmpresaPage({ params }: PageProps) {
 
           if (!response.ok) {
             const errorData = await response.json();
-            console.error('Error API response:', errorData);
             throw new Error(`Error al guardar color de subcategoría: ${errorData.error || 'Unknown error'}`);
           }
 
-          const responseData = await response.json();
-          console.log(`✅ Color de subcategoría ${subcategoria.nombre} guardado:`, newColor, responseData);
-          
-          // NO recargar datos para evitar loop infinito
-          // Los colores se actualizarán en el próximo refresh manual
-          
-          // Mostrar notificación de éxito
-          showAlert('success', `Color de subcategoría "${subcategoria.nombre}" guardado correctamente`);
+          // Limpiar localStorage una vez guardado en BD
+          const storageKey = `subcategoria_color_${empresaId}_${subcategoria.id}`;
+          localStorage.removeItem(storageKey);
           
         } catch (error) {
-          console.error('Error guardando color de subcategoría:', error);
           showAlert('error', 'Error al guardar el color de la subcategoría');
         }
       }, 300); // Debounce más corto para color
@@ -823,7 +901,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
             referencia_id: subcategoria.id,
             tipo_elemento: 'subcategoria',
             subtipo: 'fondo',
-            color: getSubcategoriaColor(subcategoria),
+            color: subcategoria.fondo_color || '#ffffff',
             brillo: nuevosValores.brillo,
             opacidad: nuevosValores.opacidad
           };

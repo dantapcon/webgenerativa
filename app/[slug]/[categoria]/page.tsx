@@ -173,38 +173,33 @@ export default async function CategoriaPage({ params }: PageProps) {
                 ) || [];
                 const tieneProductos = productosSubcategoria.length > 0;
                 
-                // Debug: Log para verificar qué colores se están obteniendo
-                console.log(`[DEBUG] Subcategoría ${extractPlainText(subcategoria.nombre)}:`, {
-                  subcategoria_id: subcategoria.id,
-                  subcategoria_completa: subcategoria,
-                  colores_objeto: subcategoria.colores,
-                  fondo_directo: subcategoria.fondo_color,
-                  color_colorimetria: subcategoria.colores?.fondo?.color,
-                  brillo_colorimetria: subcategoria.colores?.fondo?.brillo,
-                  opacidad_colorimetria: subcategoria.colores?.fondo?.opacidad,
-                  colorFondoSubcategoria,
-                  brilloSubcategoria,
-                  opacidadSubcategoria,
-                  colorFinal: aplicarBrilloOpacidad(colorFondoSubcategoria, brilloSubcategoria, opacidadSubcategoria),
-                  productosCount: productosSubcategoria.length
-                });
-                
                 // Si no hay color definido, usar el color base con efectos aplicados
                 const colorFinal = aplicarBrilloOpacidad(colorFondoSubcategoria, brilloSubcategoria, opacidadSubcategoria);
                 
-                // Log adicional para debugging
-                console.log(`🔥 TARJETA ${extractPlainText(subcategoria.nombre)} - Color aplicado:`, colorFinal);
+                // Log para debug
+                console.log(`🎨 RENDERIZANDO ${subcategoria.nombre}:`, {
+                  colorFondoSubcategoria,
+                  brilloSubcategoria,
+                  opacidadSubcategoria,
+                  colorFinal
+                });
                 
                 return (
                 <div
                   key={subcategoria.id}
                   className="group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden rounded-xl border shadow"
                   style={{
-                    backgroundColor: colorFinal + ' !important',
-                    background: 'none'
-                  }}
+                    backgroundColor: colorFinal,
+                    background: colorFinal,
+                    '--bg-color': colorFinal
+                  } as React.CSSProperties & { '--bg-color': string }}
                 >
-                  <div className="p-6">
+                  <div className="p-6"
+                    style={{
+                      backgroundColor: colorFinal,
+                      background: colorFinal
+                    }}
+                  >
                     {/* Layout vertical */}
                     {categoriaEncontrada.tipo_display === 'vertical' ? (
                       <div className="md:flex md:gap-6">
