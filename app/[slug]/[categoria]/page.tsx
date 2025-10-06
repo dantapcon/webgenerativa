@@ -1,4 +1,4 @@
-import { WebGeneratorService } from '@/lib/services/webgenerator';
+import CachedWebGeneratorService from '@/lib/services/cached-webgenerator';
 import { notFound } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -39,7 +39,7 @@ export default async function CategoriaPage({ params }: PageProps) {
   // Log para debugging en producción
   console.log(`[${new Date().toISOString()}] Cargando categoría "${categoria}" para empresa "${slug}"`);
   
-  const empresa = await WebGeneratorService.getEmpresaBySlug(slug);
+  const empresa = await CachedWebGeneratorService.getEmpresaBySlug(slug);
   
   if (!empresa) {
     notFound();
@@ -52,7 +52,7 @@ export default async function CategoriaPage({ params }: PageProps) {
 
   // Buscar la categoría específica usando la función generateSlug consistente
   const categoriaEncontrada = empresa.categorias?.find(
-    cat => generateSlug(cat.nombre) === categoria
+    (cat: any) => generateSlug(cat.nombre) === categoria
   );
 
   if (!categoriaEncontrada) {
@@ -70,7 +70,7 @@ export default async function CategoriaPage({ params }: PageProps) {
   // Filtrar productos de esta categoría específica que NO tienen subcategoría
   // (productos que pertenecen directamente a la categoría, no a subcategorías)
   const productosDeCategoria = empresa.productos?.filter(
-    producto => producto.categoria_id === categoriaEncontrada.id && !producto.subcategoria_id
+    (producto: any) => producto.categoria_id === categoriaEncontrada.id && !producto.subcategoria_id
   ) || [];
 
   return (
@@ -387,13 +387,13 @@ export default async function CategoriaPage({ params }: PageProps) {
 }
 
 export async function generateStaticParams(props: { params: { slug: string } }) {
-  const empresa = await WebGeneratorService.getEmpresaBySlug(props.params.slug);
+  const empresa = await CachedWebGeneratorService.getEmpresaBySlug(props.params.slug);
   
   if (!empresa || !empresa.categorias) {
     return [];
   }
 
-  return empresa.categorias.map((categoria) => ({
+  return empresa.categorias.map((categoria: any) => ({
     categoria: generateSlug(categoria.nombre),
   }));
 }

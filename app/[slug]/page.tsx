@@ -1,4 +1,4 @@
-import { WebGeneratorService } from '@/lib/services/webgenerator';
+import { CachedWebGeneratorService } from '@/lib/services/cached-webgenerator';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
@@ -89,7 +89,7 @@ export default async function EmpresaPage({ params }: PageProps) {
   // Log para debugging en producción
   console.log(`[${new Date().toISOString()}] Cargando empresa con slug: ${slug}`);
   
-  const empresa = await WebGeneratorService.getEmpresaBySlug(slug);
+  const empresa = await CachedWebGeneratorService.getEmpresaBySlug(slug);
   
   if (!empresa) {
     notFound();
@@ -113,7 +113,7 @@ export default async function EmpresaPage({ params }: PageProps) {
   // Log adicional para debugging de categorías/subcategorías
   console.log(`[${new Date().toISOString()}] Empresa cargada: ${empresa.nombre_empresa}`);
   console.log(`[${new Date().toISOString()}] Categorías encontradas: ${empresa.categorias?.length || 0}`);
-  empresa.categorias?.forEach(cat => {
+  empresa.categorias?.forEach((cat: any) => {
     console.log(`[${new Date().toISOString()}] Categoría "${cat.nombre}" - Subcategorías: ${cat.subcategorias?.length || 0}`);
   });
 

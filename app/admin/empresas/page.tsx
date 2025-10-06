@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Empresa } from '@/lib/types/webgenerator';
-import { WebGeneratorService } from '@/lib/services/webgenerator';
+import { CachedWebGeneratorService } from '@/lib/services/cached-webgenerator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -70,8 +70,8 @@ export default function AdminEmpresasPage() {
   const cargarEmpresas = async () => {
     setIsLoading(true);
     try {
-      const data = await WebGeneratorService.getAllEmpresas();
-      const empresasConEstado = data.map(empresa => {
+      const data = await CachedWebGeneratorService.getAllEmpresas();
+      const empresasConEstado = data.map((empresa: any) => {
         const estadoInfo = getEstadoInfo(empresa.estado_sitio);
         return {
           ...empresa,
@@ -91,7 +91,7 @@ export default function AdminEmpresasPage() {
 
   const toggleEstadoEmpresa = async (id: number) => {
     try {
-      await WebGeneratorService.toggleEmpresaStatus(id);
+      await CachedWebGeneratorService.toggleEmpresaStatus(id);
       showAlert('success', 'Estado de la empresa actualizado');
       cargarEmpresas();
     } catch (error) {
@@ -103,7 +103,7 @@ export default function AdminEmpresasPage() {
   const eliminarEmpresa = async (id: number, nombre: string) => {
     if (window.confirm(`¿Estás seguro de que deseas eliminar "${nombre}"?`)) {
       try {
-        await WebGeneratorService.deleteEmpresa(id);
+        await CachedWebGeneratorService.deleteEmpresa(id);
         showAlert('success', 'Empresa eliminada exitosamente');
         cargarEmpresas();
       } catch (error) {

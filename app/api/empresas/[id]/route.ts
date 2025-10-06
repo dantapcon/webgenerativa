@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { WebGeneratorService } from '@/lib/services/webgenerator';
+import { CachedWebGeneratorService } from '@/lib/services/cached-webgenerator';
+import { CacheService } from '@/lib/services/cache';
 
 export async function GET(
   request: NextRequest,
@@ -16,7 +17,7 @@ export async function GET(
       }, { status: 400 });
     }
 
-    const empresa = await WebGeneratorService.getEmpresaById(numericId);
+    const empresa = await CachedWebGeneratorService.getEmpresaById(numericId);
     
     if (!empresa) {
       return NextResponse.json({
@@ -58,7 +59,7 @@ export async function PUT(
 
     const body = await request.json();
     
-    const empresa = await WebGeneratorService.updateEmpresa(numericId, body);
+    const empresa = await CachedWebGeneratorService.updateEmpresa(numericId, body);
     
     return NextResponse.json({
       success: true,
@@ -92,7 +93,7 @@ export async function DELETE(
       }, { status: 400 });
     }
 
-    await WebGeneratorService.deleteEmpresa(numericId);
+    await CachedWebGeneratorService.deleteEmpresa(numericId);
     
     return NextResponse.json({
       success: true,

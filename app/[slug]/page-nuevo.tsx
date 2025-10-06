@@ -1,4 +1,4 @@
-import { WebGeneratorService } from '@/lib/services/webgenerator';
+import { CachedWebGeneratorService } from '@/lib/services/cached-webgenerator';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
@@ -12,7 +12,7 @@ interface PageProps {
 export default async function EmpresaPage({ params }: PageProps) {
   const { slug } = await params;
   
-  const empresa = await WebGeneratorService.getEmpresaBySlug(slug);
+  const empresa = await CachedWebGeneratorService.getEmpresaBySlug(slug);
   
   if (!empresa) {
     notFound();

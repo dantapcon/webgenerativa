@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { WebGeneratorService } from '@/lib/services/webgenerator';
+import { CachedWebGeneratorService } from '@/lib/services/cached-webgenerator';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const result = await WebGeneratorService.createEmpresa(body);
+    const result = await CachedWebGeneratorService.createEmpresa(body);
     
     return NextResponse.json({
       success: true,
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const empresas = await WebGeneratorService.getAllEmpresas();
+    const empresas = await CachedWebGeneratorService.getAllEmpresas();
     
     return NextResponse.json({
       success: true,

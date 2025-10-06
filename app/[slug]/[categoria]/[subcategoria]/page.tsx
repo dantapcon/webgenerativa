@@ -1,4 +1,4 @@
-import { WebGeneratorService } from '@/lib/services/webgenerator';
+import { CachedWebGeneratorService } from '@/lib/services/cached-webgenerator';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -23,7 +23,7 @@ export default async function SubcategoriaPage({ params }: PageProps) {
   // Log para debugging en producción
   console.log(`[${new Date().toISOString()}] Cargando subcategoría "${subcategoria}" en categoría "${categoria}" para empresa "${slug}"`);
   
-  const empresa = await WebGeneratorService.getEmpresaBySlug(slug);
+  const empresa = await CachedWebGeneratorService.getEmpresaBySlug(slug);
   
   if (!empresa) {
     notFound();
@@ -36,7 +36,7 @@ export default async function SubcategoriaPage({ params }: PageProps) {
 
   // Buscar la categoría específica
   const categoriaEncontrada = empresa.categorias?.find(
-    cat => generateSlug(cat.nombre) === categoria
+    (cat: any) => generateSlug(cat.nombre) === categoria
   );
 
   if (!categoriaEncontrada) {
@@ -45,7 +45,7 @@ export default async function SubcategoriaPage({ params }: PageProps) {
 
   // Buscar la subcategoría específica
   const subcategoriaEncontrada = categoriaEncontrada.subcategorias?.find(
-    subcat => generateSlug(subcat.nombre) === subcategoria
+    (subcat: any) => generateSlug(subcat.nombre) === subcategoria
   );
 
   if (!subcategoriaEncontrada) {
@@ -81,7 +81,7 @@ export default async function SubcategoriaPage({ params }: PageProps) {
 
   // Filtrar productos de esta subcategoría específica
   const productosDeSubcategoria = empresa.productos?.filter(
-    producto => producto.subcategoria_id === subcategoriaEncontrada.id
+    (producto: any) => producto.subcategoria_id === subcategoriaEncontrada.id
   ) || [];
 
   return (
@@ -163,21 +163,21 @@ export default async function SubcategoriaPage({ params }: PageProps) {
 }
 
 export async function generateStaticParams({ params }: { params: { slug: string; categoria: string } }) {
-  const empresa = await WebGeneratorService.getEmpresaBySlug(params.slug);
+  const empresa = await CachedWebGeneratorService.getEmpresaBySlug(params.slug);
   
   if (!empresa || !empresa.categorias) {
     return [];
   }
 
   const categoria = empresa.categorias.find(
-    cat => generateSlug(cat.nombre) === params.categoria
+    (cat: any) => generateSlug(cat.nombre) === params.categoria
   );
 
   if (!categoria || !categoria.subcategorias) {
     return [];
   }
 
-  return categoria.subcategorias.map((subcategoria) => ({
+  return categoria.subcategorias.map((subcategoria: any) => ({
     subcategoria: generateSlug(subcategoria.nombre),
   }));
 }
