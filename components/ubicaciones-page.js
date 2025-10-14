@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Phone, Mail, Clock, MessageSquare } from 'lucide-react';
-import SimpleGoogleMap from '@/components/simple-google-map';
+import UniversalMap from '@/components/UniversalMap';
 
 /**
  * @typedef {Object} Sucursal
@@ -27,14 +27,29 @@ import SimpleGoogleMap from '@/components/simple-google-map';
  */
 export default function UbicacionesPage({ empresaId, colorPrimario = '#2563eb', empresaNombre = 'Nuestra Empresa' }) {
   const [sucursales, setSucursales] = useState([]);
+  const [empresa, setEmpresa] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchSucursales = async () => {
+    const fetchData = async () => {
       try {
         const supabase = createClient();
         
+        // Cargar datos de la empresa (incluyendo tipo_mapa)
+        const { data: empresaData, error: empresaError } = await supabase
+          .from('empresas')
+          .select('id, nombre_empresa, tipo_mapa')
+          .eq('id', empresaId)
+          .single();
+
+        if (empresaError) {
+          throw empresaError;
+        }
+
+        setEmpresa(empresaData);
+        
+        // Cargar sucursales
         const { data, error } = await supabase
           .from('sucursales')
           .select('*')
@@ -56,7 +71,7 @@ export default function UbicacionesPage({ empresaId, colorPrimario = '#2563eb', 
     };
 
     if (empresaId) {
-      fetchSucursales();
+      fetchData();
     }
   }, [empresaId]);
 
@@ -217,10 +232,25 @@ export default function UbicacionesPage({ empresaId, colorPrimario = '#2563eb', 
           <Card>
             <CardContent className="p-0">
               <div className="h-96 rounded-lg overflow-hidden">
-                <SimpleGoogleMap 
-                  sucursales={sucursales} 
-                  colorPrimario={colorPrimario}
-                />
+                {empresa ? (
+                  <UniversalMap 
+                    sucursales={sucursales} 
+                    tipoMapa={empresa.tipo_mapa || 'google'}
+                    empresa={{
+                      nombre_empresa: empresa.nombre_empresa || empresaNombre,
+                      telefono_empresa: empresa.telefono_empresa,
+                      correo_empresa: empresa.correo_empresa
+                    }}
+                    height="400px"
+                  />
+                ) : (
+                  <div className="h-full flex items-center justify-center bg-gray-50">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
+                      <p className="text-gray-600">Cargando mapa...</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

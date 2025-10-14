@@ -1,23 +1,67 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useSucursales, type SucursalFormData } from '@/hooks/useSucursales';
-import type { Sucursal } from '@/lib/types/webgenerator';
+import type { Sucursal, Empresa } from '@/lib/types/webgenerator';
 import { Plus, Edit2, Trash2, MapPin, Phone, Mail, Clock } from 'lucide-react';
+import MapSelector from '@/components/admin/MapSelector';
 
 interface SucursalesManagerProps {
   empresaId: number;
+  empresa?: Empresa;
 }
 
-export default function SucursalesManager({ empresaId }: SucursalesManagerProps) {
+export default function SucursalesManager({ empresaId, empresa }: SucursalesManagerProps) {
   const { sucursales, loading, addSucursal, updateSucursal, deleteSucursal } = useSucursales(empresaId);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [empresaData, setEmpresaData] = useState<Empresa | null>(empresa || null);
+
+  // Cargar datos de empresa si no se proporcionan
+  useEffect(() => {
+    if (!empresaData && empresaId) {
+      const fetchEmpresa = async () => {
+        try {
+          const response = await fetch(`/api/empresas/${empresaId}`);
+          if (response.ok) {
+            const result = await response.json();
+            const data = result.data || result; // Manejar ambos formatos
+            setEmpresaData(data);
+          }
+        } catch (error) {
+          console.error('Error cargando empresa:', error);
+        }
+      };
+      fetchEmpresa();
+    }
+  }, [empresaId, empresaData]);
+
+  // Función para actualizar el tipo de mapa
+  const handleMapTypeUpdate = async (tipoMapa: 'google' | 'openstreetmap') => {
+    try {
+      const response = await fetch(`/api/empresas/${empresaId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tipo_mapa: tipoMapa }),
+      });
+
+      if (response.ok) {
+        setEmpresaData(prev => prev ? { ...prev, tipo_mapa: tipoMapa } : null);
+      } else {
+        throw new Error('Error actualizando tipo de mapa');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al actualizar el tipo de mapa');
+    }
+  };
 
   const [formData, setFormData] = useState<SucursalFormData>({
     nombre: '',
@@ -135,6 +179,17 @@ export default function SucursalesManager({ empresaId }: SucursalesManagerProps)
         <h1 className="text-3xl font-bold">Gestión de Sucursales</h1>
         <p className="text-gray-600 mt-2">Administra las sucursales y ubicaciones de tu empresa</p>
       </div>
+
+      {/* Configuración del tipo de mapa */}
+      {empresaData && (
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">🗺️ Configuración de Mapas</h2>
+          <MapSelector 
+            value={empresaData.tipo_mapa || null}
+            onChange={handleMapTypeUpdate}
+          />
+        </div>
+      )}
 
       {/* Botón para agregar nueva sucursal */}
       {!isAddingNew && editingId === null && (

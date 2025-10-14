@@ -14,20 +14,13 @@ export function useGoogleMaps() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
-    if (!apiKey) {
-      setError('Google Maps API key no está configurada');
-      return;
-    }
-
     // Si ya está cargado, no hacer nada
     if (isGoogleMapsLoaded()) {
       setIsLoaded(true);
       return;
     }
 
-    // Usar el cargador centralizado
+    // Iniciar la carga
     setIsLoading(true);
     
     loadGoogleMapsAPI()
@@ -39,8 +32,11 @@ export function useGoogleMaps() {
         setError(err.message || 'Error al cargar Google Maps');
         setIsLoading(false);
       });
-
   }, []);
 
-  return { isLoaded, isLoading, error };
+  return {
+    isLoaded,
+    isLoading,
+    error
+  };
 }

@@ -1299,7 +1299,7 @@ export default function EditarEmpresaPage({ params }: PageProps) {
                 <h2 className="text-2xl font-bold text-gray-900">📍 Gestión de Sucursales</h2>
                 <p className="text-gray-600">Administrar las ubicaciones de la empresa</p>
               </div>
-              <SucursalesManager empresaId={empresaId} />
+              <SucursalesManager empresaId={empresaId} empresa={empresa} />
             </div>
           ) : activeSection === 'administrador' ? (
             <div>

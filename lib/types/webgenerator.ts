@@ -33,6 +33,7 @@ export interface Empresa {
   video_descripcion?: string | null;
   // Campo para sucursales/ubicaciones
   sucursales_activo?: boolean | null;
+  tipo_mapa?: 'google' | 'openstreetmap' | null;
   correo_empresa?: string | null;
   telefono_empresa?: string | null;
   direccion_empresa?: string | null;

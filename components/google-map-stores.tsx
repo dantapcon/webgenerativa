@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import type { Sucursal } from '@/lib/types/webgenerator';
+import { loadGoogleMapsAPI } from '@/lib/utils/google-maps-loader';
 
 interface GoogleMapWithStoresProps {
   sucursales: Sucursal[];
@@ -18,29 +19,11 @@ export default function GoogleMapWithStores({
   const storeLocatorRef = useRef<any>(null);
 
   useEffect(() => {
-    // Verificar si Google Maps API está disponible
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-    if (!apiKey) {
-      console.warn('Google Maps API key no configurada');
-      return;
-    }
-
-    // Cargar Google Maps API y Extended Component Library
+    // Cargar Google Maps API
     const loadGoogleMaps = async () => {
       try {
-        // Cargar Google Maps API
-        if (!window.google) {
-          const script = document.createElement('script');
-          script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,marker&loading=async`;
-          script.async = true;
-          script.defer = true;
-          document.head.appendChild(script);
-          
-          await new Promise((resolve) => {
-            script.onload = resolve;
-          });
-        }
-
+        await loadGoogleMapsAPI();
+        
         // Cargar Extended Component Library
         if (!customElements.get('gmpx-store-locator')) {
           const extendedScript = document.createElement('script');
