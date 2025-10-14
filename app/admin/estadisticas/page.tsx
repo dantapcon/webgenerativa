@@ -21,6 +21,15 @@ export default function EstadisticasPage() {
   const [empresas, setEmpresas] = useState<Empresa[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Función para extraer texto plano del HTML
+  const extractPlainText = (html: string): string => {
+    if (!html) return '';
+    // Crear un elemento temporal para extraer el texto
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    return tempDiv.textContent || tempDiv.innerText || '';
+  };
+
   const cargarEmpresas = async () => {
     setIsLoading(true);
     try {
@@ -254,7 +263,7 @@ export default function EstadisticasPage() {
                       />
                     )}
                     <div>
-                      <h4 className="font-medium text-gray-900">{empresa.nombre_empresa}</h4>
+                      <h4 className="font-medium text-gray-900">{extractPlainText(empresa.nombre_empresa)}</h4>
                       <p className="text-sm text-gray-600">
                         {empresa.tipo_negocio && (
                           <span className="capitalize">{empresa.tipo_negocio} • </span>

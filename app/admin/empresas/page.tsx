@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import RichTextDisplay from '@/components/ui/rich-text-display';
 import AdminEmpresasManager from '@/components/admin/AdminEmpresasManager';
 import { 
   Building, 
@@ -46,6 +45,15 @@ export default function AdminEmpresasPage() {
   const [filterEstado, setFilterEstado] = useState<string>('todos');
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [activeTab, setActiveTab] = useState<'empresas' | 'administradores'>('empresas');
+
+  // Función para extraer texto plano del HTML
+  const extractPlainText = (html: string): string => {
+    if (!html) return '';
+    // Crear un elemento temporal para extraer el texto
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    return tempDiv.textContent || tempDiv.innerText || '';
+  };
 
   const showAlert = (type: 'success' | 'error', message: string) => {
     setAlert({ type, message });
@@ -397,7 +405,7 @@ export default function AdminEmpresasPage() {
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <h3 className="text-xl font-semibold text-gray-900">
-                              {empresa.nombre_empresa}
+                              {extractPlainText(empresa.nombre_empresa)}
                             </h3>
                             <Badge className={empresa.estado_color}>
                               {empresa.estado_texto}
@@ -411,7 +419,7 @@ export default function AdminEmpresasPage() {
                           
                           {empresa.descripcion_empresa && (
                             <div className="text-gray-600 mb-3 line-clamp-2">
-                              <RichTextDisplay content={empresa.descripcion_empresa} />
+                              {extractPlainText(empresa.descripcion_empresa)}
                             </div>
                           )}
                           
