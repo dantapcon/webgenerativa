@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import RichTextDisplay from '@/components/ui/rich-text-display';
+import { AddToCartButton } from '@/components/cart';
 import { 
   Package, 
   Tag,
@@ -154,20 +155,31 @@ export default function ProductosGrid({
               )}
             </div>
 
-            {/* Botón de acción */}
-            {onProductoClick && (
-              <Button 
-                className="w-full mt-4" 
-                variant="outline"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onProductoClick(producto);
-                }}
-              >
-                <Eye className="h-4 w-4 mr-2" />
-                Ver detalles
-              </Button>
-            )}
+            {/* Botones de acción */}
+            <div className="space-y-2 mt-4">
+              {/* Botón de agregar al carrito */}
+              <AddToCartButton 
+                product={producto}
+                size="sm"
+                className="w-full"
+              />
+              
+              {/* Botón de ver detalles */}
+              {onProductoClick && (
+                <Button 
+                  className="w-full" 
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onProductoClick(producto);
+                  }}
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  Ver detalles
+                </Button>
+              )}
+            </div>
           </CardContent>
         </Card>
       ))}

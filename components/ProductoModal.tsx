@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import RichTextDisplay from '@/components/ui/rich-text-display';
+import { AddToCartButton } from '@/components/cart';
 import { 
   X, 
   Package, 
@@ -271,17 +272,14 @@ export default function ProductoModal({
               {/* Botón de acción */}
               {producto.activo && (
                 <div className="border-t pt-6">
-                  {onAddToCart ? (
-                    <Button
-                      onClick={() => onAddToCart(producto)}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3"
-                      size="lg"
-                    >
-                      <ShoppingCart className="h-5 w-5 mr-2" />
-                      Agregar al carrito
-                    </Button>
-                  ) : (
-                    <div className="text-center py-4">
+                  <AddToCartButton 
+                    product={producto}
+                    size="lg"
+                    className="w-full py-3"
+                  />
+                  
+                  {!producto.precio && (
+                    <div className="text-center py-4 mt-4">
                       <p className="text-gray-600 mb-2">
                         ¿Te interesa este producto?
                       </p>

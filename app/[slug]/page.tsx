@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Phone } from 'lucide-react';
 import { EmpresaLayout } from '@/components/empresa-layout';
 import { ConsejoModal } from '@/components/consejo-modal';
+import { CartWrapper } from '@/components/cart';
 import { aplicarBrilloOpacidad } from '@/lib/utils/colorUtils';
 import RichTextDisplay from '@/components/ui/rich-text-display';
 
@@ -118,20 +119,21 @@ export default async function EmpresaPage({ params }: PageProps) {
   });
 
   return (
-    <EmpresaLayout empresa={empresa}>
-      {/* Modal de Consejo Diario */}
-      <ConsejoModal
-        isActive={empresa.ventana_flotante?.activo || false}
-        titulo={empresa.ventana_flotante?.titulo || undefined}
-        mensaje={empresa.ventana_flotante?.mensaje || undefined}
-        imagenUrl={empresa.ventana_flotante?.imagen_url || undefined}
-        videoUrl={empresa.ventana_flotante?.video_url || undefined}
-        fondoTipo={empresa.ventana_flotante?.fondo_tipo || undefined}
-        fondoColor={colorFondoVentana}
-        fondoImagen={empresa.ventana_flotante?.fondo_imagen || undefined}
-        brillo={brilloVentanaFlotante}
-        opacidad={opacidadVentanaFlotante}
-      />
+    <>
+      <EmpresaLayout empresa={empresa}>
+        {/* Modal de Consejo Diario */}
+        <ConsejoModal
+          isActive={empresa.ventana_flotante?.activo || false}
+          titulo={empresa.ventana_flotante?.titulo || undefined}
+          mensaje={empresa.ventana_flotante?.mensaje || undefined}
+          imagenUrl={empresa.ventana_flotante?.imagen_url || undefined}
+          videoUrl={empresa.ventana_flotante?.video_url || undefined}
+          fondoTipo={empresa.ventana_flotante?.fondo_tipo || undefined}
+          fondoColor={colorFondoVentana}
+          fondoImagen={empresa.ventana_flotante?.fondo_imagen || undefined}
+          brillo={brilloVentanaFlotante}
+          opacidad={opacidadVentanaFlotante}
+        />
 
       {/* Hero Section */}
       <section 
@@ -301,6 +303,12 @@ export default async function EmpresaPage({ params }: PageProps) {
           </div>
         </div>
       </section>
-    </EmpresaLayout>
+      </EmpresaLayout>
+      
+      {/* Carrito flotante - solo se muestra si la empresa tiene productos */}
+      {empresa?.productos && empresa.productos.length > 0 && (
+        <CartWrapper empresaId={empresa.id} />
+      )}
+    </>
   );
 }
